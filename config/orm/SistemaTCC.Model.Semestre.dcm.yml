@@ -1,24 +1,48 @@
 SistemaTCC\Model\Semestre:
     type: entity
     table: semestre
+    indexes:
+        fk_semestre_campus1_idx:
+            columns:
+                - campus_id
     id:
         id:
             type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
             generator:
                 strategy: IDENTITY
     fields:
         nome:
             type: string
+            nullable: false
             length: 25
+            options:
+                fixed: false
         dataInicio:
-            type: datetime
+            type: date
+            nullable: false
+            column: data_inicio
         dataFim:
-            type: datetime
+            type: date
+            nullable: false
+            column: data_fim
         tipo:
             type: integer
+            nullable: true
+            options:
+                unsigned: false
     manyToOne:
         campus:
-            targetEntity: Campus
-            joinColumn:
-                name: campus_id
-                referencedColumnName: id
+            targetEntity: SistemaTCC\Model\Campus
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                campus_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

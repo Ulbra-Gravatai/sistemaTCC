@@ -1,0 +1,45 @@
+SistemaTCC\Model\TccProfessor:
+    type: entity
+    table: tcc_professor
+    indexes:
+        fk_tcc_banca_tcc1_idx:
+            columns:
+                - tcc_id
+        fk_tcc_banca_professor1_idx:
+            columns:
+                - professor_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        tipo:
+            type: boolean
+            nullable: false
+    manyToOne:
+        professor:
+            targetEntity: SistemaTCC\Model\Professor
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                professor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tcc:
+            targetEntity: SistemaTCC\Model\Tcc
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tcc_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,58 @@
+SistemaTCC\Model\EtapaEntrega:
+    type: entity
+    table: etapa_entrega
+    indexes:
+        fk_etapa_entrega_etapa1_idx:
+            columns:
+                - etapa_id
+        fk_etapa_entrega_aluno1_idx:
+            columns:
+                - aluno_id
+        fk_etapa_entrega_etapa_status1_idx:
+            columns:
+                - etapa_status_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        data:
+            type: datetime
+            nullable: false
+    manyToOne:
+        aluno:
+            targetEntity: SistemaTCC\Model\Aluno
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                aluno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        etapa:
+            targetEntity: SistemaTCC\Model\Etapa
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                etapa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        etapaStatus:
+            targetEntity: SistemaTCC\Model\EtapaStatus
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                etapa_status_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

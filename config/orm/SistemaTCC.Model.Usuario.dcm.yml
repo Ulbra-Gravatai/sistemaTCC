@@ -1,0 +1,48 @@
+SistemaTCC\Model\Usuario:
+    type: entity
+    table: usuario
+    indexes:
+        fk_usuario_usuario_acesso_idx:
+            columns:
+                - usuario_acesso_id
+        fk_usuario_pessoa1_idx:
+            columns:
+                - pessoa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        senha:
+            type: string
+            nullable: false
+            length: 25
+            options:
+                fixed: false
+    manyToOne:
+        pessoa:
+            targetEntity: SistemaTCC\Model\Pessoa
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pessoa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioAcesso:
+            targetEntity: SistemaTCC\Model\UsuarioAcesso
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_acesso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

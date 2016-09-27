@@ -1,0 +1,48 @@
+SistemaTCC\Model\EtapaNota:
+    type: entity
+    table: etapa_nota
+    indexes:
+        fk_etapa_nota_professor1_idx:
+            columns:
+                - professor_id
+        fk_etapa_nota_etapa_entrega1_idx:
+            columns:
+                - etapa_entrega_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        nota:
+            type: string
+            nullable: false
+            length: 25
+            options:
+                fixed: false
+    manyToOne:
+        etapaEntrega:
+            targetEntity: SistemaTCC\Model\EtapaEntrega
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                etapa_entrega_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        professor:
+            targetEntity: SistemaTCC\Model\Professor
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                professor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

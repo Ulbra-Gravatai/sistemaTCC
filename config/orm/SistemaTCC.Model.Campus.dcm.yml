@@ -4,9 +4,17 @@ SistemaTCC\Model\Campus:
     id:
         id:
             type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
             generator:
                 strategy: IDENTITY
     fields:
         nome:
             type: string
+            nullable: false
             length: 25
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

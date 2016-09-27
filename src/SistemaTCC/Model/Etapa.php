@@ -2,106 +2,315 @@
 
 namespace SistemaTCC\Model;
 
-use DateTime;
-use SistemaTCC\Model\EtapaTipo;
-use SistemaTCC\Model\Semestre;
-
-class Etapa {
-
+/**
+ * Etapa
+ */
+class Etapa
+{
+    /**
+     * @var integer
+     */
     private $id;
+
+    /**
+     * @var string
+     */
     private $nome;
+
+    /**
+     * @var \DateTime
+     */
     private $dataInicio;
+
+    /**
+     * @var \DateTime
+     */
     private $dataFim;
+
+    /**
+     * @var integer
+     */
     private $peso;
+
+    /**
+     * @var integer
+     */
     private $ordem;
+
+    /**
+     * @var boolean
+     */
     private $enviarEmailAdministrador;
+
+    /**
+     * @var boolean
+     */
     private $enviarEmailBanca;
+
+    /**
+     * @var boolean
+     */
     private $enviarEmailOrientador;
-    private $semestre;
+
+    /**
+     * @var \SistemaTCC\Model\EtapaTipo
+     */
     private $etapaTipo;
 
-    public function getId() {
+    /**
+     * @var \SistemaTCC\Model\Semestre
+     */
+    private $semestre;
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getNome() {
+    /**
+     * Set nome
+     *
+     * @param string $nome
+     *
+     * @return Etapa
+     */
+    public function setNome($nome)
+    {
+        $this->nome = $nome;
+
+        return $this;
+    }
+
+    /**
+     * Get nome
+     *
+     * @return string
+     */
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome($nome) {
-        $this->nome = $nome;
+    /**
+     * Set dataInicio
+     *
+     * @param \DateTime $dataInicio
+     *
+     * @return Etapa
+     */
+    public function setDataInicio($dataInicio)
+    {
+        $this->dataInicio = $dataInicio;
+
+        return $this;
     }
 
-    public function getDataInicio() {
+    /**
+     * Get dataInicio
+     *
+     * @return \DateTime
+     */
+    public function getDataInicio()
+    {
         return $this->dataInicio;
     }
 
-    public function setDataInicio(DateTime $data) {
-        $this->dataInicio = $data;
+    /**
+     * Set dataFim
+     *
+     * @param \DateTime $dataFim
+     *
+     * @return Etapa
+     */
+    public function setDataFim($dataFim)
+    {
+        $this->dataFim = $dataFim;
+
+        return $this;
     }
 
-    public function getDataFim() {
+    /**
+     * Get dataFim
+     *
+     * @return \DateTime
+     */
+    public function getDataFim()
+    {
         return $this->dataFim;
     }
 
-    public function setDataFim(DateTime $data) {
-        $this->dataFim = $data;
+    /**
+     * Set peso
+     *
+     * @param integer $peso
+     *
+     * @return Etapa
+     */
+    public function setPeso($peso)
+    {
+        $this->peso = $peso;
+
+        return $this;
     }
 
-    public function getPeso() {
+    /**
+     * Get peso
+     *
+     * @return integer
+     */
+    public function getPeso()
+    {
         return $this->peso;
     }
 
-    public function setPeso($peso) {
-        $this->peso = $peso;
+    /**
+     * Set ordem
+     *
+     * @param integer $ordem
+     *
+     * @return Etapa
+     */
+    public function setOrdem($ordem)
+    {
+        $this->ordem = $ordem;
+
+        return $this;
     }
 
-    public function getOrdem() {
+    /**
+     * Get ordem
+     *
+     * @return integer
+     */
+    public function getOrdem()
+    {
         return $this->ordem;
     }
 
-    public function setOrdem($ordem) {
-        $this->ordem = $ordem;
+    /**
+     * Set enviarEmailAdministrador
+     *
+     * @param boolean $enviarEmailAdministrador
+     *
+     * @return Etapa
+     */
+    public function setEnviarEmailAdministrador($enviarEmailAdministrador)
+    {
+        $this->enviarEmailAdministrador = $enviarEmailAdministrador;
+
+        return $this;
     }
 
-    public function getEnviaEmailAdministrador() {
+    /**
+     * Get enviarEmailAdministrador
+     *
+     * @return boolean
+     */
+    public function getEnviarEmailAdministrador()
+    {
         return $this->enviarEmailAdministrador;
     }
 
-    public function setEnviaEmailAdministrador($flag) {
-        $this->enviarEmailAdministrador = (boolean) $flag;
+    /**
+     * Set enviarEmailBanca
+     *
+     * @param boolean $enviarEmailBanca
+     *
+     * @return Etapa
+     */
+    public function setEnviarEmailBanca($enviarEmailBanca)
+    {
+        $this->enviarEmailBanca = $enviarEmailBanca;
+
+        return $this;
     }
 
-    public function getEnviaEmailBanca() {
+    /**
+     * Get enviarEmailBanca
+     *
+     * @return boolean
+     */
+    public function getEnviarEmailBanca()
+    {
         return $this->enviarEmailBanca;
     }
 
-    public function setEnviaEmailBanca($flag) {
-        $this->enviarEmailBanca = (boolean) $flag;
+    /**
+     * Set enviarEmailOrientador
+     *
+     * @param boolean $enviarEmailOrientador
+     *
+     * @return Etapa
+     */
+    public function setEnviarEmailOrientador($enviarEmailOrientador)
+    {
+        $this->enviarEmailOrientador = $enviarEmailOrientador;
+
+        return $this;
     }
 
-    public function getEnviaEmailOrientador() {
+    /**
+     * Get enviarEmailOrientador
+     *
+     * @return boolean
+     */
+    public function getEnviarEmailOrientador()
+    {
         return $this->enviarEmailOrientador;
     }
 
-    public function setEnviaEmailOrientador($flag) {
-        $this->enviarEmailOrientador = (boolean) $flag;
+    /**
+     * Set etapaTipo
+     *
+     * @param \SistemaTCC\Model\EtapaTipo $etapaTipo
+     *
+     * @return Etapa
+     */
+    public function setEtapaTipo(\SistemaTCC\Model\EtapaTipo $etapaTipo = null)
+    {
+        $this->etapaTipo = $etapaTipo;
+
+        return $this;
     }
 
-    public function getSemestre() {
+    /**
+     * Get etapaTipo
+     *
+     * @return \SistemaTCC\Model\EtapaTipo
+     */
+    public function getEtapaTipo()
+    {
+        return $this->etapaTipo;
+    }
+
+    /**
+     * Set semestre
+     *
+     * @param \SistemaTCC\Model\Semestre $semestre
+     *
+     * @return Etapa
+     */
+    public function setSemestre(\SistemaTCC\Model\Semestre $semestre = null)
+    {
+        $this->semestre = $semestre;
+
+        return $this;
+    }
+
+    /**
+     * Get semestre
+     *
+     * @return \SistemaTCC\Model\Semestre
+     */
+    public function getSemestre()
+    {
         return $this->semestre;
     }
-
-    public function setSemestre(Semestre $semestre) {
-        $this->semestre = $semestre;
-    }
-
-    public function getEtapaTipo() {
-        return $this->dataFim;
-    }
-
-    public function setEtapaTipo(EtapaTipo $tipo) {
-        $this->etapaTipo = $tipo;
-    }
-
 }
+

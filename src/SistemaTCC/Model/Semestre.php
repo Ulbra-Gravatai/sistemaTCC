@@ -2,59 +2,170 @@
 
 namespace SistemaTCC\Model;
 
-use DateTime;
-use SistemaTCC\Model\Campus;
-
-class Semestre {
-
+/**
+ * Semestre
+ */
+class Semestre
+{
+    /**
+     * @var integer
+     */
     private $id;
+
+    /**
+     * @var string
+     */
     private $nome;
+
+    /**
+     * @var \DateTime
+     */
     private $dataInicio;
+
+    /**
+     * @var \DateTime
+     */
     private $dataFim;
+
+    /**
+     * @var integer
+     */
     private $tipo;
+
+    /**
+     * @var \SistemaTCC\Model\Campus
+     */
     private $campus;
 
-    public function getId() {
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getNome() {
+    /**
+     * Set nome
+     *
+     * @param string $nome
+     *
+     * @return Semestre
+     */
+    public function setNome($nome)
+    {
+        $this->nome = $nome;
+
+        return $this;
+    }
+
+    /**
+     * Get nome
+     *
+     * @return string
+     */
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    public function setNome($nome) {
-        $this->nome = $nome;
+    /**
+     * Set dataInicio
+     *
+     * @param \DateTime $dataInicio
+     *
+     * @return Semestre
+     */
+    public function setDataInicio($dataInicio)
+    {
+        $this->dataInicio = $dataInicio;
+
+        return $this;
     }
 
-    public function getDataInicio() {
+    /**
+     * Get dataInicio
+     *
+     * @return \DateTime
+     */
+    public function getDataInicio()
+    {
         return $this->dataInicio;
     }
 
-    public function setDataInicio(DateTime $data) {
-        $this->dataInicio = $data;
+    /**
+     * Set dataFim
+     *
+     * @param \DateTime $dataFim
+     *
+     * @return Semestre
+     */
+    public function setDataFim($dataFim)
+    {
+        $this->dataFim = $dataFim;
+
+        return $this;
     }
 
-    public function getDataFim() {
+    /**
+     * Get dataFim
+     *
+     * @return \DateTime
+     */
+    public function getDataFim()
+    {
         return $this->dataFim;
     }
 
-    public function setDataFim(DateTime $data) {
-        $this->dataFim = $data;
+    /**
+     * Set tipo
+     *
+     * @param integer $tipo
+     *
+     * @return Semestre
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
     }
 
-    public function getTipo() {
+    /**
+     * Get tipo
+     *
+     * @return integer
+     */
+    public function getTipo()
+    {
         return $this->tipo;
     }
 
-    public function setTipo($tipo) {
-        $this->tipo = $tipo;
+    /**
+     * Set campus
+     *
+     * @param \SistemaTCC\Model\Campus $campus
+     *
+     * @return Semestre
+     */
+    public function setCampus(\SistemaTCC\Model\Campus $campus = null)
+    {
+        $this->campus = $campus;
+
+        return $this;
     }
 
-    public function getCampus() {
+    /**
+     * Get campus
+     *
+     * @return \SistemaTCC\Model\Campus
+     */
+    public function getCampus()
+    {
         return $this->campus;
     }
-
-    public function setCampus(Campus $campus) {
-        $this->campus = $campus;
-    }
 }
+

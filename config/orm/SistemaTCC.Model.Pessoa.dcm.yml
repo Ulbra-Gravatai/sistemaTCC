@@ -1,0 +1,35 @@
+SistemaTCC\Model\Pessoa:
+    type: entity
+    table: pessoa
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        nome:
+            type: string
+            nullable: false
+            length: 25
+            options:
+                fixed: false
+        email:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
+        telefone:
+            type: string
+            nullable: false
+            length: 25
+            options:
+                fixed: false
+        sexo:
+            type: boolean
+            nullable: false
+    lifecycleCallbacks: {  }

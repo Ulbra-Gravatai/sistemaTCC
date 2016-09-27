@@ -1,0 +1,48 @@
+SistemaTCC\Model\Aluno:
+    type: entity
+    table: aluno
+    indexes:
+        fk_aluno_pessoa1_idx:
+            columns:
+                - pessoa_id
+    uniqueConstraints:
+        matricula_UNIQUE:
+            columns:
+                - matricula
+        cgu_UNIQUE:
+            columns:
+                - cgu
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        matricula:
+            type: string
+            nullable: false
+            length: 10
+            options:
+                fixed: false
+        cgu:
+            type: string
+            nullable: false
+            length: 10
+            options:
+                fixed: false
+    manyToOne:
+        pessoa:
+            targetEntity: SistemaTCC\Model\Pessoa
+            cascade: ["persist"]
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pessoa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
