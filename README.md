@@ -18,6 +18,12 @@ Para colaborar você deve primeiro clonar o projeto do [GitHub](https://github.c
 git clone https://github.com/Ulbra-Gravatai/sistemaTCC.git
 cd sistemaTCC
 ```
+
+O ideal é usar o comando com a URL do GIT:
+```
+git clone git@github.com:Ulbra-Gravatai/sistemaTCC.git
+```
+
 Entre na brach de desenvolvimento:
 ```
 git checkout dev
@@ -118,5 +124,3 @@ Em seguida colocaremos como utilizar
 * [GitHub](https://github.com)
 * [MySQL](https://www.mysql.com)
 * [Bower](http://bower.io)
-
-
