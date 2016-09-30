@@ -1,0 +1,35 @@
+SistemaTCC\Model\Professor:
+    type: entity
+    table: professor
+    indexes:
+        fk_professor_pessoa1_idx:
+            columns:
+                - pessoa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        assinatura:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+    manyToOne:
+        pessoa:
+            targetEntity: SistemaTCC\Model\Pessoa
+            cascade: ["persist"]
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pessoa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
