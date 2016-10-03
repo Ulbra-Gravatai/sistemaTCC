@@ -1,13 +1,64 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Créditos - sistemaTCC</title>
-    </head>
-    <body>
-        <h1>Créditos</h1>
-        <p>
-            Alunos do Curso de Ciência da Computação
-        </p>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <base href="{{ app.url('/') }}">
+    <title>SistemaTCC</title>
+    <link rel="stylesheet" href="./lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./app/index/main.css">
+    <link rel="stylesheet" href="./app/shared/nav-side.css">
+    <!-- styles -->
+      {% block styles %}
+      {% endblock %}
+    <!-- /styles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+    <div class="main">
+      <nav class="navbar navbar-system navbar-fixed-top">
+        
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand">SistemaTCC</a>
+        </div>
+        <div class="pull-right menu-header">
+          <ul class="nav navbar-top-links navbar-right">
+            <li><span class="username-js">Versão x.x.x.x</span></li>
+            <li><a href="#" class="btn-logout-js"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a></li>
+          </ul>
+        </div>
+        </div>
+      </nav>
+      <div class="container">
+        <div class="content content-move-js">
+          <!-- conteudo Projetado pelo Filipe de leonel batista -->
+          <h1>Responsáveis pela versão alpha do negócio!</h1>
+          <p>
+
+<strong>Análise:<br></strong>
+Diego Santos, Douglas Angeli, Emerson Ficner, Eric Quadros, Everton Ficner, Jose Augusto Junior, Rafael Borba</p><p>
+
+<strong>Arquitetura:<br></strong>
+Guilherme Schroder, Hiago Manoel, Jean Rosa, Palmer Oliveira, Ricardo Martins, Thiago Silveira </p><p>
+
+<strong>Desenvolvimento Front-End:<br></strong>
+Diogo Machado, Elisandro Correa, Emanuel Rocha, Everton Nunes, Filipe Batista, Gustavo Santos, Luis Henrique Borba, Thiago Moura </p><p>
+
+<strong>Desenvolvimento Back-End:<br></strong>
+Eder Soares, Eric Quadros, Jose Augusto Junior, Juliani Nascimento, Marcel Jardim, Thiago Lencina </p>
+          {% block content %}
+          {% endblock %}
+          <!-- /conteudo -->
+        </div>
+      </div>
+    </div>
+    <script src="./lib/jquery/dist/jquery.min.js"></script>
+    <script src="./lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./app/shared/nav-side.js"></script>
+    <!-- scripts -->
+      {% block scripts %}
+      {% endblock %}
+    <!-- /scripts -->
+  </body>
 </html>

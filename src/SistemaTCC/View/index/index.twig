@@ -1,7 +1,53 @@
-{% extends "layout.twig" %}
-
-{% block content %}
-
-<P>Aqui vai o conteúdo</P>
-
-{% endblock %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <base href="{{ app.url('/') }}">
+    <title>SistemaTCC</title>
+    <link rel="stylesheet" href="./lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./app/index/main.css">
+    <link rel="stylesheet" href="./app/shared/nav-side.css">
+    <!-- styles -->
+	  {% block styles %}
+	  {% endblock %}
+    <!-- /styles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+    <div class="main">
+      <nav class="navbar navbar-system navbar-fixed-top">
+        <div class="">
+          <a href="#" class="btn-hamburguer menu-show pull-left"><span></span></a>
+        </div>
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand">SistemaTCC</a>
+        </div>
+        <div class="pull-right menu-header">
+          <ul class="nav navbar-top-links navbar-right">
+            <li><span class="username-js">Fulano da Silva</span></li>
+            <li><a href="#" ><i class="fa fa-cog fa-lg" aria-hidden="true"></i></a></li>
+            <li><a href="#" class="btn-logout-js"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a></li>
+          </ul>
+        </div>
+        </div>
+      </nav>
+      <div class="container">
+        <div class="content content-move-js">
+          <!-- conteudo -->
+          {% block content %}
+          {% endblock %}
+          <!-- /conteudo -->
+        </div>
+      </div>
+    </div>
+    <script src="./lib/jquery/dist/jquery.min.js"></script>
+    <script src="./lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./lib/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="./app/shared/nav-side.js"></script>
+    <!-- scripts -->
+	  {% block scripts %}
+	  {% endblock %}
+    <!-- /scripts -->
+  </body>
+</html>
