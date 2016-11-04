@@ -4,42 +4,48 @@
 {% endblock %}
 {% block content %}
 	<div class="row">
-		<div class="col-sm-6 col-xs-12">
-			<h3>{{ titulo }}</h3>
-		</div>		
-		<div class="col-sm-6 col-xs-12">
+    <div class="col-sm-6 col-xs-12">
+      <h3>{{ titulo }}</h3>
+    </div>
+    <div class="col-sm-6 col-xs-12">
 			<a href="./professor/cadastrar" class="btn btn-success btn-professor-cadastrar"><span class="glyphicon glyphicon-plus"></span> Cadastrar Professor</a>
-		</div>
+    </div>
 	</div>
-	
-	<table class="table">
-	</div>
+	<div class="row">
+    <div class="col-xs-12">
+      <table class="table table-striped">
         <thead>
-            <tr>
-              <th width="170px">Nome</th>
-              <th>E-mail</th>
-              <th>Telefone</th>
-              <th>Editar</th>
-              <th>Excluir</th>
-            </tr>
-        </thead>
-        <tbody id="lista-js">
+          <tr>
+            <th width="170px">Nome</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th></th>
+          </tr>
+          <tbody id="lista-js">
             {% for professor in professores %}
             <tr>
-                <td>{{ professor.getPessoa().getNome() }}</td>
-                <td>{{ professor.getPessoa().getEmail() }}</td>
-                <td>{{ professor.getPessoa().getTelefone() }}</td>
-                <td>
-                    <a href="/professor/editar/{{ professor.getId() }}" class="btn btn-primary">Editar</a>
-                </td>
-                <td>
-                    <button data-id="{{ professor.getId() }}" class="excluir btn btn-danger">Excluir</button>
-                </td>
+              <td>{{ professor.getPessoa().getNome() }}</td>
+              <td>{{ professor.getPessoa().getEmail() }}</td>
+              <td>{{ professor.getPessoa().getTelefone()|fone_format }}</td>
+              <td>
+                <div class="pull-right">
+                  <a href="./professor/editar/{{ professor.getId() }}" class="btn btn-primary btn-xs">
+                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                    <span class="hidden-xs">Editar</span>
+                  </a>
+                  <button data-id="{{ professor.getId() }}" class="excluir btn btn-danger btn-xs" data-id="{{ professor.getId() }}">
+                    <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                    <span class="hidden-xs">Excluir</span>
+                  </button>
+                </div>
+              </td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
+            {% endfor %}
+          </tbody>
+        </thead>
+      </table>
+    </div>
+  </div>
 {% endblock %}
 {% block scripts %}
 <script src="./app/professor/listar.js"></script>

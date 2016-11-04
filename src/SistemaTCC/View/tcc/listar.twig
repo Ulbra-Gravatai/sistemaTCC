@@ -1,6 +1,6 @@
 {% extends 'layout.twig' %}
 {% block styles %}
-  <link rel="stylesheet" href="./app/semestre/listar.css">
+  <link rel="stylesheet" href="./app/tcc/listar.css">
 {% endblock %}
 {% block content %}
 	<div class="row">
@@ -8,7 +8,7 @@
 			<h3>{{ titulo }}</h3>
 		</div>		
 		<div class="col-sm-6 col-xs-12">
-			<a href="./semestre/cadastrar" class="btn btn-success btn-semestre-cadastrar"><span class="glyphicon glyphicon-plus"></span> Cadastrar semestre</a>
+			<a href="./tcc/cadastrar" class="btn btn-success btn-tcc-cadastrar"><span class="glyphicon glyphicon-plus"></span> Cadastrar tcc</a>
 		</div>
 	</div>
 	
@@ -16,31 +16,29 @@
 	</div>
         <thead>
             <tr>
-			   <th>Data inicio</th>
-			   <th>Data fim</th>
-               <th>Campus</th> 
-               <th>Semestre</th>
+              <th>Título</th>
+              <th>Aluno</th>
+              <th>Semestre</th>
             </tr>
         </thead>
         <tbody id="lista-js">
-            {% for semestre in semestres %}
+            {% for tcc in tccs %}
             <tr>
-                <td>{{ semestre.geDataInicio() }}</td>
-				<td>{{ semestre.geDataInicio() }}</td>
-                <td>{{ semestre.getCampus() }}</td>
-                <td>{{ semestre.getSemestre() }}</td>
+                <td>{{ tcc.getTitulo() }}</td>
+                <td>{{ tcc.getAluno() }}</td>
+                <td>{{ tcc.getSemestre() }}</td>
                 <td>
 					<div class="pull-right">
-						<a href="/semestre/editar/{{ semestre.getId() }}" class="btn btn-primary">
+						<a href="/tcc/editar/{{ tcc.getId() }}" class="btn btn-primary">
 							<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
 							<span class="hidden-xs">Editar</span>
 						</a>
 
-						<button data-id="{{ semestre.getId() }}" class="excluir btn btn-danger">
+						<button data-id="{{ tcc.getId() }}" class="excluir btn btn-danger">
 							<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
 							<span class="hidden-xs">Excluir</span>
 						</button>
-					</div>
+					 </div>
                 </td>
             </tr>
         {% endfor %}
@@ -49,5 +47,5 @@
 
 {% endblock %}
 {% block scripts %}
-<script src="./app/semestre/listar.js"></script>
+<script src="./app/tcc/listar.js"></script>
 {% endblock %}

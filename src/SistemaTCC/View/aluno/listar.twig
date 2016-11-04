@@ -28,7 +28,7 @@
 						<td>{{ aluno.getMatricula() }}</td>
 						<td>{{ aluno.getPessoa().getNome() }}</td>
 						<td>{{ aluno.getPessoa().getEmail() }}</td>
-						<td>{{ aluno.getPessoa().getTelefone() }}
+						<td>{{ aluno.getPessoa().getTelefone()|fone_format }}
 							<div class="pull-right">
 								<a href="aluno/editar/{{ aluno.getId() }}/" class="btn btn-primary btn-xs" >
 									<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>

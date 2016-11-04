@@ -1,0 +1,41 @@
+{% extends 'layout.twig' %}
+{% block content %}
+    <h3>{{ titulo }}</h3>
+    <form id="form-js">
+        {% if id is defined %}
+        <input type="hidden" name="id" value="{{ id }}" id="id" />
+        {% endif %}
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label" for="nome">Titulo</label>
+                    <input type="text" class="form-control" name="titulo" id="titulo" value="{{ values.titulo }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label" for="email">Aluno</label>
+                    <input type="aluno" class="form-control" name="aluno" id="aluno" value="{{ values.aluno }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label" for="telefone">Semestre</label>
+                    <input type="text" class="form-control" name="semestre" id="semestre" value="{{ values.semestre }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Salvar</button>
+    </form>
+{% endblock %}
+{% block scripts %}
+<script src="./app/shared/maskedinputplugin.js"></script>
+<script src="./app/aluno/formulario.js"></script>
+{% endblock %}
+

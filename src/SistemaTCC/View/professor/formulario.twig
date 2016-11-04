@@ -25,7 +25,7 @@
             <div class="col-xs-4">
                 <div class="form-group">
                     <label class="control-label" for="telefone">Telefone <small>(com DDD)</small></label>
-                    <input type="number" class="form-control" name="telefone" id="telefone" value="{{ values.telefone }}">
+                    <input type="text" class="form-control mask-phone-js" name="telefone" id="telefone" value="{{ values.telefone }}">
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -60,14 +60,20 @@
 				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Outros" >Outros</label></div>
 			</div>
         </div>
+        <hr>
         <div class="row">
         	<div class="col-xs-3">
-        		<button type="submit" class="btn btn-primary btn-lg">Salvar</button>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
         	</div>
+            <div class="col-xs-2">
+                <a href="./professor/" class="btn btn-default btn-lg btn-block">Cancelar</a>
+            </div>
         </div>
 
     </form>
 {% endblock %}
 {% block scripts %}
+<script src="./app/shared/jquery-mask-plugin.js"></script>
+<script src="./app/shared/mascaras-padrao.js"></script>
 <script src="./app/professor/formulario.js"></script>
 {% endblock %}
