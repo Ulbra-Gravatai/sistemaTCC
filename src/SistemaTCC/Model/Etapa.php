@@ -7,6 +7,7 @@ namespace SistemaTCC\Model;
  */
 class Etapa
 {
+    use Serializer\ObjectToJson;
     /**
      * @var integer
      */
@@ -342,4 +343,3 @@ class Etapa
         return $this->semestre;
     }
 }
-

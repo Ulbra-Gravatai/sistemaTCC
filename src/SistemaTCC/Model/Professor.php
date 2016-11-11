@@ -2,6 +2,9 @@
 
 namespace SistemaTCC\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use SistemaTCC\Model\AreaDeInteresse;
+
 /**
  * Professor
  */
@@ -22,6 +25,12 @@ class Professor
      */
     private $pessoa;
 
+	private $areasDeInteresse;
+
+	public function __construct()
+	{
+		$this->areasDeInteresse = new ArrayCollection();
+	}
 
     /**
      * Get id
@@ -80,5 +89,15 @@ class Professor
     {
         return $this->pessoa;
     }
-}
 
+	public function getAreasDeInteresse()
+	{
+		return $this->areasDeInteresse;
+	}
+
+	public function addAreaDeInteresse(AreaDeInteresse $areaDeInteresse)
+	{
+		$this->areasDeInteresse[] = $areaDeInteresse;
+		$areaDeInteresse->addProfessor($this);
+	}
+}

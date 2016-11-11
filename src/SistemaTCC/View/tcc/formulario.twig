@@ -16,7 +16,11 @@
             <div class="col-xs-6">
                 <div class="form-group">
                     <label class="control-label" for="email">Aluno</label>
-                    <input type="aluno" class="form-control" name="aluno" id="aluno" value="{{ values.aluno }}">
+                    <select class="form-control" id="aluno">
+                      {% for aluno in values.aluno %}
+      								    <option value="{{ aluno.getId() }}">{{ aluno.getPessoa().getNome() }}</option>
+                      {% endfor %}
+      							</select>
                     <span class="help-block"></span>
                 </div>
             </div>
@@ -24,9 +28,10 @@
         <div class="row">
             <div class="col-xs-4">
                 <div class="form-group">
-                    <label class="control-label" for="telefone">Semestre</label>
-                    <input type="text" class="form-control" name="semestre" id="semestre" value="{{ values.semestre }}">
-                    <span class="help-block"></span>
+					<select class="form-control" id="semestre">
+						<option value="1" {{ values.semestre == 1 ? 'selected' : '' }}>Primeiro</option>
+						<option value="2" {{ values.semestre == 2 ? 'selected' : '' }}>Segundo</option>
+					</select>
                 </div>
             </div>
 
@@ -36,6 +41,5 @@
 {% endblock %}
 {% block scripts %}
 <script src="./app/shared/maskedinputplugin.js"></script>
-<script src="./app/aluno/formulario.js"></script>
+<script src="./app/tcc/formulario.js"></script>
 {% endblock %}
-

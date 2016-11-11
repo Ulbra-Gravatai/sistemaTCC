@@ -52,4 +52,3 @@ class EtapaTipo
         return $this->nome;
     }
 }
-

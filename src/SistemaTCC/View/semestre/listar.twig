@@ -6,29 +6,29 @@
 	<div class="row">
 		<div class="col-sm-6 col-xs-12">
 			<h3>{{ titulo }}</h3>
-		</div>		
+		</div>
 		<div class="col-sm-6 col-xs-12">
 			<a href="./semestre/cadastrar" class="btn btn-success btn-semestre-cadastrar"><span class="glyphicon glyphicon-plus"></span> Cadastrar semestre</a>
 		</div>
 	</div>
-	
+
 	<table class="table">
 	</div>
         <thead>
             <tr>
-			   <th>Data inicio</th>
-			   <th>Data fim</th>
-               <th>Campus</th> 
-               <th>Semestre</th>
+			   <th>Nome</th>
+               <th>Campus</th>
+               <th>Data Inicial</th>
+			   <th>Data Final</th>
             </tr>
         </thead>
         <tbody id="lista-js">
             {% for semestre in semestres %}
             <tr>
-                <td>{{ semestre.geDataInicio() }}</td>
-				<td>{{ semestre.geDataInicio() }}</td>
-                <td>{{ semestre.getCampus() }}</td>
-                <td>{{ semestre.getSemestre() }}</td>
+                <td>{{ semestre.getNome() }}</td>
+                <td>{{ semestre.getCampus().getNome() }}</td>
+                <td>{{ semestre.getDataInicio().format('d/m/Y') }}</td>
+				<td>{{ semestre.getDataFim().format('d/m/Y') }}</td>
                 <td>
 					<div class="pull-right">
 						<a href="/semestre/editar/{{ semestre.getId() }}" class="btn btn-primary">
@@ -36,7 +36,7 @@
 							<span class="hidden-xs">Editar</span>
 						</a>
 
-						<button data-id="{{ semestre.getId() }}" class="excluir btn btn-danger">
+						<button data-id="{{ semestre.getId() }}" class="btn-excluir-js btn btn-danger">
 							<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
 							<span class="hidden-xs">Excluir</span>
 						</button>

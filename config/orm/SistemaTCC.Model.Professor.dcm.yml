@@ -32,4 +32,18 @@ SistemaTCC\Model\Professor:
                 pessoa_id:
                     referencedColumnName: id
             orphanRemoval: false
+    manyToMany:
+        areasDeInteresse:
+            targetEntity: SistemaTCC\Model\AreaDeInteresse
+            cascade: ["all"]
+            inversedBy: professores
+            joinTable:
+                name: professor_area_de_interesse
+                joinColumns:
+                    professor_id:
+                      referencedColumnName: id
+                inverseJoinColumns:
+                    area_de_interesse_id:
+                      referencedColumnName: id
+
     lifecycleCallbacks: {  }

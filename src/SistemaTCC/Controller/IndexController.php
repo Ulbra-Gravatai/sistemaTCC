@@ -14,4 +14,8 @@ class IndexController {
         return $app['twig']->render('index/creditos.twig');
     }
 
+    public function loginAction(Application $app) {
+        return 'Login';
+    }
+
 }

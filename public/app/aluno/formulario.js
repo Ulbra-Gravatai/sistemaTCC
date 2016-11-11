@@ -29,7 +29,7 @@ $(function() {
           	matricula: $form.find('#matricula').val(),
             telefone: $form.find('#telefone').val(),
             email: $form.find('#email').val(),
-            sexo: $form.find('[name=sexo]').val(),
+            sexo: $form.find('input[name=sexo]:checked').val(),
           	cgu:  $form.find('#cgu').val(),
         };
 

@@ -55,3 +55,15 @@ html, body {
     padding: 10px;
     overflow: hidden;
 }
+
+.btn-cadastrar{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+@media (min-width: 768px) {
+  .btn-cadastrar{
+    margin-top: 16px;
+    margin-bottom: 10px;
+    float: right;
+  }
+}

@@ -32,10 +32,10 @@ class AlunoController {
             ],
             'telefone' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
-								new Assert\Regex([
-									'pattern' => '/^[0-9]+$/i',
-									'message' => 'Seu telefone deve possuir apenas números'
-								]),
+				new Assert\Regex([
+					'pattern' => '/^[0-9]+$/i',
+					'message' => 'Seu telefone deve possuir apenas números'
+				]),
                 new Assert\Length([
                     'min' => 10,
                     'max' => 12,
@@ -46,30 +46,30 @@ class AlunoController {
             'sexo' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
             ],
-						'cgu' => [
-                new Assert\NotBlank(['message' => 'Preencha esse campo']),
-								new Assert\GreaterThan([
-										'value'   => 1,
-										'message' => 'Seu CGU não pode ser um número negativo',
-								]),
+			'cgu' => [
+                
+				new Assert\GreaterThan([
+						'value'   => 1,
+						'message' => 'Seu CGU não pode ser um número negativo',
+				]),
+				new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Length([
-                     'min' => 9,
-                     'max' => 10,
+                     'min' => 3,
+                     'max' => 9,
                      'minMessage' => 'Seu CGU precisa possuir pelo menos {{ limit }} caracteres',
                      'maxMessage' => 'Seu CGU não deve possuir mais que {{ limit }} caracteres'
                 ])
             ],
-						'matricula' => [
-                new Assert\NotBlank(['message' => 'Preencha esse campo']),
-								new Assert\GreaterThan([
-										'value'   => 1,
-										'message' => 'Sua Matrícula não pode ser um número negativo',
-								]),
+			'matricula' => [
+				new Assert\GreaterThan([
+						'value'   => 1,
+						'message' => 'Sua Matrícula não pode ser um número negativo',
+				]),
+				new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Length([
-                     'min' => 9,
+                     'min' => 10,
                      'max' => 10,
-                     'minMessage' => 'Sua Matrícula precisa possuir pelo menos {{ limit }} caracteres',
-                     'maxMessage' => 'Sua Matrícula não deve possuir mais que {{ limit }} caracteres'
+                     'exactMessage' => 'Sua Matrícula deve possuir exatamente {{ limit }} caracteres'
                 ])
             ]
         ];
@@ -93,7 +93,7 @@ class AlunoController {
             'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
             'sexo'      => $request->get('sexo'),
 			'cgu'		=> $request->get('cgu'),
-			'matricula'	=> $request->get('matricula')
+			'matricula'	=> str_replace('-','',$request->get('matricula')),
         ];
 
         $errors = $this->validacao($app, $dados);
@@ -144,7 +144,7 @@ class AlunoController {
             'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone', $pessoa->getTelefone())),
             'sexo'      => $request->get('sexo', $pessoa->getSexo()),
             'cgu'       => $request->get('cgu', $aluno->getCgu()),
-            'matricula' => $request->get('matricula', $aluno->getMatricula())
+            'matricula' => str_replace('-','',$request->get('matricula', $aluno->getMatricula()))
         ];
 
         $errors = $this->validacao($app, $dados);
@@ -235,7 +235,7 @@ class AlunoController {
         return 'Excluir Aluno';
     }
 
-	public function listarAction(Application $app) {
+		public function listarAction(Application $app) {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Aluno');
         $alunos = $db->findAll();
         $dadosParaView = [

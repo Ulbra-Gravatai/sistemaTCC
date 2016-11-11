@@ -1,0 +1,45 @@
+{% extends 'layout.twig' %}
+{% block content %}
+	<div class="row">
+    <div class="col-sm-6 col-xs-12">
+      <h3>{{ titulo }}</h3>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+			<a href="./campus/cadastrar" class="btn btn-success btn-cadastrar"><span class="glyphicon glyphicon-plus"></span> Cadastrar Campus</a>
+    </div>
+	</div>
+	<div class="row">
+    <div class="col-xs-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th width="170px">Nome</th>
+            <th></th>
+          </tr>
+          <tbody id="lista-js">
+            {% for item in campus %}
+            <tr>
+              <td>{{ item.getNome() }}</td>
+              <td>
+                <div class="pull-right">
+                  <a href="./campus/editar/{{ item.getId() }}/" class="btn btn-primary btn-xs">
+                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                    <span class="hidden-xs">Editar</span>
+                  </a>
+                  <button data-id="{{ item.getId() }}" class="excluir btn btn-danger btn-xs" data-id="{{ item.getId() }}">
+                    <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                    <span class="hidden-xs">Excluir</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </thead>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+<script src="./app/campus/listar.js"></script>
+{% endblock %}
