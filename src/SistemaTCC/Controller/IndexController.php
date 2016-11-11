@@ -11,11 +11,18 @@ class IndexController {
     }
 
     public function creditosAction(Application $app) {
-        return $app['twig']->render('index/creditos.twig');
+
+		$token = $app['security.token_storage']->getToken();
+
+		if (null !== $token) {
+			return $app->encodePassword($token->getUser(), 'admin');
+		}
+
+		return 'admin';
     }
 
     public function loginAction(Application $app) {
-        return 'Login';
+
     }
 
 }
