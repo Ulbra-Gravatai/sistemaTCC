@@ -21,7 +21,7 @@ class DoctrineOrmServiceProvider implements ServiceProviderInterface {
                 'host'     => 'localhost',
                 'dbname'   => 'sistema_tcc',
                 'user'     => 'root',
-                'password' => 'root',
+                'password' => '',
                 'charset'  => 'utf8mb4',
             ];
 
