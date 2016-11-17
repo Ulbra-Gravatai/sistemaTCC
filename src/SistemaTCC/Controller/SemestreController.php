@@ -61,6 +61,22 @@ class SemestreController {
         }
         return $retorno;
     }
+
+    private function nomeJaExiste($app, $nome, $id = false) {
+        $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
+        if (count($semestres)) {
+            foreach ($semestres as $semestre) {
+                if ($id && (int)$id === (int)$semestre->getId()) {
+                    continue;
+                }
+                if ($nome === $semestre->getNome()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function add(Application $app, Request $request) {
         $dados = [
             'nome'       => $request->get('nome'),
@@ -73,6 +89,10 @@ class SemestreController {
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
+        }
+
+        if ($this->nomeJaExiste($app, $dados['nome'])) {
+            return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
 
         $semestre = new Semestre();
@@ -118,6 +138,10 @@ class SemestreController {
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
+        }
+
+        if ($this->nomeJaExiste($app, $dados['nome'], $id)) {
+            return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
 
         $campus = $app['orm']->find('\SistemaTCC\Model\Campus', $request->get('campus'));
