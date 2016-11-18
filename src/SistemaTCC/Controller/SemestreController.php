@@ -16,12 +16,12 @@ class SemestreController {
         $asserts = [
             'nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
-                new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
-                ]),
+                // new Assert\Regex([
+                //     'pattern' => '/^[0-9]{4}\/[0-2]{2}+$/i',
+                //     'message' => 'Nome do semestre deve possuir esse formato Ex.: 2016/02'
+                // ]),
                 new Assert\Length([
-                    'min' => 3,
+                    'min' => 6,
                     'max' => 50,
                     'minMessage' => 'Seu nome precisa possuir pelo menos {{ limit }} caracteres',
                     'maxMessage' => 'Seu nome não deve possuir mais que {{ limit }} caracteres',
