@@ -14,8 +14,8 @@ class AlunoController {
             'nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú]+?[a-zA-ZÀ-ú ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
+                    'pattern' => '/^[a-zA-ZÀ-ú]+ [a-zA-ZÀ-ú.]+?[a-zA-ZÀ-ú .]+$/i',
+                    'message' => 'Informe o Nome e Sobrenome'
                 ]),
                 new Assert\Length([
                     'min' => 3,
@@ -47,7 +47,7 @@ class AlunoController {
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
             ],
 			'cgu' => [
-                
+
 				new Assert\GreaterThan([
 						'value'   => 1,
 						'message' => 'Seu CGU não pode ser um número negativo',

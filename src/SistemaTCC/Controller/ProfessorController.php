@@ -14,8 +14,8 @@ class ProfessorController {
             'nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú]+?[a-zA-ZÀ-ú ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
+                    'pattern' => '/^[a-zA-ZÀ-ú]+ [a-zA-ZÀ-ú.]+?[a-zA-ZÀ-ú .]+$/i',
+                    'message' => 'Informe o Nome e Sobrenome'
                 ]),
                 new Assert\Length([
                     'min' => 3,
@@ -46,6 +46,12 @@ class ProfessorController {
             'sexo' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
             ],
+            'interesses' => [
+                new Assert\NotBlank(['message' => 'Informe as áreas de interesse']),
+                new Assert\Type([
+                    'type' => 'array',
+                ]),
+            ],
         ];
         $constraint = new Assert\Collection($asserts);
         $errors = $app['validator']->validate($dados, $constraint);
@@ -62,10 +68,11 @@ class ProfessorController {
     public function add(Application $app, Request $request) {
 
         $dados = [
-            'nome'      => $request->get('nome'),
-            'email'     => $request->get('email'),
-            'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
-            'sexo'      => $request->get('sexo')
+            'nome'       => $request->get('nome'),
+            'email'      => $request->get('email'),
+            'telefone'   => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
+            'sexo'       => $request->get('sexo'),
+            'interesses' => $request->get('interesses')
         ];
 
         $errors = $this->validacao($app, $dados);
@@ -75,6 +82,10 @@ class ProfessorController {
 
         $pessoa = new \SistemaTCC\Model\Pessoa();
         $professor = new \SistemaTCC\Model\Professor();
+
+        foreach ($dados['interesses'] as $idArea) {
+            $professor->addAreaDeInteresse($app['orm']->find('\SistemaTCC\Model\AreaDeInteresse', $idArea));
+        }
 
         $pessoa->setNome($request->get('nome'))
                ->setEmail($request->get('email'))
@@ -107,18 +118,35 @@ class ProfessorController {
             return new Response('O professor não existe.', Response::HTTP_NOT_FOUND);
 
         $dados = [
-            'nome'      => $request->get('nome'),
-            'email'     => $request->get('email'),
-            'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
-            'sexo'      => $request->get('sexo')
+            'nome'       => $request->get('nome'),
+            'email'      => $request->get('email'),
+            'telefone'   => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
+            'sexo'       => $request->get('sexo'),
+            'interesses' => $request->get('interesses')
         ];
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
+        // Remove Areas de Interesse
+        $interesses = $professor->getAreasDeInteresse();
+        if (count($interesses)) {
+            foreach ($interesses as $interesse) {
+                $professor->removeAreaDeInteresse($interesse);
+            }
+        }
+
+        // Adiciona Areas de Interesse
+        if (count($dados['interesses'])) {
+            foreach ($dados['interesses'] as $idArea) {
+                $areaDeInteresse = $app['orm']->find('\SistemaTCC\Model\AreaDeInteresse', (int) $idArea);
+                if ($areaDeInteresse) {
+                    $professor->addAreaDeInteresse($areaDeInteresse);
+                }
+            }
+        }
 
         $pessoa = $professor->getPessoa();
-
         $pessoa->setNome($request->get('nome', $pessoa->getNome()))
                ->setEmail($request->get('email', $pessoa->getEmail()))
                ->setTelefone(str_replace(array('(',')',' ','-'),'',$request->get('telefone', $pessoa->getTelefone())))
@@ -152,8 +180,12 @@ class ProfessorController {
     }
 
     public function cadastrarAction(Application $app, Request $request) {
+
+        $areas = $app['orm']->getRepository('\SistemaTCC\Model\AreaDeInteresse')->findAll();
+
         $dadosParaView = [
             'titulo' => 'Cadastrar Professor',
+            'areas' => $areas,
             'values' => [
                 'nome'      => '',
                 'email'     => '',
@@ -170,14 +202,17 @@ class ProfessorController {
         if (!$professor) {
             return $app->redirect('../professor/listar');
         }
+        $areas = $app['orm']->getRepository('\SistemaTCC\Model\AreaDeInteresse')->findAll();
         $dadosParaView = [
             'titulo' => 'Alterando Professor: ' . $professor->getPessoa()->getNome(),
             'id' => $id,
+            'areas' => $areas,
             'values' => [
-                'nome'      => $professor->getPessoa()->getNome(),
-                'email'     => $professor->getPessoa()->getEmail(),
-                'telefone'  => $professor->getPessoa()->getTelefone(),
-                'sexo'      => $professor->getPessoa()->getSexo(),
+                'nome'       => $professor->getPessoa()->getNome(),
+                'email'      => $professor->getPessoa()->getEmail(),
+                'telefone'   => $professor->getPessoa()->getTelefone(),
+                'sexo'       => $professor->getPessoa()->getSexo(),
+                'interesses' => $professor->getAreasDeInteresse(),
             ],
         ];
         return $app['twig']->render('professor/formulario.twig', $dadosParaView);

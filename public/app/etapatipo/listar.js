@@ -1,8 +1,8 @@
 $(function() {
 
     var $lista = $('#lista-js');
-    var url = './campus/';
-    var urlListar = './campus/listar';
+    var url = './etapatipo/';
+    var urlListar = './etapatipo/listar';
 
     function ajax(id) {
         var request = $.ajax({
@@ -18,7 +18,7 @@ $(function() {
 
         // Caiu aqui, tem erro
         request.fail(function(err) {
-            swal("OPS!","O Campus possui algum vínculo como por exemplo em SEMESTRE, portanto não pode ser removido!" , "error");
+            swal("OPS!","A etapa possui algum vínculo e portanto não pode ser removido!" , "error");
             console.log(err.responseText);
             return false;
         });
