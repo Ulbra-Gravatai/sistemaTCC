@@ -6,4 +6,4 @@
 .DS_Store
 doc/analysis/Modelagem/Diagrama.mwb.bak
 /nbproject/
-/files/
+/config/db.yml

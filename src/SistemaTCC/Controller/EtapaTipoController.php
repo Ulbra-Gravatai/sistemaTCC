@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CampusController {
+class EtapaTipoController {
 
     private function validacao($app, $dados) {
         $asserts = [
@@ -38,13 +38,13 @@ class CampusController {
     }
 
     private function nomeJaExiste($app, $nome, $id = false) {
-        $allCampus = $app['orm']->getRepository('\SistemaTCC\Model\Campus')->findAll();
-        if (count($allCampus)) {
-            foreach ($allCampus as $objCampus) {
-                if ($id && (int)$id === (int)$objCampus->getId()) {
+        $allEtapaTipo = $app['orm']->getRepository('\SistemaTCC\Model\EtapaTipo')->findAll();
+        if (count($allEtapaTipo)) {
+            foreach ($allEtapaTipo as $objEtapaTipo) {
+                if ($id && (int)$id === (int)$objEtapaTipo->getId()) {
                     continue;
                 }
-                if ($nome === $objCampus->getNome()) {
+                if ($nome === $objEtapaTipo->getNome()) {
                     return true;
                 }
             }
@@ -65,22 +65,22 @@ class CampusController {
             return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
 
-        $campus = new \SistemaTCC\Model\Campus();
-        $campus->setNome($dados['nome']);
+        $etapatipo = new \SistemaTCC\Model\EtapaTipo();
+        $etapatipo->setNome($dados['nome']);
         try {
-            $app['orm']->persist($campus);
+            $app['orm']->persist($etapatipo);
             $app['orm']->flush();
         }
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'Campus cadastrado com sucesso.'], 201);
+        return $app->json(['success' => 'Tipo cadastrado com sucesso.'], 201);
     }
 
     public function edit(Application $app, Request $request, $id) {
-        $campus = $app['orm']->find('\SistemaTCC\Model\Campus', (int) $id);
-        if (!$campus) {
-            return $app->json([ 'error' => 'O Campus não existe.'], 400);
+        $etapatipo = $app['orm']->find('\SistemaTCC\Model\EtapaTipo', (int) $id);
+        if (!$etapaTipo) {
+            return $app->json([ 'error' => 'A etapa não existe.'], 400);
         }
         $dados = [
             'nome' => $request->get('nome')
@@ -92,69 +92,69 @@ class CampusController {
         if ($this->nomeJaExiste($app, $dados['nome'], $id)) {
             return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
-        $campus->setNome($dados['nome']);
+        $etapatipo->setNome($dados['nome']);
         try {
             $app['orm']->flush();
         }
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'Campus editado com sucesso.']);
+        return $app->json(['success' => 'Tipo editado com sucesso.']);
     }
 
     public function del(Application $app, Request $request, $id) {
-        $campus = $app['orm']->find('\SistemaTCC\Model\Campus', (int) $id);
-        if (!$campus) {
-            return $app->json([ 'error' => 'O Campus não existe.'], 400);
+        $etapatipo = $app['orm']->find('\SistemaTCC\Model\EtapaTipo', (int) $id);
+        if (!$etapatipo) {
+            return $app->json([ 'error' => 'Tipo não existe.'], 400);
         }
         try {
-            $app['orm']->remove($campus);
+            $app['orm']->remove($etapatipo);
             $app['orm']->flush();
         }
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'Campus excluído com sucesso.']);
+        return $app->json(['success' => 'Tipo excluído com sucesso.']);
     }
 
     public function indexAction(Application $app, Request $request) {
-        return $app->redirect('../campus/listar');
+        return $app->redirect('../etapatipo/listar');
     }
 
     public function cadastrarAction(Application $app, Request $request) {
         $dadosParaView = [
-            'titulo' => 'Cadastrar Campus',
+            'titulo' => 'Cadastrar Tipo',
             'values' => [
             'nome' => '',
             ],
         ];
-        return $app['twig']->render('campus/formulario.twig', $dadosParaView);
+        return $app['twig']->render('etapatipo/formulario.twig', $dadosParaView);
     }
 
     public function editarAction(Application $app, Request $request, $id) {
-        $db = $app['orm']->getRepository('\SistemaTCC\Model\Campus');
-        $campus = $db->find($id);
-        if (!$campus) {
-            return $app->redirect('../campus/listar');
+        $db = $app['orm']->getRepository('\SistemaTCC\Model\EtapaTipo');
+        $etapatipo = $db->find($id);
+        if (!$etapatipo) {
+            return $app->redirect('../etapatipo/listar');
         }
         $dadosParaView = [
-            'titulo' => 'Alterando Campus: ' . $id,
+            'titulo' => 'Alterando Tipo: ' . $id,
             'id' => $id,
             'values' => [
-                'nome'      => $campus->getNome(),
+                'nome'      => $etapatipo->getNome(),
             ],
         ];
-        return $app['twig']->render('campus/formulario.twig', $dadosParaView);
+        return $app['twig']->render('etapatipo/formulario.twig', $dadosParaView);
     }
 
     public function listarAction(Application $app, Request $request) {
-        $db = $app['orm']->getRepository('\SistemaTCC\Model\Campus');
-        $campus = $db->findAll();
+        $db = $app['orm']->getRepository('\SistemaTCC\Model\EtapaTipo');
+        $etapatipo = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Campus Listar',
-            'campus' => $campus,
+            'titulo' => 'Tipo Listar',
+            'etapatipo' => $etapatipo,
         ];
-        return $app['twig']->render('campus/listar.twig', $dadosParaView);
+        return $app['twig']->render('etapatipo/listar.twig', $dadosParaView);
     }
 
 }

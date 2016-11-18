@@ -45,19 +45,28 @@
         </div>
         <div clas="row">
         	<div class="col-xs-12">
-        		<h4>Áreas de interesse:</h4>
+                <div class="form-group">
+                    <h4 id="interesses">Áreas de interesse:</h4>
+                    <span class="help-block"></span>
+                </div>
         	</div>
         </div>
         <div class="row">
 			<div class="col-xs-4">
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="redesi" >Redes de Computadores I</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="redesii" >Redes de Computadores II</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Algoritmosi" >Algoritmos de programação I</label></div>
-			</div>
-			<div class="col-xs-4">
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Algoritmosii" >Algoritmos de programação II</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Algoritmosiii" >Algoritmos de programação III</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Outros" >Outros</label></div>
+            {% for area in areas %}
+                {% set checked = ' ' %}
+                {% if id is defined %}
+                    {% for x in values.interesses %}
+                        {% if x.getId() == area.getId() %}
+                            {% set checked = 'checked' %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+				<div class="form-group">
+                    <label class="control-label">
+                    <input type="checkbox" value="{{ area.getId() }}" {{checked}}> {{ area.getTitulo() }}</label>
+                </div>
+            {% endfor %}
 			</div>
         </div>
         <hr>

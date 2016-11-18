@@ -100,4 +100,12 @@ class Professor
 		$this->areasDeInteresse[] = $areaDeInteresse;
 		$areaDeInteresse->addProfessor($this);
 	}
+
+    public function removeAreaDeInteresse(AreaDeInteresse $areaDeInteresse)
+    {
+        if ($this->areasDeInteresse->contains($areaDeInteresse)) {
+            $this->areasDeInteresse->removeElement($areaDeInteresse);
+            $areaDeInteresse->removeProfessor($this);
+        }
+    }
 }

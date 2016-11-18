@@ -70,4 +70,12 @@ class AreaDeInteresse
 	{
 		$this->professores[] = $professor;
 	}
+
+    public function removeProfessor(Professor $professor)
+    {
+        if ($this->professores->contains($professor)) {
+            $this->professores->removeElement($professor);
+            $professor->removeAreaDeInteresse($this);
+        }
+    }
 }

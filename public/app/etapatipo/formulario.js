@@ -2,12 +2,14 @@ $(function() {
 
     const $form = $('#form-js');
     const itemID = $form.find('#id').val();
-    const restURL = './professor/';
-    const listaURL = './professor/';
+    const restURL = './etapatipo/';
+    const listaURL = './etapatipo/';
+    const fields = ['nome'];
+    let isDone = false;
 
     function verifyErrors(err) {
         const errors = err || {};
-        $.each(['nome', 'email', 'telefone', 'interesses'], function(key, value) {
+        $.each(fields, function(key, value) {
             const message = errors[value] || false;
             const element = $form.find('#' + value);
             if (message) {
@@ -20,17 +22,13 @@ $(function() {
 
     $form.on('submit', function(event) {
         event.preventDefault();
-        const interesses = [];
-        $.each($("input[type=checkbox]:checked"), function() {
-            interesses.push($(this).val());
-        });
+
+        if (isDone) {
+            return false;
+        }
 
         const values = {
-            nome: $form.find('#nome').val(),
-            telefone: $form.find('#telefone').val(),
-            email: $form.find('#email').val(),
-            sexo: $form.find('input[name=sexo]:checked').val(),
-            interesses: interesses
+            nome: $form.find('#nome').val()
         };
 
         const url = restURL + (itemID ? itemID + '/' : '' );
@@ -44,8 +42,8 @@ $(function() {
                 data: values
             });
 
-        // Caiu aqui deu certo
         request.done(function(data) {
+            isDone = true;
             verifyErrors();
             swal({
                 title: "OK",
@@ -59,7 +57,6 @@ $(function() {
                 });
         });
 
-        // Caiu aqui, tem erro
         request.fail(function(err) {
             const errors = err.responseJSON;
             verifyErrors(errors);
