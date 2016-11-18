@@ -260,13 +260,14 @@ class SemestreController {
     }
 
     public function listarAction(Application $app) {
-     $db = $app['orm']->getRepository('\SistemaTCC\Model\Semestre');
-      $query = $app['orm']->createQuery($sql);
-       $semestres = $db->findAll();
+
+        $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
+
         $dadosParaView = [
             'titulo' => 'Semestre Listar',
-            'semestres' => $semestres,
+            'semestres' => $semestres
         ];
+
         return $app['twig']->render('semestre/listar.twig', $dadosParaView);
     }
 
