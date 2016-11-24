@@ -112,7 +112,7 @@ class EnviarEtapaController {
 			$subtitulo = $etapa->getNome();
 			$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($id);
 			if ($etapaEntrega) {
-				$nota = $db->findBy(array('etapaEntrega' => $etapaEntrega->getId()));
+				$nota = $db->findOneBy(array('etapaEntrega' => $etapaEntrega->getId()));
 			}
 		}
 		$dadosParaView = [
