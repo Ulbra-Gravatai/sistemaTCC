@@ -90,6 +90,10 @@ class SemestreController {
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
+		
+		if (strtotime($dados['dataInicio']) > strtotime($dados['dataFim'])){
+			return $app->json(['dataInicio' => 'Data inicial é maior que a Data Final'], 400);
+		}		
 
         if ($this->nomeJaExiste($app, $dados['nome'])) {
             return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
