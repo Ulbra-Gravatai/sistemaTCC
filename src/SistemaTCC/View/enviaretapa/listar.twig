@@ -9,47 +9,59 @@
 	  </div>
   </div>
   {% if etapas|length > 0 %}
-	{% for etapa in etapas %}
-	  <div class="row">
-		  <div class="col-sm-12 col-xs-12">
-			  <div class="panel panel-default">
-					<div class="panel-body">
-						<h5 class="pull-left">{{ etapa.nome }}
-							{% if etapa.id in etapas_status|keys %}
-								<span class="label
-									{% if etapas_status[etapa.id].getId() == 1 %}
-										label-danger
-									{% elseif etapas_status[etapa.id].getId() == 2 %}
-										label-warning
-									{% elseif etapas_status[etapa.id].getId() == 3 %}
-										label-success
-									{% elseif etapas_status[etapa.id].getId() == 4 %}
-										label-info
-									{% elseif etapas_status[etapa.id].getId() == 5 %}
-										label-primary
-									{% else %}
-										label-default
-									{% endif %}
-									">{{ etapas_status[etapa.id].getNome() }}</span>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Data Limite</th>
+				<th>Nota</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for etapa in etapas %}
+				<tr>
+					<td>{{ etapa.nome }}
+						{% if etapa.id in etapas_status|keys %}
+							<span class="label
+								{% if etapas_status[etapa.id].getId() == 1 %}
+									label-danger
+								{% elseif etapas_status[etapa.id].getId() == 2 %}
+									label-warning
+								{% elseif etapas_status[etapa.id].getId() == 3 %}
+									label-success
+								{% elseif etapas_status[etapa.id].getId() == 4 %}
+									label-info
+								{% elseif etapas_status[etapa.id].getId() == 5 %}
+									label-primary
+								{% else %}
+									label-default
+								{% endif %}
+								">{{ etapas_status[etapa.id].getNome() }}</span>
+						{% endif %}
+					</td>
+					<td>{{ etapa.getDataFim()|date('d/m/Y H:i:s') }}</td>
+					<td>
+						{% if etapa.id in etapas_status|keys %}
+							
+						{% endif %}
+					</td>
+					<td>	
+						<a href="enviaretapa/nota/{{ etapa.id }}/" class="btn btn-primary 
+							{% if etapa.id not in etapas_status|keys or etapas_status[etapa.id].getId() !=5 %}
+								disabled
 							{% endif %}
-						</h5>
-						<div class="pull-right">	
-							<a href="enviaretapa/nota/{{ etapa.id }}/" class="btn btn-primary 
-								{% if etapa.id not in etapas_status|keys or etapas_status[etapa.id].getId() !=5 %}
-									disabled
-								{% endif %}
-								"><i class="fa fa-info"></i> Nota</a>
-							<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning
-								{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
-									disabled
-								{% endif %}
-								"><i class="fa fa-send-o"></i> Enviar</a>
-						</div>
-					</div>
-			  </div>
-		  </div>
-	  </div>
-	{% endfor %}
+							"><i class="fa fa-info"></i> Nota</a>
+						<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning
+							{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
+								disabled
+							{% endif %}
+							"><i class="fa fa-send-o"></i> Enviar</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
   {% else %}
 	<div class="alert alert-warning" role="alert">Nenhuma etapa encontrada!</div>
   {% endif %}
