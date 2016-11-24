@@ -14,7 +14,7 @@
 			<tr>
 				<th>Nome</th>
 				<th>Data Limite</th>
-				<th>Nota</th>
+				<th>Nota/Peso</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -42,21 +42,26 @@
 					</td>
 					<td>{{ etapa.getDataFim()|date('d/m/Y H:i:s') }}</td>
 					<td>
-						{% if etapa.id in etapas_status|keys %}
-							
+						{% if etapa.id in etapas_nota|keys %}
+							{{ etapas_nota[etapa.id].getNota() }}/{{ etapa.peso }}
+						{% else %}
+							0/{{ etapa.peso }}
 						{% endif %}
 					</td>
-					<td>	
-						<a href="enviaretapa/nota/{{ etapa.id }}/" class="btn btn-primary 
-							{% if etapa.id not in etapas_status|keys or etapas_status[etapa.id].getId() !=5 %}
-								disabled
-							{% endif %}
-							"><i class="fa fa-info"></i> Nota</a>
-						<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning
-							{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
-								disabled
-							{% endif %}
-							"><i class="fa fa-send-o"></i> Enviar</a>
+					<td>
+						<div class="pull-right">
+							<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning btn-xs">
+								{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
+									<i class="fa fa-search"></i> Consultar
+								{% else %}
+									{% if etapa.id in etapas_status|keys %}
+										<i class="fa fa-pencil"></i> Editar
+									{% else %}
+										<i class="fa fa-send-o"></i> Enviar
+									{% endif %}
+								{% endif %}
+							</a>
+						</div>
 					</td>
 				</tr>
 			{% endfor %}
