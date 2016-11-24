@@ -16,12 +16,12 @@ class SemestreController {
         $asserts = [
             'nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
-                new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
-                ]),
+                // new Assert\Regex([
+                //     'pattern' => '/^[0-9]{4}\/[0-2]{2}+$/i',
+                //     'message' => 'Nome do semestre deve possuir esse formato Ex.: 2016/02'
+                // ]),
                 new Assert\Length([
-                    'min' => 3,
+                    'min' => 6,
                     'max' => 50,
                     'minMessage' => 'Seu nome precisa possuir pelo menos {{ limit }} caracteres',
                     'maxMessage' => 'Seu nome não deve possuir mais que {{ limit }} caracteres',
@@ -90,6 +90,10 @@ class SemestreController {
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
+		
+		if (strtotime($dados['dataInicio']) > strtotime($dados['dataFim'])){
+			return $app->json(['dataInicio' => 'Data inicial é maior que a Data Final'], 400);
+		}		
 
         if ($this->nomeJaExiste($app, $dados['nome'])) {
             return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
@@ -260,13 +264,14 @@ class SemestreController {
     }
 
     public function listarAction(Application $app) {
-     $db = $app['orm']->getRepository('\SistemaTCC\Model\Semestre');
-      $query = $app['orm']->createQuery($sql);
-       $semestres = $db->findAll();
+
+        $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
+
         $dadosParaView = [
             'titulo' => 'Semestre Listar',
-            'semestres' => $semestres,
+            'semestres' => $semestres
         ];
+
         return $app['twig']->render('semestre/listar.twig', $dadosParaView);
     }
 

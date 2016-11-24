@@ -183,13 +183,14 @@ class tccController {
     }
 
     public function listarAction(Application $app, Request $request) {
-        // return '1223';
-        $db = $app['orm']->getRepository('\SistemaTCC\Model\tcc');
-        $tcces = $db->findAll();
+
+        $tccs = $app['orm']->getRepository('\SistemaTCC\Model\Tcc')->findAll();
+
         $dadosParaView = [
             'titulo' => 'Tcc Listar',
             'tccs' => $tccs,
         ];
+
         return $app['twig']->render('tcc/listar.twig', $dadosParaView);
     }
 
