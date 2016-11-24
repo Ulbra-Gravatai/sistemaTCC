@@ -45,7 +45,7 @@ class EnviarEtapaController {
 		//if (count($errors) > 0) {
 		//	return $app->json($errors, 400);
 		//}
-		$caminho = 'files/semestre';
+		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
 		$tipo = $file->getClientOriginalExtension(); 
 		$nome = md5(uniqid()) . '.' . $tipo;
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
@@ -86,10 +86,15 @@ class EnviarEtapaController {
 		$etapas = $db->findBy(array('semestre' => $semestre,'tcc' => $tcc));
 		
 		$etapas_status = array();
+		$etapas_nota = array();
 		foreach($etapas as $etapa){
 			$etapa_entrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($etapa->getId());
 			if($etapa_entrega!=''){
 				$etapas_status[$etapa->getId()] = $etapa_entrega->getEtapaStatus();
+				$etapa_nota = $app['orm']->getRepository('\SistemaTCC\Model\EtapaNota')->findOneByEtapaEntrega($etapa_entrega->getId());
+				if($etapa_nota != ''){
+					$etapas_nota[$etapa->getId()] = $etapa_nota;
+				}
 			}
 		}
 		
@@ -97,32 +102,10 @@ class EnviarEtapaController {
 			'titulo' => 'Etapas',
 			'etapas' => $etapas,
 			'etapas_status' => $etapas_status,
+			'etapas_nota' => $etapas_nota,
 			'data_atual' => (new DateTime())
 		];
 		return $app['twig']->render('enviaretapa/listar.twig', $dadosParaView);
-	}
-
-	public function notaAction(Application $app, Request $request, $id) {
-		$db = $app['orm']->getRepository('\SistemaTCC\Model\EtapaNota');
-		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $id);
-		$etapaEntrega = array();
-		$nota = array();
-		$subtitulo = '';
-		if ($etapa) {
-			$subtitulo = $etapa->getNome();
-			$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($id);
-			if ($etapaEntrega) {
-				$nota = $db->findOneBy(array('etapaEntrega' => $etapaEntrega->getId()));
-			}
-		}
-		$dadosParaView = [
-			'titulo' => 'Nota Etapa:',
-			'subtitulo' => $subtitulo,
-			'etapa' => $etapa,
-			'notas' => $nota,
-			'etapa_entrega' => $etapaEntrega
-		];
-		return $app['twig']->render('enviaretapa/nota.twig', $dadosParaView);
 	}
 
 	public function enviarAction(Application $app, Request $request, $id) {

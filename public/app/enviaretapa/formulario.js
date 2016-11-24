@@ -6,7 +6,7 @@ $(function () {
   var listaURL = './enviaretapa/';
   function verifyErrors(err) {
     var errors = err || {};
-    $.each(['titulo', 'observacoes', 'arquivo'], function (key, value) {
+    $.each(['arquivo'], function (key, value) {
       var message = errors[value] || false;
       var element = $form.find('#' + value);
       if (message) {
@@ -20,9 +20,7 @@ $(function () {
   $form.on('submit', function (event) {
     event.preventDefault();
     var values = {
-      etapa_id: $form.find('#etapa-id').val(),
-      titulo: $form.find('#titulo').val(),
-      observacoes: $form.find('#observacoes').val(),
+      etapa: $form.find('#etapa-id').val(),
       arquivo: $form.find('#arquivo').val()
     };
     var url = restURL;
@@ -52,5 +50,9 @@ $(function () {
       var errors = err.responseJSON;
       verifyErrors(errors);
     });
+  });
+  
+  $("#arquivo").change(function() {
+	$(this).prev().html($(this).val());
   });
 });
