@@ -35,7 +35,7 @@ SistemaTCC\Model\Professor:
     manyToMany:
         areasDeInteresse:
             targetEntity: SistemaTCC\Model\AreaDeInteresse
-            cascade: ["all"]
+            cascade: { }
             inversedBy: professores
             joinTable:
                 name: professor_area_de_interesse

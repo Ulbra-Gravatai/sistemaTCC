@@ -14,7 +14,7 @@ class AreaDeInteresseController {
             'titulo' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú0-9]+?[a-zA-ZÀ-ú 0-9]+$/i',
+                    'pattern' => '/^[a-zA-ZÀ-ú]+?[a-zA-ZÀ-ú 0-9 \-]+$/i',
                     'message' => 'O titulo deve possuir apenas letras'
                 ]),
                 new Assert\Length([

@@ -12,7 +12,9 @@ $(function() {
             });
         // Caiu aqui deu certo
         request.done(function(data) {
-            location.href = urlListar;
+            showDone(function() {
+                location.href = urlListar;
+            });
             return;
         });
 
@@ -30,18 +32,9 @@ $(function() {
         if (!id) {
             return false;
         }
-        swal({
-            title: "Deseja mesmo excluir?",
-            text: "Você irá remover esse registro!",
-            type: "error",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Sim, excluir agora!",
-            closeOnConfirm: false },
-            function(){
-                swal("Ok!", "Registro excluido!", "success");
-                ajax(id);
-            });
+        showConfirmDelete(function() {
+            ajax(id);
+        });
     });
 
 });
