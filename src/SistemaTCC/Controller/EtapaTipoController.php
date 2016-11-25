@@ -79,7 +79,7 @@ class EtapaTipoController {
 
     public function edit(Application $app, Request $request, $id) {
         $etapatipo = $app['orm']->find('\SistemaTCC\Model\EtapaTipo', (int) $id);
-        if (!$etapaTipo) {
+        if (!$etapatipo) {
             return $app->json([ 'error' => 'A etapa não existe.'], 400);
         }
         $dados = [

@@ -45,16 +45,9 @@ $(function() {
         request.done(function(data) {
             isDone = true;
             verifyErrors();
-            swal({
-                title: "OK",
-                text: text,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Voltar para Lista",
-                closeOnConfirm: false },
-                function() {
-                    location.href = listaURL;
-                });
+             showSaved(text, function() {
+                location.href = listaURL;
+            });
         });
 
         request.fail(function(err) {

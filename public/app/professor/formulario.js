@@ -43,23 +43,12 @@ $(function() {
                 dataType: 'json',
                 data: values
             });
-
-        // Caiu aqui deu certo
         request.done(function(data) {
             verifyErrors();
-            swal({
-                title: "OK",
-                text: text,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Voltar para Lista",
-                closeOnConfirm: false },
-                function() {
-                    location.href = listaURL;
-                });
+            showSaved(text, function() {
+                location.href = listaURL;
+            });
         });
-
-        // Caiu aqui, tem erro
         request.fail(function(err) {
             const errors = err.responseJSON;
             verifyErrors(errors);
