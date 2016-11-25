@@ -109,18 +109,23 @@ class EnviarEtapaController {
 	}
 
 	public function enviarAction(Application $app, Request $request, $id) {
-		$db = $app['orm']->getRepository('\SistemaTCC\Model\Etapa');
-		$etapa = $db->find($id);
+		$etapa = $app['orm']->getRepository('\SistemaTCC\Model\Etapa')->find($id);
+		
 		if (!$etapa) {
 			return $app->redirect('../enviaretapa/listar');
+		}
+		
+		$etapa_entrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($etapa->getId());
+		$arquivos = array();
+		if($etapa_entrega){
+			$arquivos = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntregaArquivo')->findByEtapaEntrega($etapa_entrega->getId());
 		}
 		$dadosParaView = [
 			'titulo' => 'Enviar Etapa:',
 			'subtitulo' => $etapa->getNome(),
-			'etapa' => $id,
-			'data_inicio' => $etapa->getDataInicio()->format('d/m/Y H:i:s'),
-			'data_fim' => $etapa->getDataFim()->format('d/m/Y H:i:s'),
-			'arquivos' => '' //IMPLEMENTAR - Listar arquivos já enviados
+			'etapa' => $etapa,
+			'data_atual' => new DateTime(),
+			'arquivos' => $arquivos
 		];
 		return $app['twig']->render('enviaretapa/formulario.twig', $dadosParaView);
 	}

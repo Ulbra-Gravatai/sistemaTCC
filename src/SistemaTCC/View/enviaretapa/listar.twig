@@ -52,12 +52,12 @@
 						<div class="pull-right">
 							<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning btn-xs">
 								{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
-									<i class="fa fa-search"></i> Consultar
+									<i class="fa fa-search fa-lg"></i><span class="hidden-xs"> Consultar</span>
 								{% else %}
 									{% if etapa.id in etapas_status|keys %}
-										<i class="fa fa-pencil"></i> Editar
+										<i class="fa fa-pencil fa-lg"></i><span class="hidden-xs"> Editar</span>
 									{% else %}
-										<i class="fa fa-send-o"></i> Enviar
+										<i class="fa fa-send-o fa-lg"></i><span class="hidden-xs"> Enviar</span>
 									{% endif %}
 								{% endif %}
 							</a>
