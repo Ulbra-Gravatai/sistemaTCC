@@ -27,7 +27,7 @@
             </div>
             <div class="pull-right menu-header">
                 <ul class="nav navbar-top-links navbar-right">
-                    <li><span class="username-js">Fulano da Silva</span></li>
+                    <li><span class="username-js">{{ app.user.username }}</span></li>
                     <li><a href="#" ><i class="fa fa-cog fa-lg" aria-hidden="true"></i></a></li>
                     <li><a href="./logout/" class="btn-logout-js"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a></li>
                 </ul>
@@ -42,16 +42,17 @@
     <aside class="navbar-toggle-js">
         <nav class="navbar-container">
             <ul class="navbar-content">
+                <li><a href="./areadeinteresse/">Area de Interesse</a></li>
                 <li><a href="./campus/">Campus</a></li>
                 <li><a href="./semestre/">Semestre</a></li>
-				<li><a href="./etapatipo/">Tipo</a></li>
+				        <li><a href="./etapatipo/">Tipo</a></li>
                 <li><a href="./tcc/">Cadastrar TTC</a></li>
                 <li><a href="./aluno/">Aluno</a></li>
                 <li><a href="./professor/">Professor</a></li>
                 <li><a href="./enviaretapa/">Etapa</a></li>
-			    <li><a href="./avaliacao/">Consultar avaliação</a></li>
-			    <li><a href="#">Agendar defesa</a></li>
-			    <li><a href="#">Gerar atestado</a></li>
+			          <li><a href="./avaliacao/">Consultar avaliação</a></li>
+			          <li><a href="./agenda/">Agendar defesa</a></li>
+			          <li><a href="./atestado/">Gerar atestado</a></li>
             </ul>
         </nav>
     </aside>
@@ -68,6 +69,7 @@
     <script src="./lib/sweetalert/dist/sweetalert.min.js"></script>
     <script src="./app/shared/nav-side.js"></script>
     <script src="./app/shared/sweetalert.min.js"></script>
+    <script src="./app/shared/helpers.js"></script>
     <!-- scripts -->
 	{% block scripts %}{% endblock %}
     <!-- /scripts -->

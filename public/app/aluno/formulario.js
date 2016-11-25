@@ -6,7 +6,7 @@ $(function() {
     const itemID = $form.find('#id').val();
     const restURL = './aluno/';
     const listaURL = './aluno/';
-	
+
     function verifyErrors(err) {
         const errors = err || {};
 
@@ -48,16 +48,9 @@ $(function() {
         // Caiu aqui deu certo
         request.done(function(data) {
             verifyErrors();
-            swal({
-                title: "OK",
-                text: text,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Voltar para Lista",
-                closeOnConfirm: false },
-                function() {
-                    location.href = listaURL;
-                });
+            showSaved(text, function() {
+                location.href = listaURL;
+            });
         });
 
         // Caiu aqui, tem erro

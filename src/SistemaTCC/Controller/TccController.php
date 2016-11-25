@@ -184,7 +184,7 @@ class tccController {
 
     public function listarAction(Application $app, Request $request) {
         // return '1223';
-        $db = $app['orm']->getRepository('\SistemaTCC\Model\tcc');
+        $db = $app['orm']->getRepository('\SistemaTCC\Model\Tcc');
         $tcces = $db->findAll();
         $dadosParaView = [
             'titulo' => 'Tcc Listar',

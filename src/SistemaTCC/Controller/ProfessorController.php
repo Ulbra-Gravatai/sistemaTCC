@@ -223,7 +223,6 @@ class ProfessorController {
     }
 
     public function listarAction(Application $app, Request $request) {
-        // return '1223';
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Professor');
         $professores = $db->findAll();
         $dadosParaView = [

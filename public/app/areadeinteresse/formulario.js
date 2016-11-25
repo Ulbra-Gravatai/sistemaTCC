@@ -2,9 +2,9 @@ $(function() {
 
     const $form = $('#form-js');
     const itemID = $form.find('#id').val();
-    const restURL = './etapatipo/';
-    const listaURL = './etapatipo/';
-    const fields = ['nome'];
+    const restURL = './areadeinteresse/';
+    const listaURL = './areadeinteresse/';
+    const fields = ['titulo'];
     let isDone = false;
 
     function verifyErrors(err) {
@@ -28,7 +28,7 @@ $(function() {
         }
 
         const values = {
-            nome: $form.find('#nome').val()
+            titulo: $form.find('#titulo').val()
         };
 
         const url = restURL + (itemID ? itemID + '/' : '' );
@@ -45,7 +45,7 @@ $(function() {
         request.done(function(data) {
             isDone = true;
             verifyErrors();
-            showSaved(text, function() {
+             showSaved(text, function() {
                 location.href = listaURL;
             });
         });

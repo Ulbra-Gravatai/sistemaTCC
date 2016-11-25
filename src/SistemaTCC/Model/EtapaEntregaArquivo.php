@@ -7,6 +7,7 @@ namespace SistemaTCC\Model;
  */
 class EtapaEntregaArquivo
 {
+	use Serializer\ObjectToJson;
     /**
      * @var integer
      */
