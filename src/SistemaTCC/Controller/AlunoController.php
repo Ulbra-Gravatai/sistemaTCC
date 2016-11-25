@@ -37,8 +37,8 @@ class AlunoController {
 					'message' => 'Seu telefone deve possuir apenas números'
 				]),
                 new Assert\Length([
-                    'min' => 10,
-                    'max' => 12,
+                    'min' => 1,
+                    'max' => 10,
                     'minMessage' => 'Informe no mínimo {{ limit }} números',
                     'maxMessage' => 'Informe no máximo {{ limit }} números',
                 ])
