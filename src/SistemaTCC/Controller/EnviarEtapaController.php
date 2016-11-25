@@ -35,7 +35,9 @@ class EnviarEtapaController {
 
 	public function add(Application $app, Request $request) {
 		$file = $request->files->get('arquivo');
-		
+		if(!$file){
+			return $app->json(['Nenhum arquivo recebido.'], 400);
+		}
 		
 		$dados = [
 			'arquivo' => $file
@@ -50,17 +52,19 @@ class EnviarEtapaController {
 		$nome = md5(uniqid()) . '.' . $tipo;
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
 		
-		$etapaEntrega = new \SistemaTCC\Model\EtapaEntrega();
 		$etapaEntregaArquivo = new \SistemaTCC\Model\EtapaEntregaArquivo();
 		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $request->get('etapa'));
 		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', 1);//$request->getSession()->get('alunoId')); //Verificar como será armazenado as informações do usuário na sessão
-		$etapaStatus = $app['orm']->find('\SistemaTCC\Model\EtapaStatus', 1); //Verificar qual será o status padrão
 		
-		$etapaEntrega->setData(new DateTime())
-				->setAluno($aluno)
-				->setEtapa($etapa)
-				->setEtapaStatus($etapaStatus);
-
+		$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($request->get('etapa'));
+		if(!$etapaEntrega){
+			$etapaEntrega = new \SistemaTCC\Model\EtapaEntrega();
+			$etapaStatus = $app['orm']->find('\SistemaTCC\Model\EtapaStatus', 3);
+			$etapaEntrega->setData(new DateTime())
+					->setAluno($aluno)
+					->setEtapa($etapa)
+					->setEtapaStatus($etapaStatus);
+		}
 		$etapaEntregaArquivo->setNome($nome)
 				->setTipo($tipo)
 				->setCaminho($caminho)
@@ -72,7 +76,26 @@ class EnviarEtapaController {
 		} catch (\Exception $e) {
 			return $app->json([$e->getMessage()], 400);
 		}
-		return $app->json(['success' => 'Arquivo enviado com sucesso.'], 201);
+		return $app->json(['success' => 'Arquivo enviado com sucesso.','arquivo' => $etapaEntregaArquivo->toJson()], 201);//['nome'=>$etapaEntregaArquivo->getNome()]
+	}
+	
+	public function del(Application $app, Request $request, $id) {
+
+        if (null === $arquivo= $app['orm']->find('\SistemaTCC\Model\EtapaEntregaArquivo', (int) $id)) {
+            return $app->json(['error' => 'O arquivo não existe.'], 400);
+        }
+		
+		if(!unlink(__DIR__ . '/../../../' . $arquivo->getCaminho() . $arquivo->getNome())){
+			return $app->json(['error' => 'O arquivo não existe.'], 400);
+		}
+        try {
+            $app['orm']->remove($arquivo);
+            $app['orm']->flush();
+        }
+        catch (\Exception $e) {
+            return $app->json($e->getMessage(), 400);
+        }
+        return $app->json(['success' => 'Arquivo excluido com sucesso.']);
 	}
 
 	public function indexAction(Application $app, Request $request) {
