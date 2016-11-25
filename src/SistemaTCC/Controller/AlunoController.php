@@ -55,7 +55,7 @@ class AlunoController {
 				new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Length([
                      'min' => 3,
-                     'max' => 10,
+                     'max' => 11,
                      'minMessage' => 'Seu CGU precisa possuir pelo menos {{ limit }} caracteres',
                      'maxMessage' => 'Seu CGU não deve possuir mais que {{ limit }} caracteres'
                 ])
