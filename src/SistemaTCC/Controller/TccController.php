@@ -148,17 +148,23 @@ class tccController {
       $db = $app['orm']->getRepository('\SistemaTCC\Model\Aluno');
       $aluno = $db->findAll();
 
+      $alunos = [];
+      foreach ($aluno as $a => $al) {
+          array_push($alunos, $al->getId().' - '.$al->getPessoa()->getNome());
+      }
+
         $dadosParaView = [
             'titulo' => 'Cadastrar tcc',
+            'listaAlunos' => json_encode($alunos),
             'values' => [
               'titulo'    => '',
               'aluno'     => $aluno,
-              'semestre'  => '',
+              'semestre'  => '',              
             ],
         ];
+
         return $app['twig']->render('tcc/formulario.twig', $dadosParaView);
     }
-
 
     public function editarAction(Application $app, Request $request, $id) {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\tcc');
