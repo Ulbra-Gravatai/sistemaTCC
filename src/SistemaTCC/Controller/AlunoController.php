@@ -193,8 +193,9 @@ class AlunoController {
         if (null === $aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $id)) {
             return $app->json(['error' => 'O aluno não existe.'], 400);
         }
-
+		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($aluno->getPessoa()->getId());
         try {
+			$app['orm']->remove($usuario);
             $app['orm']->remove($aluno);
             $app['orm']->flush();
         }
@@ -254,7 +255,7 @@ class AlunoController {
         return 'Excluir Aluno';
     }
 
-		public function listarAction(Application $app) {
+	public function listarAction(Application $app) {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Aluno');
         $alunos = $db->findAll();
         $dadosParaView = [
