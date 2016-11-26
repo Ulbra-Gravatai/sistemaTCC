@@ -6,7 +6,7 @@ $(function() {
     const itemID = $form.find('#id').val();
     const restURL = './tcc/';
     const listaURL = './tcc/';
-	
+    
     function verifyErrors(err) {
         const errors = err || {};
 
@@ -26,10 +26,10 @@ $(function() {
 
         const values = {
             titulo: $form.find('#titulo').val(),
-          	aluno: $form.find('#aluno').val(),
+            aluno: $form.find('#aluno').val(),
             semestre: $form.find('#semestre').val(),
         };
-
+        values.aluno = values.aluno.substring(0, values.aluno.toString().indexOf('-')).trim();
 
         const url = restURL + (itemID ? itemID + '/' : '' );
         const method = itemID ? 'put' : 'post';
@@ -65,4 +65,32 @@ $(function() {
 
     });
 
+    $('.typeahead.pessoas-js').typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      name: 'alunos',
+      source: substringMatcher(alunos)
+    });
+
 });
+
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    matches = [];
+
+    substrRegex = new RegExp(q, 'i');
+
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};

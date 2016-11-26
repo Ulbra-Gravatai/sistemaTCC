@@ -8,38 +8,37 @@
         <div class="row">
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label class="control-label" for="nome">Titulo</label>
-                    <input type="text" class="form-control" name="titulo" id="titulo" value="{{ values.titulo }}">
+                    <label class="control-label" for="titulo">Titulo</label>
+                    <input type="text" class="form-control" name="titulo" id="titulo" value="{{ values.titulo }}" placeholder="Digite o título...">
                     <span class="help-block"></span>
                 </div>
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label class="control-label" for="email">Aluno</label>
-                    <select class="form-control" id="aluno">
-                      {% for aluno in values.aluno %}
-      								    <option value="{{ aluno.getId() }}">{{ aluno.getPessoa().getNome() }}</option>
-                      {% endfor %}
-      							</select>
-                    <span class="help-block"></span>
+                    <label class="control-label" for="aluno">Aluno</label><br/>
+                    <input type="text" class="form-control typeahead pessoas-js" name="aluno" id="aluno" placeholder="Digite o nome..." size="100%">
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-4">
                 <div class="form-group">
-					<select class="form-control" id="semestre">
-						<option value="1" {{ values.semestre == 1 ? 'selected' : '' }}>Primeiro</option>
-						<option value="2" {{ values.semestre == 2 ? 'selected' : '' }}>Segundo</option>
-					</select>
+                    <select class="form-control" id="semestre">
+                        <option value="1" {{ values.semestre == 1 ? 'selected' : '' }}>Primeiro</option>
+                        <option value="2" {{ values.semestre == 2 ? 'selected' : '' }}>Segundo</option>
+                    </select>
                 </div>
             </div>
-
         </div>
         <button type="submit" class="btn btn-primary btn-lg">Salvar</button>
     </form>
+
 {% endblock %}
 {% block scripts %}
-<script src="./app/shared/maskedinputplugin.js"></script>
-<script src="./app/tcc/formulario.js"></script>
+    <script>
+         var alunos = JSON.parse("{{listaAlunos}}".replace(/&quot;/g,'"'));
+    </script>
+    <script src="./app/shared/jquery-mask-plugin.js"></script>
+    <script src="./app/tcc/formulario.js"></script>
+    <script src="./lib/typeahead/typeahead.bundle.min.js"></script>
 {% endblock %}

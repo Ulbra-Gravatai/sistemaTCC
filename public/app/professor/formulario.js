@@ -7,7 +7,7 @@ $(function() {
 
     function verifyErrors(err) {
         const errors = err || {};
-        $.each(['nome', 'email', 'telefone', 'interesses'], function(key, value) {
+        $.each(['nome', 'email', 'telefone', 'interesses','senha'], function(key, value) {
             const message = errors[value] || false;
             const element = $form.find('#' + value);
             if (message) {
@@ -30,7 +30,8 @@ $(function() {
             telefone: $form.find('#telefone').val(),
             email: $form.find('#email').val(),
             sexo: $form.find('input[name=sexo]:checked').val(),
-            interesses: interesses
+            interesses: interesses,
+			senha: $form.find('#senha').val()
         };
 
         const url = restURL + (itemID ? itemID + '/' : '' );

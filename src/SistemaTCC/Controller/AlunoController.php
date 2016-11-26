@@ -71,7 +71,13 @@ class AlunoController {
                      'max' => 10,
                      'exactMessage' => 'Sua Matrícula deve possuir exatamente {{ limit }} caracteres'
                 ])
-            ]
+            ],
+			'senha' => [
+				new Assert\Length([
+					'min' => 6,
+					'minMessage' => 'A senha deve conter no minímo {{ limit }} digitos'
+				])
+			]
         ];
         $constraint = new Assert\Collection($asserts);
         $errors     = $app['validator']->validate($dados, $constraint);
@@ -94,15 +100,18 @@ class AlunoController {
             'sexo'      => $request->get('sexo'),
 			'cgu'		=> $request->get('cgu'),
 			'matricula'	=> str_replace('-','',$request->get('matricula')),
+			'senha'		=> $request->get('senha')
         ];
 
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
+		
         $pessoa = new \SistemaTCC\Model\Pessoa();
         $aluno = new \SistemaTCC\Model\Aluno();
-
+		$usuario = new \SistemaTCC\Model\Usuario();
+		
         $pessoa->setNome($dados['nome'])
                ->setEmail($dados['email'])
                ->setTelefone($dados['telefone'])
@@ -111,9 +120,13 @@ class AlunoController {
         $aluno->setMatricula($dados['matricula'])
               ->setCgu($dados['cgu'])
               ->setPessoa($pessoa);
-
+		
+		$usuario->setPessoa($pessoa)
+				->setSenha($this->gerarSenha($app,$dados['senha']))
+				->setUsuarioAcesso($app['orm']->find('\SistemaTCC\Model\UsuarioAcesso',3));
         try {
             $app['orm']->persist($aluno);
+			$app['orm']->persist($usuario);
             $app['orm']->flush();
         }
         catch (\Exception $e) {
@@ -138,13 +151,15 @@ class AlunoController {
         }
 
         $pessoa = $aluno->getPessoa();
+		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($pessoa->getId());
         $dados = [
             'nome'      => $request->get('nome', $pessoa->getNome()),
             'email'     => $request->get('email', $pessoa->getEmail()),
             'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone', $pessoa->getTelefone())),
             'sexo'      => $request->get('sexo', $pessoa->getSexo()),
             'cgu'       => $request->get('cgu', $aluno->getCgu()),
-            'matricula' => str_replace('-','',$request->get('matricula', $aluno->getMatricula()))
+            'matricula' => str_replace('-','',$request->get('matricula', $aluno->getMatricula())),
+			'senha'		=> $request->get('senha')
         ];
 
         $errors = $this->validacao($app, $dados);
@@ -159,6 +174,10 @@ class AlunoController {
 
         $aluno->setMatricula($dados['matricula'])
               ->setCgu($dados['cgu']);
+		
+		if($dados['senha']!=''){
+			$usuario->setSenha($this->gerarSenha($app,$dados['senha']));
+		}
 
         try {
             $app['orm']->flush();
@@ -174,8 +193,9 @@ class AlunoController {
         if (null === $aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $id)) {
             return $app->json(['error' => 'O aluno não existe.'], 400);
         }
-
+		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($aluno->getPessoa()->getId());
         try {
+			$app['orm']->remove($usuario);
             $app['orm']->remove($aluno);
             $app['orm']->flush();
         }
@@ -235,7 +255,7 @@ class AlunoController {
         return 'Excluir Aluno';
     }
 
-		public function listarAction(Application $app) {
+	public function listarAction(Application $app) {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Aluno');
         $alunos = $db->findAll();
         $dadosParaView = [
@@ -244,5 +264,13 @@ class AlunoController {
         ];
         return $app['twig']->render('aluno/listar.twig', $dadosParaView);
     }
+	
+	private function gerarSenha(Application $app, $senha){
+		$token = $app['security.token_storage']->getToken();
 
+		if (null !== $token) {
+			return $app->encodePassword($token->getUser(), $senha);
+		}
+		return false;
+	}
 }

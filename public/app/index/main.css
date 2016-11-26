@@ -67,3 +67,8 @@ html, body {
     float: right;
   }
 }
+
+.aling-btn-input{
+	margin-bottom: 15px;
+	padding-top: 25px;
+}
