@@ -75,7 +75,7 @@ class SistemaTCC extends Application {
 
 		$app->get('/tcc/', "\\SistemaTCC\\Controller\\TccController::indexAction");
 		$app->get('/tcc/cadastrar/', "\\SistemaTCC\\Controller\\TccController::cadastrarAction");
-		$app->get('/tcc/editar/', "\\SistemaTCC\\Controller\\TccController::editarAction");
+		$app->get('/tcc/editar/{id}/', "\\SistemaTCC\\Controller\\TccController::editarAction");
 		$app->get('/tcc/excluir/', "\\SistemaTCC\\Controller\\TccController::excluirAction");
 		$app->get('/tcc/listar/', "\\SistemaTCC\\Controller\\TccController::listarAction");
 
