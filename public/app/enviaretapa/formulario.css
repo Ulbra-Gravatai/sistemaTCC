@@ -26,3 +26,6 @@
 	background-color: #286090;
 	border-color: #204d74;
 }
+.item-upload .progress, .item-upload .alert{
+	margin: 0px;
+}
