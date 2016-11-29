@@ -6,6 +6,7 @@ use DateTime;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class EnviarEtapaController {
@@ -14,8 +15,10 @@ class EnviarEtapaController {
 		$asserts = [
 			'arquivo' => [
 				new Assert\File([
-					'mimeTypes' => ['application/pdf','application/x-pdf','application/msword'],
-					'mimeTypesMessage' => 'Somente os formatos doc e pdf são aceitos.',
+					'maxSize' => '30Mi',
+					'maxSizeMessage' => 'O arquivo é muito grande ({{ size }} {{ suffix }}). O tamanho máximo permitido é {{ limit }} {{ suffix }}.',
+					//'mimeTypes' => ['application/pdf','application/x-pdf','application/msword'],
+					//'mimeTypesMessage' => 'Somente os formatos doc e pdf são aceitos.',
 					'disallowEmptyMessage' => 'Selecione um arquivo',
 					'uploadErrorMessage' => 'Não foi possível realizar o upload dos arquivos, tente novamente mais tarde.']
 				),
@@ -35,6 +38,7 @@ class EnviarEtapaController {
 
 	public function add(Application $app, Request $request) {
 		$file = $request->files->get('arquivo');
+
 		if(!$file){
 			return $app->json(['Nenhum arquivo recebido.'], 400);
 		}
@@ -43,12 +47,18 @@ class EnviarEtapaController {
 			'arquivo' => $file
 		];
 		
-		//$errors = $this->validacao($app, $dados);
-		//if (count($errors) > 0) {
-		//	return $app->json($errors, 400);
-		//}
-		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
+		$errors = $this->validacao($app, $dados);
+		if (count($errors) > 0) {
+			return $app->json($errors, 400);
+		}
+		
 		$tipo = $file->getClientOriginalExtension(); 
+		$extensoesPermitidas = ['pdf','doc','docx'];
+		if(!in_array($tipo,$extensoesPermitidas)){
+			return $app->json(['arquivo'=>'Somente os formatos de arquivo pdf, doc e docx são aceitos.'], 400);
+		}
+		
+		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
 		$nome = md5(uniqid()) . '.' . $tipo;
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
 		
