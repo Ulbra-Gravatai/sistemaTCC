@@ -38,7 +38,7 @@ class AlunoController {
 				]),
                 new Assert\Length([
                     'min' => 1,
-                    'max' => 10,
+                    'max' => 11,
                     'minMessage' => 'Informe no mínimo {{ limit }} números',
                     'maxMessage' => 'Informe no máximo {{ limit }} números',
                 ])
@@ -91,6 +91,36 @@ class AlunoController {
         return $retorno;
     }
 
+	private function cguJaExiste($app, $cgu, $id = true) {
+		$alunos = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findAll();
+		if (count($alunos)) {
+			foreach ($alunos as $aluno) {
+				if ($id && (int)$id === (int)$aluno->getId()) {
+					continue;
+				}
+				if ($cgu === $aluno->getCgu()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private function matriculaJaExiste($app, $matricula, $id = true) {
+		$alunos = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findAll();
+		if (count($alunos)) {
+			foreach ($alunos as $aluno) {
+				if ($id && (int)$id === (int)$aluno->getId()) {
+					continue;
+				}
+				if ($matricula === $aluno->getMatricula()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
     public function add(Application $app, Request $request) {
 
         $dados = [
@@ -107,11 +137,19 @@ class AlunoController {
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-		
+
+		if ($this->cguJaExiste($app, $dados['cgu'])) {
+			return $app->json(['cgu' => 'Este CGU já existe, informe outro'], 400);
+		}
+
+		if ($this->matriculaJaExiste($app, $dados['matricula'])) {
+			return $app->json(['matricula' => 'Esta matrícula já existe, informe outra'], 400);
+		}
+
         $pessoa = new \SistemaTCC\Model\Pessoa();
         $aluno = new \SistemaTCC\Model\Aluno();
 		$usuario = new \SistemaTCC\Model\Usuario();
-		
+
         $pessoa->setNome($dados['nome'])
                ->setEmail($dados['email'])
                ->setTelefone($dados['telefone'])
@@ -120,7 +158,7 @@ class AlunoController {
         $aluno->setMatricula($dados['matricula'])
               ->setCgu($dados['cgu'])
               ->setPessoa($pessoa);
-		
+
 		$usuario->setPessoa($pessoa)
 				->setSenha($this->gerarSenha($app,$dados['senha']))
 				->setUsuarioAcesso($app['orm']->find('\SistemaTCC\Model\UsuarioAcesso',3));
@@ -167,6 +205,14 @@ class AlunoController {
             return $app->json($errors, 400);
         }
 
+		if ($this->cguJaExiste($app, $dados['cgu'], $id)) {
+			return $app->json(['cgu' => 'Este CGU já existe, informe outro'], 400);
+		}
+
+		if ($this->matriculaJaExiste($app, $dados['matricula'], $id)) {
+			return $app->json(['matricula' => 'Esta matrícula já existe, informe outra'], 400);
+		}
+
         $pessoa->setNome($dados['nome'])
                ->setEmail($dados['email'])
                ->setTelefone($dados['telefone'])
@@ -174,7 +220,7 @@ class AlunoController {
 
         $aluno->setMatricula($dados['matricula'])
               ->setCgu($dados['cgu']);
-		
+
 		if($dados['senha']!=''){
 			$usuario->setSenha($this->gerarSenha($app,$dados['senha']));
 		}
@@ -264,7 +310,7 @@ class AlunoController {
         ];
         return $app['twig']->render('aluno/listar.twig', $dadosParaView);
     }
-	
+
 	private function gerarSenha(Application $app, $senha){
 		$token = $app['security.token_storage']->getToken();
 
