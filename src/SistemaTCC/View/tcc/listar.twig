@@ -22,9 +22,8 @@
             {% for tcc in tccs %}
             <tr>
                 <td>{{ tcc.getTitulo() }}</td>
-                <td>{{ tcc.getAluno() }}</td>
-                <td>{{ tcc.getSemestre() }}</td>
-                <td>{{ tcc.getAluno().getPessoa().getNome()}}
+                <td>{{ tcc.getAluno().getPessoa().getNome()}}</td>
+                <td>{{ tcc.getSemestre().getNome()}}</td>
                 <td>
 					<div class="pull-right">
 						<a href="/tcc/editar/{{ tcc.getId() }}" class="btn btn-primary">
