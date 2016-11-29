@@ -15,22 +15,32 @@
             </div>
             <div class="col-xs-6">
                 <div class="form-group">
-                    <label class="control-label" for="aluno">Aluno</label><br/>
-                    <input type="text" class="form-control typeahead pessoas-js" name="aluno" id="aluno" placeholder="Digite o nome..." size="100%">
+                    <label class="control-label" for="aluno">Aluno</label>
+                    <input type="text" class="form-control typeahead pessoas-js" name="aluno" id="aluno" placeholder="Digite o nome..." size="100%" value="{{ values.aluno }}">
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-4">
                 <div class="form-group">
+					<label class="control-label" for="semestre">Semestre</label>
                     <select class="form-control" id="semestre">
-                        <option value="1" {{ values.semestre == 1 ? 'selected' : '' }}>Primeiro</option>
-                        <option value="2" {{ values.semestre == 2 ? 'selected' : '' }}>Segundo</option>
+						<option value="">Selecione um semestre...</option>
+						{% for semestre in listarSemestres %}
+							<option value="{{ semestre.getId() }}" {{ values.semestre == semestre.getId() ? 'selected' : '' }}>{{ semestre.getNome() }}</option>
+						{% endfor %}
                     </select>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg">Salvar</button>
+		<div class="row">
+			<div class="col-xs-3">
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
+			</div>
+			<div class="col-xs-2">
+                <a href="./tcc/" class="btn btn-default btn-lg btn-block">Cancelar</a>
+            </div>
+		</div>
     </form>
 
 {% endblock %}
