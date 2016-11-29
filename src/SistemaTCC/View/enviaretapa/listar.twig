@@ -40,7 +40,7 @@
 								">{{ etapas_status[etapa.id].getNome() }}</span>
 						{% endif %}
 					</td>
-					<td>{{ etapa.getDataFim()|date('d/m/Y H:i:s') }}</td>
+					<td>{{ etapa.getDataFim()|date('d/m/Y') }}</td>
 					<td>
 						{% if etapa.id in etapas_nota|keys %}
 							{{ etapas_nota[etapa.id].getNota() }}/{{ etapa.peso }}
