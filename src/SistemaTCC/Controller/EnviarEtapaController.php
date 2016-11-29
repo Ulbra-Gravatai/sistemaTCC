@@ -58,7 +58,6 @@ class EnviarEtapaController {
 		
 		$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($request->get('etapa'));
 		if(!$etapaEntrega){
-			date_default_timezone_set('America/Sao_Paulo');
 			$etapaEntrega = new \SistemaTCC\Model\EtapaEntrega();
 			$etapaStatus = $app['orm']->find('\SistemaTCC\Model\EtapaStatus', 3);
 			$etapaEntrega->setData(new DateTime())
@@ -122,7 +121,6 @@ class EnviarEtapaController {
 			}
 		}
 		
-		date_default_timezone_set('America/Sao_Paulo');
 		$dadosParaView = [
 			'titulo' => 'Etapas',
 			'etapas' => $etapas,
@@ -145,7 +143,7 @@ class EnviarEtapaController {
 		if($etapa_entrega){
 			$arquivos = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntregaArquivo')->findByEtapaEntrega($etapa_entrega->getId());
 		}
-		date_default_timezone_set('America/Sao_Paulo');
+
 		$dadosParaView = [
 			'titulo' => 'Enviar Etapa:',
 			'subtitulo' => $etapa->getNome(),
