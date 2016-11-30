@@ -35,7 +35,7 @@ class SistemaTCC extends Application {
 		$this->register(new SecurityServiceProvider(), ['security.firewalls' => [
 			'admin' => [
 				'pattern' => '^/.+',
-				'form' => ['login_path' => '/', 'check_path' => '/login/'],
+				'form' => ['login_path' => '/', 'check_path' => '/login/', 'default_target_path' => '/semestre/'],
 				'logout' => ['logout_path' => '/logout/', 'invalidate_session' => true],
 				'users' => function () use ($app) {
 					return new UserProvider($app['orm']->getConnection());
