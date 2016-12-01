@@ -233,7 +233,7 @@ class EtapaSemestreController {
       $query = $app['orm']->createQuery($sql);
        $etapa = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Etapa Listar',
+            'titulo' => 'Listar Etapa',
             'etapas' => $etapa,
         ];
         return $app['twig']->render('etapa/listar.twig', $dadosParaView);

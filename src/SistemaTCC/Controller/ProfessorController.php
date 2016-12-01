@@ -248,7 +248,7 @@ class ProfessorController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Professor');
         $professores = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Professor Listar',
+            'titulo' => 'Listar Professor',
             'professores' => $professores,
         ];
         return $app['twig']->render('professor/listar.twig', $dadosParaView);
