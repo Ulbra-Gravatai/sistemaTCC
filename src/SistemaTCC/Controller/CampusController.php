@@ -151,7 +151,7 @@ class CampusController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Campus');
         $campus = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Campus Listar',
+            'titulo' => 'Listar Campus',
             'campus' => $campus,
         ];
         return $app['twig']->render('campus/listar.twig', $dadosParaView);

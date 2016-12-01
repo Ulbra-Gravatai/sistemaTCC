@@ -1,0 +1,2 @@
+ALTER TABLE aluno 
+MODIFY cgu VARCHAR(11) ;

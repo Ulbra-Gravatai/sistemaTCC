@@ -19,7 +19,10 @@ class SistemaTCC extends Application {
 	public function __construct() {
 
 		parent::__construct();
-
+		
+		//Seta o timezone padrão para corrigir o erro da Issue #183
+		date_default_timezone_set('America/Sao_Paulo');
+		
 		$app = $this;
 
 		Request::enableHttpMethodParameterOverride();
@@ -32,7 +35,7 @@ class SistemaTCC extends Application {
 		$this->register(new SecurityServiceProvider(), ['security.firewalls' => [
 			'admin' => [
 				'pattern' => '^/.+',
-				'form' => ['login_path' => '/', 'check_path' => '/login/'],
+				'form' => ['login_path' => '/', 'check_path' => '/login/', 'default_target_path' => '/semestre/'],
 				'logout' => ['logout_path' => '/logout/', 'invalidate_session' => true],
 				'users' => function () use ($app) {
 					return new UserProvider($app['orm']->getConnection());
@@ -75,7 +78,7 @@ class SistemaTCC extends Application {
 
 		$app->get('/tcc/', "\\SistemaTCC\\Controller\\TccController::indexAction");
 		$app->get('/tcc/cadastrar/', "\\SistemaTCC\\Controller\\TccController::cadastrarAction");
-		$app->get('/tcc/editar/', "\\SistemaTCC\\Controller\\TccController::editarAction");
+		$app->get('/tcc/editar/{id}/', "\\SistemaTCC\\Controller\\TccController::editarAction");
 		$app->get('/tcc/excluir/', "\\SistemaTCC\\Controller\\TccController::excluirAction");
 		$app->get('/tcc/listar/', "\\SistemaTCC\\Controller\\TccController::listarAction");
 
@@ -92,7 +95,6 @@ class SistemaTCC extends Application {
 		$app->get('/enviaretapa/', "\\SistemaTCC\\Controller\\EnviarEtapaController::indexAction");
 		$app->get('/enviaretapa/listar/', "\\SistemaTCC\\Controller\\EnviarEtapaController::listarAction");
 		$app->get('/enviaretapa/enviar/{id}/', "\\SistemaTCC\\Controller\\EnviarEtapaController::enviarAction");
-		$app->get('/enviaretapa/nota/{id}/', "\\SistemaTCC\\Controller\\EnviarEtapaController::notaAction");
 
 		$app->get('/areadeinteresse/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::indexAction");
 		$app->get('/areadeinteresse/cadastrar/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::cadastrarAction");
@@ -111,8 +113,9 @@ class SistemaTCC extends Application {
 		$app->put('/professor/{id}/', "\\SistemaTCC\\Controller\\ProfessorController::edit");
 		$app->delete('/professor/{id}/', "\\SistemaTCC\\Controller\\ProfessorController::del");
 
+		// REST Enviar Etapa
 		$app->post('/enviaretapa/',"\\SistemaTCC\\Controller\\EnviarEtapaController::add");
-
+		$app->delete('/enviaretapa/{id}/', "\\SistemaTCC\\Controller\\EnviarEtapaController::del");
 
 		// REST Etapa Status
 		$app->post('/etapa-status/', "SistemaTCC\Controller\EtapaStatusController::add");

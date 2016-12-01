@@ -151,7 +151,7 @@ class AreaDeInteresseController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\AreaDeInteresse');
         $area = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Area de interesse Listar',
+            'titulo' => 'Listar Area de interesse',
             'areadeinteresse' => $area,
         ];
         return $app['twig']->render('areadeinteresse/listar.twig', $dadosParaView);
