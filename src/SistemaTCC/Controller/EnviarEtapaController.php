@@ -132,7 +132,7 @@ class EnviarEtapaController {
 		}
 		
 		$dadosParaView = [
-			'titulo' => 'Etapas',
+			'titulo' => 'Listar Etapas',
 			'etapas' => $etapas,
 			'etapas_status' => $etapas_status,
 			'etapas_nota' => $etapas_nota,

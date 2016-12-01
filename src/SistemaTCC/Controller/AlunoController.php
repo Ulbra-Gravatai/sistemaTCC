@@ -336,7 +336,7 @@ class AlunoController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Aluno');
         $alunos = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Aluno Listar',
+            'titulo' => 'Listar Aluno',
             'alunos' => $alunos,
         ];
         return $app['twig']->render('aluno/listar.twig', $dadosParaView);
