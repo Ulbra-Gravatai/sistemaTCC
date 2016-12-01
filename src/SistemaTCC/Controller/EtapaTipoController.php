@@ -79,7 +79,7 @@ class EtapaTipoController {
 
     public function edit(Application $app, Request $request, $id) {
         $etapatipo = $app['orm']->find('\SistemaTCC\Model\EtapaTipo', (int) $id);
-        if (!$etapaTipo) {
+        if (!$etapatipo) {
             return $app->json([ 'error' => 'A etapa não existe.'], 400);
         }
         $dados = [
@@ -123,7 +123,7 @@ class EtapaTipoController {
 
     public function cadastrarAction(Application $app, Request $request) {
         $dadosParaView = [
-            'titulo' => 'Cadastrar Tipo',
+            'titulo' => 'Cadastrar Tipo de Etapa',
             'values' => [
             'nome' => '',
             ],
@@ -138,7 +138,7 @@ class EtapaTipoController {
             return $app->redirect('../etapatipo/listar');
         }
         $dadosParaView = [
-            'titulo' => 'Alterando Tipo: ' . $id,
+            'titulo' => 'Alterando Tipo de Etapa: ' . $id,
             'id' => $id,
             'values' => [
                 'nome'      => $etapatipo->getNome(),
@@ -151,7 +151,7 @@ class EtapaTipoController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\EtapaTipo');
         $etapatipo = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Tipo Listar',
+            'titulo' => 'Listar Tipo de Etapa',
             'etapatipo' => $etapatipo,
         ];
         return $app['twig']->render('etapatipo/listar.twig', $dadosParaView);

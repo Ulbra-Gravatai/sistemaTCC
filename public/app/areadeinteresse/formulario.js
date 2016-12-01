@@ -2,12 +2,14 @@ $(function() {
 
     const $form = $('#form-js');
     const itemID = $form.find('#id').val();
-    const restURL = './professor/';
-    const listaURL = './professor/';
+    const restURL = './areadeinteresse/';
+    const listaURL = './areadeinteresse/';
+    const fields = ['titulo'];
+    let isDone = false;
 
     function verifyErrors(err) {
         const errors = err || {};
-        $.each(['nome', 'email', 'telefone', 'interesses','senha'], function(key, value) {
+        $.each(fields, function(key, value) {
             const message = errors[value] || false;
             const element = $form.find('#' + value);
             if (message) {
@@ -20,18 +22,13 @@ $(function() {
 
     $form.on('submit', function(event) {
         event.preventDefault();
-        const interesses = [];
-        $.each($("input[type=checkbox]:checked"), function() {
-            interesses.push($(this).val());
-        });
+
+        if (isDone) {
+            return false;
+        }
 
         const values = {
-            nome: $form.find('#nome').val(),
-            telefone: $form.find('#telefone').val(),
-            email: $form.find('#email').val(),
-            sexo: $form.find('input[name=sexo]:checked').val(),
-            interesses: interesses,
-			senha: $form.find('#senha').val()
+            titulo: $form.find('#titulo').val()
         };
 
         const url = restURL + (itemID ? itemID + '/' : '' );
@@ -44,12 +41,15 @@ $(function() {
                 dataType: 'json',
                 data: values
             });
+
         request.done(function(data) {
+            isDone = true;
             verifyErrors();
-            showSaved(text, function() {
+             showSaved(text, function() {
                 location.href = listaURL;
             });
         });
+
         request.fail(function(err) {
             const errors = err.responseJSON;
             verifyErrors(errors);

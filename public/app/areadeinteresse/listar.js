@@ -1,15 +1,16 @@
 $(function() {
 
-    const $lista = $('#lista-js');
-    const url = './professor/';
-    const urlListar = './professor/listar';
+    var $lista = $('#lista-js');
+    var url = './areadeinteresse/';
+    var urlListar = './areadeinteresse/listar';
 
     function ajax(id) {
-        const request = $.ajax({
+        var request = $.ajax({
                 url: url + id + '/',
                 type: 'delete',
                 dataType: 'json',
             });
+        // Caiu aqui deu certo
         request.done(function(data) {
             showDone(function() {
                 location.href = urlListar;
@@ -17,15 +18,16 @@ $(function() {
             return;
         });
 
+        // Caiu aqui, tem erro
         request.fail(function(err) {
-            console.log(err);
+            console.log(err.responseText);
             return false;
         });
     }
 
     $lista.on('click', '.excluir', function(event) {
         event.preventDefault();
-        const id = $(this).data('id');
+        var id = $(this).data('id');
         if (!id) {
             return false;
         }
