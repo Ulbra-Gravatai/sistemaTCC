@@ -69,7 +69,7 @@ class tccController {
         ];
 
         $errors = $this->validacao($app, $dados);
-		
+
 		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
         if (!array_key_exists('aluno',$errors) && !$aluno) {
             $errors['aluno'] = 'aluno não existe';
@@ -78,11 +78,11 @@ class tccController {
         if (!array_key_exists('semestre',$errors) && !$semestre) {
             $errors['semestre'] = 'O semestre não existe';
         }
-		
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-        
+
         $tcc = new \SistemaTCC\Model\Tcc();
 
         $tcc->setTitulo($request->get('titulo'))
@@ -110,7 +110,7 @@ class tccController {
 
     public function edit(Application $app, Request $request, $id) {
 
-        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\tcc', (int) $id))
+        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\Tcc', (int) $id))
             return new Response('O tcc não existe.', Response::HTTP_NOT_FOUND);
 
         $dados = [
@@ -120,7 +120,7 @@ class tccController {
 			'disciplina' => $request->get('disciplina')
         ];
         $errors = $this->validacao($app, $dados);
-		
+
 		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
         if (!array_key_exists('aluno',$errors) && !$aluno) {
             $errors['aluno'] = 'aluno não existe';
@@ -130,11 +130,11 @@ class tccController {
         if (!array_key_exists('semestre',$errors) && !$semestre) {
             $errors['semestre'] = 'O semestre não existe';
         }
-		
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-		
+
         $tcc->setTitulo($request->get('titulo', $tcc->getTitulo()))
                ->setAluno($aluno)
                ->setSemestre($semestre)
@@ -151,7 +151,7 @@ class tccController {
 
     public function del(Application $app, Request $request, $id) {
 
-        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\tcc', (int) $id))
+        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\Tcc', (int) $id))
             return $app->json([ 'error' => 'O tcc não existe.'], 400);
         try {
             $app['orm']->remove($tcc);
@@ -193,12 +193,12 @@ class tccController {
     }
 
     public function editarAction(Application $app, Request $request, $id) {
-        $db = $app['orm']->getRepository('\SistemaTCC\Model\tcc');
+        $db = $app['orm']->getRepository('\SistemaTCC\Model\Tcc');
         $tcc = $db->find($id);
         if (!$tcc) {
             return $app->redirect('../tcc/listar');
         }
-		
+
 		$alunos = [];
 		$aluno = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findAll();
 		foreach ($aluno as $a => $al) {
