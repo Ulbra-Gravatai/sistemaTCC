@@ -7,22 +7,23 @@
         {% endif %}
         <div class="row">
             <div class="col-xs-6">
-                <div class="form-group">
+                <div class="form-group group-titulo">
                     <label class="control-label" for="titulo">Titulo</label>
                     <input type="text" class="form-control" name="titulo" id="titulo" value="{{ values.titulo }}" placeholder="Digite o título...">
                     <span class="help-block"></span>
                 </div>
             </div>
             <div class="col-xs-6">
-                <div class="form-group">
+                <div class="form-group group-aluno">
                     <label class="control-label" for="aluno">Aluno</label>
                     <input type="text" class="form-control typeahead pessoas-js" name="aluno" id="aluno" placeholder="Digite o nome..." size="100%" value="{{ values.aluno }}">
+					<span class="help-block"></span>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-4">
-                <div class="form-group">
+                <div class="form-group group-semestre">
 					<label class="control-label" for="semestre">Semestre</label>
                     <select class="form-control" id="semestre">
 						<option value="">Selecione um semestre...</option>
@@ -30,8 +31,20 @@
 							<option value="{{ semestre.getId() }}" {{ values.semestre == semestre.getId() ? 'selected' : '' }}>{{ semestre.getNome() }}</option>
 						{% endfor %}
                     </select>
+					<span class="help-block"></span>
                 </div>
             </div>
+			<div class="col-xs-4">
+				<div class="form-group group-disciplina">
+					<label class="control-label" for="disciplina">Disciplina</label>
+					<select class="form-control" id="disciplina">
+						<option value="">Selecione uma disciplina...</option>
+						<option value="1" {{ values.disciplina == 1 ? 'selected' : '' }}>TCC 1</option>
+						<option value="2" {{ values.disciplina == 2 ? 'selected' : '' }}>TCC 2</option>
+					</select>
+					<span class="help-block"></span>
+				</div>
+			</div>
         </div>
 		<div class="row">
 			<div class="col-xs-3">

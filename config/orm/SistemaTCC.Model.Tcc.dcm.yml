@@ -24,6 +24,10 @@ SistemaTCC\Model\Tcc:
             length: 255
             options:
                 fixed: false
+        disciplina:
+            type: integer
+            nullable: false
+            column: disciplina
     manyToOne:
         aluno:
             targetEntity: SistemaTCC\Model\Aluno

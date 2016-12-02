@@ -38,6 +38,13 @@ class tccController {
                     'maxMessage' => 'O titulo não deve possuir mais que {{ limit }} caracteres',
                 ])
             ],
+			'disciplina' => [
+				new Assert\NotBlank(['message' => 'Preencha esse campo']),
+				new Assert\Type([
+                    'type' => 'numeric',
+                    'message' => 'A disciplina selecionada não é válida'
+                ]),
+			]
         ];
         $constraint = new Assert\Collection($asserts);
         $errors = $app['validator']->validate($dados, $constraint);
@@ -57,26 +64,31 @@ class tccController {
         $dados = [
 			'titulo'   => $request->get('titulo'),
 			'aluno'    => $request->get('aluno'),
-			'semestre' => $request->get('semestre')
+			'semestre' => $request->get('semestre'),
+			'disciplina' => $request->get('disciplina')
         ];
 
         $errors = $this->validacao($app, $dados);
+
+		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
+        if (!array_key_exists('aluno',$errors) && !$aluno) {
+            $errors['aluno'] = 'aluno não existe';
+        }
+        $semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
+        if (!array_key_exists('semestre',$errors) && !$semestre) {
+            $errors['semestre'] = 'O semestre não existe';
+        }
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-        $aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
-        if (!$aluno) {
-            return $app->json(['aluno' => 'aluno não existe'], 400);
-        }
-        $semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
-        if (!$semestre) {
-            return $app->json(['semestre' => 'O semestre não existe'], 400);
-        }
+
         $tcc = new \SistemaTCC\Model\Tcc();
 
         $tcc->setTitulo($request->get('titulo'))
 			->setAluno($aluno)
-			->setSemestre($semestre);
+			->setSemestre($semestre)
+			->setDisciplina($request->get('disciplina'));
 
         try {
             $app['orm']->persist($tcc);
@@ -98,32 +110,35 @@ class tccController {
 
     public function edit(Application $app, Request $request, $id) {
 
-        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\tcc', (int) $id))
+        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\Tcc', (int) $id))
             return new Response('O tcc não existe.', Response::HTTP_NOT_FOUND);
 
         $dados = [
             'titulo'     => $request->get('titulo'),
             'aluno'    	 => $request->get('aluno'),
-            'semestre'   => $request->get('semestre')
+            'semestre'   => $request->get('semestre'),
+			'disciplina' => $request->get('disciplina')
         ];
         $errors = $this->validacao($app, $dados);
+
+		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
+        if (!array_key_exists('aluno',$errors) && !$aluno) {
+            $errors['aluno'] = 'aluno não existe';
+        }
+
+		$semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
+        if (!array_key_exists('semestre',$errors) && !$semestre) {
+            $errors['semestre'] = 'O semestre não existe';
+        }
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
 
-        $aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
-        if (!$aluno) {
-            return $app->json(['aluno' => 'aluno não existe'], 400);
-        }
-
-		$semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
-        if (!$semestre) {
-            return $app->json(['semestre' => 'O semestre não existe'], 400);
-        }
-		
         $tcc->setTitulo($request->get('titulo', $tcc->getTitulo()))
                ->setAluno($aluno)
-               ->setSemestre($semestre);
+               ->setSemestre($semestre)
+			   ->setDisciplina($request->get('disciplina'));
 
         try {
             $app['orm']->flush();
@@ -136,7 +151,7 @@ class tccController {
 
     public function del(Application $app, Request $request, $id) {
 
-        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\tcc', (int) $id))
+        if (null === $tcc = $app['orm']->find('\SistemaTCC\Model\Tcc', (int) $id))
             return $app->json([ 'error' => 'O tcc não existe.'], 400);
         try {
             $app['orm']->remove($tcc);
@@ -167,9 +182,10 @@ class tccController {
             'listaAlunos' => json_encode($alunos),
 			'listarSemestres' => $semestres,
             'values' => [
-              'titulo'    => '',
-              'aluno'     => '',
-              'semestre'  => '',              
+				'titulo'	 => '',
+				'aluno'		 => '',
+				'semestre'	 => '',
+				'disciplina' => ''
             ],
         ];
 
@@ -177,12 +193,12 @@ class tccController {
     }
 
     public function editarAction(Application $app, Request $request, $id) {
-        $db = $app['orm']->getRepository('\SistemaTCC\Model\tcc');
+        $db = $app['orm']->getRepository('\SistemaTCC\Model\Tcc');
         $tcc = $db->find($id);
         if (!$tcc) {
             return $app->redirect('../tcc/listar');
         }
-		
+
 		$alunos = [];
 		$aluno = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findAll();
 		foreach ($aluno as $a => $al) {
@@ -198,6 +214,7 @@ class tccController {
                 'titulo'      => $tcc->getTitulo(),
                 'aluno'     => $tcc->getAluno()->getId() . ' - ' . $tcc->getAluno()->getPessoa()->getNome(),
                 'semestre'  => $tcc->getSemestre()->getId(),
+				'disciplina' => $tcc->getDisciplina()
             ],
         ];
         return $app['twig']->render('tcc/formulario.twig', $dadosParaView);
@@ -212,10 +229,11 @@ class tccController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Tcc');
         $tccs = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Tcc Listar',
+            'titulo' => 'Listar Tcc',
             'tccs' => $tccs,
         ];
         return $app['twig']->render('tcc/listar.twig', $dadosParaView);
     }
 
 }
+

@@ -91,7 +91,21 @@ class AlunoController {
         return $retorno;
     }
 
-	private function cguJaExiste($app, $cgu, $id = true) {
+	/*
+	 * Função que verifica se o email já foi cadastrado.
+	 */
+	private function emailJaExiste($app, $email, $id = false) {
+		$pessoa = $app['orm']->getRepository('\SistemaTCC\Model\Pessoa')->findOneByEmail($email);
+		if($pessoa && $id !== (int) $pessoa->getId()){
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	 * Função que verifica se o CGU já foi cadastrado.
+	 */
+	private function cguJaExiste($app, $cgu, $id = false) {
 		$alunos = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findAll();
 		if (count($alunos)) {
 			foreach ($alunos as $aluno) {
@@ -106,7 +120,10 @@ class AlunoController {
 		return false;
 	}
 
-	private function matriculaJaExiste($app, $matricula, $id = true) {
+	/*
+	 * Função que verifica se a Matricula já foi cadastrada.
+	 */
+	private function matriculaJaExiste($app, $matricula, $id = false) {
 		$alunos = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findAll();
 		if (count($alunos)) {
 			foreach ($alunos as $aluno) {
@@ -134,17 +151,26 @@ class AlunoController {
         ];
 
         $errors = $this->validacao($app, $dados);
+
+		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'])) {
+			$errors['email'] = 'Este email já existe, informe outro';
+		}
+
+		if (!array_key_exists('cgu',$errors) && $this->cguJaExiste($app, $dados['cgu'])) {
+			$errors['cgu'] = 'Este CGU já existe, informe outro';
+		}
+
+		if (!array_key_exists('matricula',$errors) && $this->matriculaJaExiste($app, $dados['matricula'])) {
+			$errors['matricula'] = 'Esta matrícula já existe, informe outra';
+		}
+
+		if (!array_key_exists('senha',$errors) && $dados['senha'] == '') {
+			$errors['senha'] = 'Preencha esse campo';
+		}
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-
-		if ($this->cguJaExiste($app, $dados['cgu'])) {
-			return $app->json(['cgu' => 'Este CGU já existe, informe outro'], 400);
-		}
-
-		if ($this->matriculaJaExiste($app, $dados['matricula'])) {
-			return $app->json(['matricula' => 'Esta matrícula já existe, informe outra'], 400);
-		}
 
         $pessoa = new \SistemaTCC\Model\Pessoa();
         $aluno = new \SistemaTCC\Model\Aluno();
@@ -160,7 +186,7 @@ class AlunoController {
               ->setPessoa($pessoa);
 
 		$usuario->setPessoa($pessoa)
-				->setSenha($this->gerarSenha($app,$dados['senha']))
+				->setSenha($this->codificarSenha($app,$dados['senha']))
 				->setUsuarioAcesso($app['orm']->find('\SistemaTCC\Model\UsuarioAcesso',3));
         try {
             $app['orm']->persist($aluno);
@@ -201,17 +227,22 @@ class AlunoController {
         ];
 
         $errors = $this->validacao($app, $dados);
-        if (count($errors) > 0) {
-            return $app->json($errors, 400);
-        }
+
+		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'], $pessoa->getId())) {
+			$errors['email'] = 'Este email já existe, informe outro';
+		}
 
 		if ($this->cguJaExiste($app, $dados['cgu'], $id)) {
-			return $app->json(['cgu' => 'Este CGU já existe, informe outro'], 400);
+			$errors['cgu'] = 'Este CGU já existe, informe outro';
 		}
 
 		if ($this->matriculaJaExiste($app, $dados['matricula'], $id)) {
-			return $app->json(['matricula' => 'Esta matrícula já existe, informe outra'], 400);
+			$errors['matricula'] = 'Esta matrícula já existe, informe outra';
 		}
+
+        if (count($errors) > 0) {
+            return $app->json($errors, 400);
+        }
 
         $pessoa->setNome($dados['nome'])
                ->setEmail($dados['email'])
@@ -222,7 +253,7 @@ class AlunoController {
               ->setCgu($dados['cgu']);
 
 		if($dados['senha']!=''){
-			$usuario->setSenha($this->gerarSenha($app,$dados['senha']));
+			$usuario->setSenha($this->codificarSenha($app,$dados['senha']));
 		}
 
         try {
@@ -246,7 +277,7 @@ class AlunoController {
             $app['orm']->flush();
         }
         catch (\Exception $e) {
-            return $app->json($e->getMessage(), 400);
+            return $app->json(['error' => 'Esse Aluno provavelmente possui um vínculo! Para mais detalhes abra o console do DevTools', 'message' => $e->getMessage()], 400);
         }
         return $app->json(['success' => 'Aluno excluido com sucesso.']);
 	}
@@ -305,13 +336,13 @@ class AlunoController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Aluno');
         $alunos = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Aluno Listar',
+            'titulo' => 'Listar Aluno',
             'alunos' => $alunos,
         ];
         return $app['twig']->render('aluno/listar.twig', $dadosParaView);
     }
 
-	private function gerarSenha(Application $app, $senha){
+	private function codificarSenha(Application $app, $senha){
 		$token = $app['security.token_storage']->getToken();
 
 		if (null !== $token) {

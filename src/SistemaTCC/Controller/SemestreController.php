@@ -292,7 +292,7 @@ class SemestreController {
         $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
 
         $dadosParaView = [
-            'titulo' => 'Semestre Listar',
+            'titulo' => 'Listar Semestre',
             'semestres' => $semestres
         ];
 

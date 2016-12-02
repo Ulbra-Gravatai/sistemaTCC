@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+	{% set isEditable = etapa.getDataInicio() <= data_atual and etapa.getDataFim() >= data_atual %}
 	<div class="row">
 		<div class="col-sm-12 col-xs-12">
 			<h3>{{ titulo }} <small>{{ subtitulo }}</small></h3>
@@ -14,7 +15,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<h4 class="pull-left">Arquivos</h4>
-				{% if etapa.getDataInicio() <= data_atual and etapa.getDataFim() >= data_atual %}
+				{% if isEditable %}
 					<div id="upload" class="btn-upload pull-right">
 						<i class="fa fa-upload" aria-hidden="true"></i>
 						<span class="hidden-xs"> Enviar arquivo</span>
@@ -30,16 +31,18 @@
 						{% for arquivo in arquivos %}
 							<li id="arquivo-{{ arquivo.getId() }}" class="list-group-item">
 								<a href="../{{ arquivo.caminho }}{{ arquivo.nome }}">{{ arquivo.nome }}</a>
-								<div class="pull-right">
-									<button type="button" class="btn btn-danger btn-xs excluir-arquivo-js" data-id="{{ arquivo.getId() }}">
-										<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
-										<span class="hidden-xs">Excluir</span>
-									</button>
-								</div>
+								{% if isEditable %}
+									<div class="pull-right">
+										<button type="button" class="btn btn-danger btn-xs excluir-arquivo-js" data-id="{{ arquivo.getId() }}">
+											<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+											<span class="hidden-xs">Excluir</span>
+										</button>
+									</div>
+								{% endif %}
 							</li>
 						{% endfor %}
 					{% else %}
-						<div class="alert alert-warning" role="alert">Nenhum arquivo enviado.</div>
+						<div class="alert alert-warning remove-on-upload-js" role="alert">Nenhum arquivo enviado.</div>
 					{% endif %}
 				</ul>
 			</div>
@@ -50,6 +53,17 @@
 			</div>
 		</div>
 	</form>
+	<li class="list-group-item item-upload modelo-item-upload">
+		<a href=""></a>
+		{% if isEditable %}
+			<div class="pull-right">
+				<button type="button" class="btn btn-danger btn-xs excluir-arquivo-js" data-id="">
+					<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+					<span class="hidden-xs">Excluir</span>
+				</button>
+			</div>
+		{% endif %}
+	</li>
 {% endblock %}
 
 {% block scripts %}

@@ -24,6 +24,9 @@ SistemaTCC\Model\Etapa:
             length: 25
             options:
                 fixed: false
+        descricao:
+            type: text
+            nullable: true
         dataInicio:
             type: datetime
             nullable: false
@@ -42,18 +45,6 @@ SistemaTCC\Model\Etapa:
             nullable: false
             options:
                 unsigned: false
-        enviarEmailAdministrador:
-            type: boolean
-            nullable: false
-            column: enviar_email_administrador
-        enviarEmailBanca:
-            type: boolean
-            nullable: false
-            column: enviar_email_banca
-        enviarEmailOrientador:
-            type: boolean
-            nullable: false
-            column: enviar_email_orientador
         tcc:
             type: integer
             nullable: false
