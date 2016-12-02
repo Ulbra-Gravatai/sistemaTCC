@@ -54,7 +54,7 @@
 /* MENU SIDE-NAV */
 
 .navbar-toggle-js {
-    width: 300px;
+    width: 100%;
     height: calc(100% - 60px);
     top: 80px;
     left: 0;
@@ -73,6 +73,7 @@
     top: 0;
     left: 0;
     opacity: 0;
+    background: rgba(255, 255, 255, 0.9);
     transition: opacity 0.3s;
 }
 
@@ -83,7 +84,7 @@
 }
 
 .navbar-toggle-js .navbar-container {
-    width: 100%;
+    width: 300px;
     height: 100%;
     position: relative;
     background-color: #393e46;
@@ -109,9 +110,9 @@
     opacity: 1;
 }
 
-.side-show {
+/*.side-show {
     margin-left: 300px;
-}
+}*/
 
 
 /*MENU SIDE-NAV - UL*/
@@ -140,6 +141,7 @@
     text-decoration: none;
     color: #FFF;
 }
+
 
 
 /* FIM MENU SIDE-NAV - UL */
