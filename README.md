@@ -13,6 +13,7 @@ Sistema para Controle e Acompanhamento de Trabalhos de Conclusão de Curso
 * [Composer](https://getcomposer.org)
 * [MySQL](https://www.mysql.com)
 * [Bower](http://bower.io)
+* [Flyway](https://flywaydb.org)
 
 ## Como iniciar (Utilizando linha de comando)
 Para colaborar você deve primeiro clonar o projeto do [GitHub](https://github.com/Ulbra-Gravatai/sistemaTCC/):
@@ -112,7 +113,13 @@ Para começar a brincar, crie sua própria branch para não haver problemas na h
 git checkout -b <seu_nome>
 ```
 ## Banco de dados
-Foi adicionado o arquivo config/banco-de-dados.sql, basta importa-lo para o MySQL e modificar o arquivo src/SistemaTCC/Provider/DoctrineOrmServiceProvider.php com as informações do seu banco de dados local.
+Para a base de dados está sendo utilizado o flyway.
+Você deve: 
+# Baixar o flyway correspondente a sua plataforma do site
+# Descompactar o flyway em uma pasta no seu computador
+# Colocar tudo o que estiver dentro da pasta flyway-4.X.X para dentro da pasta flyway do projeto
+# Executar flyway migrate 
+# Sempre que alguém criar uma nova migration na pasta sql, basta executar flyway migrate para o seu banco ficar atualizado.
 
 ## Brincadeira!
 Agora sim, a brincadeira pode começar!
