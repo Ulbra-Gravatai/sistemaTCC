@@ -113,8 +113,20 @@ class EnviarEtapaController {
 	}
 
 	public function listarAction(Application $app, Request $request) {
-		$semestre = 1; //$request->getSession()->get('semestreId'); //Id Semestre das etapas a serem listadas (Verificar como será armazenado as informações de sessão)
-		$tcc = 1;
+		$pessoa = $app['orm']->getRepository('\SistemaTCC\Model\Pessoa')->findOneByEmail($app['user']->getUsername());
+		$aluno = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findOneByPessoa($pessoa);
+		if(!$aluno){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'Somente alunos podem acessar está área.']);
+		}
+		//Busca o semestre atual
+		$semestre  = $app['orm']->createQuery('SELECT s FROM SistemaTCC\Model\Semestre s WHERE CURRENT_DATE() BETWEEN s.dataInicio AND s.dataFim')->getOneOrNullResult();
+		if(!$semestre){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'O semestre atual não foi cadastrado, contacte o administrado.']);
+		}
+		$tcc = $app['orm']->getRepository('\SistemaTCC\Model\Tcc')->findOneBy(['aluno'=>$aluno,'semestre'=>$semestre]);
+		if(!$tcc){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'Você não tem um TCC cadastrado no semestre atual.']);
+		}
 		$db = $app['orm']->getRepository('\SistemaTCC\Model\Etapa');
 		$etapas = $db->findBy(array('semestre' => $semestre,'tcc' => $tcc));
 		

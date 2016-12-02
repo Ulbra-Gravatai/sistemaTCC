@@ -36,7 +36,14 @@
             closeOnConfirm: false }, callback);
     }
 
-
-
+    context['showError'] = function showError(text, callback) {
+        swal({
+            title: "Ocorreu um Erro!",
+            text: text,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Fechar",
+            closeOnConfirm: true });
+    };
 
 })(this);
