@@ -70,7 +70,7 @@ class ProfessorController {
         }
         return $retorno;
     }
-	
+
 	/*
 	 * Função que verifica se o email já foi cadastrado.
 	 */
@@ -94,15 +94,15 @@ class ProfessorController {
         ];
 
         $errors = $this->validacao($app, $dados);
-		
+
 		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'])) {
 			$errors['email'] = 'Este email já existe, informe outro';
 		}
-		
+
 		if (!array_key_exists('senha',$errors) && $dados['senha'] == '') {
 			$errors['senha'] = 'Preencha esse campo';
 		}
-		
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
@@ -121,11 +121,11 @@ class ProfessorController {
                ->setSexo($request->get('sexo'));
 
         $professor->setPessoa($pessoa);
-		
+
 		$usuario->setPessoa($pessoa)
 				->setSenha($this->codificarSenha($app,$dados['senha']))
-				->setUsuarioAcesso($app['orm']->find('\SistemaTCC\Model\UsuarioAcesso',2));
-				
+				->setNivel('ROLE_PROFESSOR');
+
         try {
             $app['orm']->persist($professor);
 			$app['orm']->persist($usuario);
@@ -149,7 +149,7 @@ class ProfessorController {
 
         if (null === $professor = $app['orm']->find('\SistemaTCC\Model\Professor', (int) $id))
             return new Response('O professor não existe.', Response::HTTP_NOT_FOUND);
-		
+
 		$pessoa = $professor->getPessoa();
         $dados = [
             'nome'       => $request->get('nome'),
@@ -160,11 +160,11 @@ class ProfessorController {
 			'senha'		 => $request->get('senha')
         ];
         $errors = $this->validacao($app, $dados);
-		
+
 		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'],$pessoa->getId())) {
 			$errors['email'] = 'Este email já existe, informe outro';
 		}
-		
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
@@ -190,12 +190,12 @@ class ProfessorController {
                ->setEmail($request->get('email', $pessoa->getEmail()))
                ->setTelefone(str_replace(array('(',')',' ','-'),'',$request->get('telefone', $pessoa->getTelefone())))
                ->setSexo($request->get('sexo', $pessoa->getSexo()));
-		
+
 		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($pessoa->getId());
 		if($dados['senha']!=''){
 			$usuario->setSenha($this->codificarSenha($app,$dados['senha']));
 		}
-		
+
         try {
             $app['orm']->flush();
         }
@@ -209,7 +209,7 @@ class ProfessorController {
 
         if (null === $professor = $app['orm']->find('\SistemaTCC\Model\Professor', (int) $id))
             return $app->json([ 'error' => 'O professor não existe.'], 400);
-		
+
 		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($professor->getPessoa()->getId());
         try {
 			$app['orm']->remove($usuario);
@@ -278,7 +278,7 @@ class ProfessorController {
         ];
         return $app['twig']->render('professor/listar.twig', $dadosParaView);
     }
-	
+
 	private function codificarSenha(Application $app, $senha){
 		$token = $app['security.token_storage']->getToken();
 
