@@ -1,1 +1,0 @@
-ALTER TABLE etapa ADD descricao LONGTEXT DEFAULT NULL;
