@@ -27,6 +27,11 @@ class Usuario
      */
     private $usuarioAcesso;
 
+    /**
+     * @var string
+     */
+    private $nivel;
+
 
     /**
      * Get id
@@ -109,5 +114,28 @@ class Usuario
     {
         return $this->usuarioAcesso;
     }
-}
 
+    /**
+     * Set nivel
+     *
+     * @param string $nivel
+     *
+     * @return Usuario
+     */
+    public function setNivel($nivel)
+    {
+        $this->nivel = $nivel;
+
+        return $this;
+    }
+
+    /**
+     * Get nivel
+     *
+     * @return string
+     */
+    public function getNivel()
+    {
+        return $this->nivel;
+    }
+}
