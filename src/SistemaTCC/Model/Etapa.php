@@ -342,4 +342,33 @@ class Etapa
     {
         return $this->semestre;
     }
+    /**
+     * @var string
+     */
+    private $descricao;
+
+
+    /**
+     * Set descricao
+     *
+     * @param string $descricao
+     *
+     * @return Etapa
+     */
+    public function setDescricao($descricao)
+    {
+        $this->descricao = $descricao;
+
+        return $this;
+    }
+
+    /**
+     * Get descricao
+     *
+     * @return string
+     */
+    public function getDescricao()
+    {
+        return $this->descricao;
+    }
 }
