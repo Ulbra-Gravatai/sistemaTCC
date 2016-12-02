@@ -187,7 +187,7 @@ class AlunoController {
 
 		$usuario->setPessoa($pessoa)
 				->setSenha($this->codificarSenha($app,$dados['senha']))
-				->setUsuarioAcesso($app['orm']->find('\SistemaTCC\Model\UsuarioAcesso',3));
+				->setNivel('ROLE_ALUNO');
         try {
             $app['orm']->persist($aluno);
 			$app['orm']->persist($usuario);

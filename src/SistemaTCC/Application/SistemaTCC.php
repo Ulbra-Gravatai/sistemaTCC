@@ -19,10 +19,10 @@ class SistemaTCC extends Application {
 	public function __construct() {
 
 		parent::__construct();
-		
+
 		//Seta o timezone padrão para corrigir o erro da Issue #183
 		date_default_timezone_set('America/Sao_Paulo');
-		
+
 		$app = $this;
 
 		Request::enableHttpMethodParameterOverride();
@@ -173,6 +173,12 @@ class SistemaTCC extends Application {
 			$twig->addFilter($fone_format);
 			return $twig;
 		});
+
+		$isGranted = new \Twig_SimpleFunction('is_granted', function($role) use ($app) {
+		    return $app['security.authorization_checker']->isGranted($role);
+		});
+
+		$app['twig']->addFunction($isGranted);
 	}
 
 }
