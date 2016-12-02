@@ -90,7 +90,7 @@ class AlunoController {
         }
         return $retorno;
     }
-	
+
 	/*
 	 * Função que verifica se o email já foi cadastrado.
 	 */
@@ -101,7 +101,7 @@ class AlunoController {
 		}
 		return false;
 	}
-	
+
 	/*
 	 * Função que verifica se o CGU já foi cadastrado.
 	 */
@@ -151,11 +151,11 @@ class AlunoController {
         ];
 
         $errors = $this->validacao($app, $dados);
-		
+
 		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'])) {
 			$errors['email'] = 'Este email já existe, informe outro';
 		}
-		
+
 		if (!array_key_exists('cgu',$errors) && $this->cguJaExiste($app, $dados['cgu'])) {
 			$errors['cgu'] = 'Este CGU já existe, informe outro';
 		}
@@ -163,11 +163,11 @@ class AlunoController {
 		if (!array_key_exists('matricula',$errors) && $this->matriculaJaExiste($app, $dados['matricula'])) {
 			$errors['matricula'] = 'Esta matrícula já existe, informe outra';
 		}
-		
+
 		if (!array_key_exists('senha',$errors) && $dados['senha'] == '') {
 			$errors['senha'] = 'Preencha esse campo';
 		}
-		
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
@@ -227,11 +227,11 @@ class AlunoController {
         ];
 
         $errors = $this->validacao($app, $dados);
-		
+
 		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'], $pessoa->getId())) {
 			$errors['email'] = 'Este email já existe, informe outro';
 		}
-		
+
 		if ($this->cguJaExiste($app, $dados['cgu'], $id)) {
 			$errors['cgu'] = 'Este CGU já existe, informe outro';
 		}
@@ -239,7 +239,7 @@ class AlunoController {
 		if ($this->matriculaJaExiste($app, $dados['matricula'], $id)) {
 			$errors['matricula'] = 'Esta matrícula já existe, informe outra';
 		}
-		
+
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
@@ -277,7 +277,7 @@ class AlunoController {
             $app['orm']->flush();
         }
         catch (\Exception $e) {
-            return $app->json($e->getMessage(), 400);
+            return $app->json(['error' => 'Esse Aluno provavelmente possui um vínculo! Para mais detalhes abra o console do DevTools', 'message' => $e->getMessage()], 400);
         }
         return $app->json(['success' => 'Aluno excluido com sucesso.']);
 	}

@@ -19,7 +19,7 @@ class AreaDeInteresseController {
                 ]),
                 new Assert\Length([
                     'min' => 3,
-                    'max' => 25,
+                    'max' => 200,
                     'minMessage' => 'O titulo precisa possuir pelo menos {{ limit }} caracteres',
                     'maxMessage' => 'O titulo não deve possuir mais que {{ limit }} caracteres',
                 ])
