@@ -19,7 +19,10 @@ class SistemaTCC extends Application {
 	public function __construct() {
 
 		parent::__construct();
-
+		
+		//Seta o timezone padrão para corrigir o erro da Issue #183
+		date_default_timezone_set('America/Sao_Paulo');
+		
 		$app = $this;
 
 		Request::enableHttpMethodParameterOverride();
@@ -32,7 +35,7 @@ class SistemaTCC extends Application {
 		$this->register(new SecurityServiceProvider(), ['security.firewalls' => [
 			'admin' => [
 				'pattern' => '^/.+',
-				'form' => ['login_path' => '/', 'check_path' => '/login/'],
+				'form' => ['login_path' => '/', 'check_path' => '/login/', 'default_target_path' => '/semestre/'],
 				'logout' => ['logout_path' => '/logout/', 'invalidate_session' => true],
 				'users' => function () use ($app) {
 					return new UserProvider($app['orm']->getConnection());
@@ -75,7 +78,7 @@ class SistemaTCC extends Application {
 
 		$app->get('/tcc/', "\\SistemaTCC\\Controller\\TccController::indexAction");
 		$app->get('/tcc/cadastrar/', "\\SistemaTCC\\Controller\\TccController::cadastrarAction");
-		$app->get('/tcc/editar/', "\\SistemaTCC\\Controller\\TccController::editarAction");
+		$app->get('/tcc/editar/{id}/', "\\SistemaTCC\\Controller\\TccController::editarAction");
 		$app->get('/tcc/excluir/', "\\SistemaTCC\\Controller\\TccController::excluirAction");
 		$app->get('/tcc/listar/', "\\SistemaTCC\\Controller\\TccController::listarAction");
 

@@ -5,13 +5,22 @@
   var restURL = './enviaretapa/';
   var listaURL = './enviaretapa/';
 	
-  function verifyErrors(err) {
+  function verifyErrors(err,item) {
     var errors = err || {};
     $.each(['arquivo'], function (key, value) {
       var message = errors[value] || false;
       var element = $form.find('#' + value);
       if (message) {
         element.parent().addClass('has-error').find('.help-block').html(message);
+		item.html(
+		'<div class="alert alert-danger alert-dismissible" role="alert">'
+			+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+			+ "<strong>Atenção!</strong> " + message
+		+ '</div>');
+		item.on('click','.close',function(e){
+			e.preventDefault();
+			item.remove();
+		});
       } else {
         element.parent().removeClass('has-error').find('.help-block').html('');
       }
@@ -20,16 +29,13 @@
 
   $form.find('#arquivo').on('change', function (event) {
     event.preventDefault();
-	var item = $('<li class="list-group-item"></li>').html(
+	var item = $('.modelo-item-upload').clone().removeClass('modelo-item-upload').html(
 	'<div class="progress">'
-		+ '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'+
-			+ '<span class="sr-only">Enviando Arquivo</span>'
+		+ '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
+			+ 'Enviando Arquivo...'
 		+ '</div>'
 	+ '</div>');
-    //var values = {
-    //  etapa: $form.find('#etapa-id').val(),
-    //  arquivo: $form.find('#arquivo').val()
-    //};
+
     var url = restURL;
     var method = 'post';
     var request = $.ajax({
@@ -42,6 +48,7 @@
 		processData:false,
 		beforeSend: function() {
 			$('#upload-list').append(item);
+			$('.remove-on-upload-js').remove();
 		}
     });
     // Caiu aqui deu certo
@@ -49,7 +56,7 @@
       verifyErrors();
 	  
 	  item.attr('id','arquivo-' + data.arquivo.id);
-	  item.html(item.prev().html());
+	  item.html($('.modelo-item-upload').html());
 	  item.find('a').attr('href','../' + data.arquivo.caminho + data.arquivo.nome).text(data.arquivo.nome);
 	  item.find('.excluir-arquivo-js').attr('data-id',data.arquivo.id);
       swal({
@@ -67,7 +74,7 @@
     // Caiu aqui, tem erro
     request.fail(function (err) {
       var errors = err.responseJSON;
-      verifyErrors(errors);
+      verifyErrors(errors, item);
     });
   });
   

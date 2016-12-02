@@ -21,7 +21,7 @@ SistemaTCC\Model\Usuario:
         senha:
             type: string
             nullable: false
-            length: 25
+            length: 255
             options:
                 fixed: false
     manyToOne:

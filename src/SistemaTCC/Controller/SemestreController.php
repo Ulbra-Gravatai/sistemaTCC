@@ -90,10 +90,20 @@ class SemestreController {
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-		
+        //verifica se a data inicial é maior que final.
 		if (strtotime($dados['dataInicio']) > strtotime($dados['dataFim'])){
 			return $app->json(['dataInicio' => 'Data inicial é maior que a Data Final'], 400);
-		}		
+		}
+		//verifica se as datas escolhidas não ultrapassem 6 meses.
+		$dataInicio = strtotime($dados['dataInicio']);
+		$dataFim = strtotime($dados['dataFim']);
+		if(date('Y',$dataFim)==date('Y',$dataInicio)){
+			if (date('m',$dataFim)-date('m',$dataInicio)>6){
+				return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+			}
+		}else{
+			return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+		}
 
         if ($this->nomeJaExiste($app, $dados['nome'])) {
             return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
@@ -152,6 +162,20 @@ class SemestreController {
         if (!$campus) {
             return $app->json(['campus' => 'Não existe campus cadastrado'], 400);
         }
+        //verifica se a data inicial é maior que final.
+		if (strtotime($dados['dataInicio']) > strtotime($dados['dataFim'])){
+			return $app->json(['dataInicio' => 'Data inicial é maior que a Data Final'], 400);
+		}
+		//verifica se as datas escolhidas não ultrapassem 6 meses.
+		$dataInicio = strtotime($dados['dataInicio']);
+		$dataFim = strtotime($dados['dataFim']);
+		if(date('Y',$dataFim)==date('Y',$dataInicio)){
+			if (date('m',$dataFim)-date('m',$dataInicio)>6){
+				return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+			}
+		}else{
+			return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+		}
 
         $semestre->setNome($request->get('nome'));
         $semestre->setDataInicio(new DateTime($request->get('dataInicio')));
@@ -268,7 +292,7 @@ class SemestreController {
         $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
 
         $dadosParaView = [
-            'titulo' => 'Semestre Listar',
+            'titulo' => 'Listar Semestre',
             'semestres' => $semestres
         ];
 

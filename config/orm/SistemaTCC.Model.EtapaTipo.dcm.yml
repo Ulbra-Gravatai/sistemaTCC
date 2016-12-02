@@ -17,4 +17,16 @@ SistemaTCC\Model\EtapaTipo:
             length: 25
             options:
                 fixed: false
+        avaliado_banca:
+            type: boolean
+            nullable: false
+        avaliado_coordenador:
+            type: boolean
+            nullable: false
+        avaliado_orientador:
+            type: boolean
+            nullable: false
+        entrega_arquivo:
+            type: boolean
+            nullable: false
     lifecycleCallbacks: {  }

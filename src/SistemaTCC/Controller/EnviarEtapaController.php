@@ -6,6 +6,7 @@ use DateTime;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class EnviarEtapaController {
@@ -14,8 +15,10 @@ class EnviarEtapaController {
 		$asserts = [
 			'arquivo' => [
 				new Assert\File([
-					'mimeTypes' => ['application/pdf','application/x-pdf','application/msword'],
-					'mimeTypesMessage' => 'Somente os formatos doc e pdf são aceitos.',
+					'maxSize' => '30Mi',
+					'maxSizeMessage' => 'O arquivo é muito grande ({{ size }} {{ suffix }}). O tamanho máximo permitido é {{ limit }} {{ suffix }}.',
+					//'mimeTypes' => ['application/pdf','application/x-pdf','application/msword'],
+					//'mimeTypesMessage' => 'Somente os formatos doc e pdf são aceitos.',
 					'disallowEmptyMessage' => 'Selecione um arquivo',
 					'uploadErrorMessage' => 'Não foi possível realizar o upload dos arquivos, tente novamente mais tarde.']
 				),
@@ -34,29 +37,38 @@ class EnviarEtapaController {
 	}
 
 	public function add(Application $app, Request $request) {
-		$file = $request->files->get('arquivo');
-		if(!$file){
-			return $app->json(['Nenhum arquivo recebido.'], 400);
+		$pessoa = $app['orm']->getRepository('\SistemaTCC\Model\Pessoa')->findOneByEmail($app['user']->getUsername());
+		$aluno = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findOneByPessoa($pessoa);
+		if(!$aluno){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'Somente alunos podem acessar está área.']);
 		}
+		
+		$file = $request->files->get('arquivo');
 		
 		$dados = [
 			'arquivo' => $file
 		];
 		
-		//$errors = $this->validacao($app, $dados);
-		//if (count($errors) > 0) {
-		//	return $app->json($errors, 400);
-		//}
-		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
+		$errors = $this->validacao($app, $dados);
+		
 		$tipo = $file->getClientOriginalExtension(); 
+		$extensoesPermitidas = ['pdf','doc','docx'];
+		if(!array_key_exists('arquivo',$errors) && !in_array($tipo,$extensoesPermitidas)){
+			$errors['arquivo'] ='Somente os formatos de arquivo pdf, doc e docx são aceitos.';
+		}
+		
+		if (count($errors) > 0) {
+			return $app->json($errors, 400);
+		}
+		
+		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
 		$nome = md5(uniqid()) . '.' . $tipo;
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
 		
 		$etapaEntregaArquivo = new \SistemaTCC\Model\EtapaEntregaArquivo();
 		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $request->get('etapa'));
-		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', 1);//$request->getSession()->get('alunoId')); //Verificar como será armazenado as informações do usuário na sessão
 		
-		$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($request->get('etapa'));
+		$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneBy(['etapa'=>$etapa,'aluno'=>$aluno]);
 		if(!$etapaEntrega){
 			$etapaEntrega = new \SistemaTCC\Model\EtapaEntrega();
 			$etapaStatus = $app['orm']->find('\SistemaTCC\Model\EtapaStatus', 3);
@@ -103,15 +115,27 @@ class EnviarEtapaController {
 	}
 
 	public function listarAction(Application $app, Request $request) {
-		$semestre = 1; //$request->getSession()->get('semestreId'); //Id Semestre das etapas a serem listadas (Verificar como será armazenado as informações de sessão)
-		$tcc = 1;
+		$pessoa = $app['orm']->getRepository('\SistemaTCC\Model\Pessoa')->findOneByEmail($app['user']->getUsername());
+		$aluno = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findOneByPessoa($pessoa);
+		if(!$aluno){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'Somente alunos podem acessar está área.']);
+		}
+		//Busca o semestre atual
+		$semestre  = $app['orm']->createQuery('SELECT s FROM SistemaTCC\Model\Semestre s WHERE CURRENT_DATE() BETWEEN s.dataInicio AND s.dataFim')->getOneOrNullResult();
+		if(!$semestre){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'O semestre atual não foi cadastrado, contacte o administrado.']);
+		}
+		$tcc = $app['orm']->getRepository('\SistemaTCC\Model\Tcc')->findOneBy(['aluno'=>$aluno,'semestre'=>$semestre]);
+		if(!$tcc){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'Você não tem um TCC cadastrado no semestre atual.']);
+		}
 		$db = $app['orm']->getRepository('\SistemaTCC\Model\Etapa');
-		$etapas = $db->findBy(array('semestre' => $semestre,'tcc' => $tcc));
+		$etapas = $db->findBy(array('semestre' => $semestre,'tcc' => $tcc->getDisciplina()));
 		
 		$etapas_status = array();
 		$etapas_nota = array();
 		foreach($etapas as $etapa){
-			$etapa_entrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($etapa->getId());
+			$etapa_entrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneBy(['etapa'=>$etapa,'aluno'=>$aluno]);
 			if($etapa_entrega!=''){
 				$etapas_status[$etapa->getId()] = $etapa_entrega->getEtapaStatus();
 				$etapa_nota = $app['orm']->getRepository('\SistemaTCC\Model\EtapaNota')->findOneByEtapaEntrega($etapa_entrega->getId());
@@ -122,7 +146,7 @@ class EnviarEtapaController {
 		}
 		
 		$dadosParaView = [
-			'titulo' => 'Etapas',
+			'titulo' => 'Listar Etapas',
 			'etapas' => $etapas,
 			'etapas_status' => $etapas_status,
 			'etapas_nota' => $etapas_nota,
@@ -132,17 +156,24 @@ class EnviarEtapaController {
 	}
 
 	public function enviarAction(Application $app, Request $request, $id) {
+		$pessoa = $app['orm']->getRepository('\SistemaTCC\Model\Pessoa')->findOneByEmail($app['user']->getUsername());
+		$aluno = $app['orm']->getRepository('\SistemaTCC\Model\Aluno')->findOneByPessoa($pessoa);
+		if(!$aluno){
+			return $app['twig']->render('alerta.twig',['tipo'=>'danger','mensagem'=>'Somente alunos podem acessar está área.']);
+		}
+		
 		$etapa = $app['orm']->getRepository('\SistemaTCC\Model\Etapa')->find($id);
 		
 		if (!$etapa) {
 			return $app->redirect('../enviaretapa/listar');
 		}
 		
-		$etapa_entrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneByEtapa($etapa->getId());
+		$etapa_entrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneBy(['etapa'=>$etapa,'aluno'=>$aluno]);
 		$arquivos = array();
 		if($etapa_entrega){
 			$arquivos = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntregaArquivo')->findByEtapaEntrega($etapa_entrega->getId());
 		}
+
 		$dadosParaView = [
 			'titulo' => 'Enviar Etapa:',
 			'subtitulo' => $etapa->getNome(),

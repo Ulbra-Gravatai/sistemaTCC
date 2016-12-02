@@ -40,7 +40,7 @@
 								">{{ etapas_status[etapa.id].getNome() }}</span>
 						{% endif %}
 					</td>
-					<td>{{ etapa.getDataFim()|date('d/m/Y H:i:s') }}</td>
+					<td>{{ etapa.getDataFim()|date('d/m/Y') }}</td>
 					<td>
 						{% if etapa.id in etapas_nota|keys %}
 							{{ etapas_nota[etapa.id].getNota() }}/{{ etapa.peso }}
@@ -49,26 +49,28 @@
 						{% endif %}
 					</td>
 					<td>
-						<div class="pull-right">
-							<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning btn-xs">
-								{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
-									<i class="fa fa-search fa-lg"></i><span class="hidden-xs"> Consultar</span>
-								{% else %}
-									{% if etapa.id in etapas_status|keys %}
-										<i class="fa fa-pencil fa-lg"></i><span class="hidden-xs"> Editar</span>
+						{% if etapa.getEtapaTipo().getEntregaArquivo() %}
+							<div class="pull-right">
+								<a href="enviaretapa/enviar/{{ etapa.id }}/" class="btn btn-warning btn-xs">
+									{% if etapa.getDataInicio() > data_atual or etapa.getDataFim() < data_atual %}
+										<i class="fa fa-search fa-lg"></i><span class="hidden-xs"> Consultar</span>
 									{% else %}
-										<i class="fa fa-send-o fa-lg"></i><span class="hidden-xs"> Enviar</span>
+										{% if etapa.id in etapas_status|keys %}
+											<i class="fa fa-pencil fa-lg"></i><span class="hidden-xs"> Editar</span>
+										{% else %}
+											<i class="fa fa-send-o fa-lg"></i><span class="hidden-xs"> Enviar</span>
+										{% endif %}
 									{% endif %}
-								{% endif %}
-							</a>
-						</div>
+								</a>
+							</div>
+						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
   {% else %}
-	<div class="alert alert-warning" role="alert">Nenhuma etapa encontrada!</div>
+	<div class="alert alert-danger" role="alert">Não existem etapas cadastradas! Contate o Administrador.</div>
   {% endif %}
 
 {% endblock %}

@@ -34,14 +34,29 @@
                     <strong class="control-label">Sexo</strong>
                     <div class="checkbox">
                         <label for="">
-                            <input type="radio" name="sexo" value="1" id="sexom" {{ values.sexo == 1 ? 'checked' : '' }}> <strong>M</strong>
+                            <input type="radio" name="sexo" value="0" id="sexom" {{ values.sexo == 0 ? 'checked' : '' }}> <strong>M</strong>
                         </label>
                         <label>
-                            <input type="radio" name="sexo" value="0" id="sexof" {{ values.sexo == 0 ? 'checked' : '' }}> <strong>F</strong>
+                            <input type="radio" name="sexo" value="1" id="sexof" {{ values.sexo == 1 ? 'checked' : '' }}> <strong>F</strong>
                         </label>
                     </div>
                 </div>
             </div>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label class="control-label" for="senha">Senha</label>
+					<input type="text" class="form-control" name="senha" id="senha">
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="aling-btn-input">
+					<button type="button" class="btn btn-primary btn-block gerar-senha-js">
+						<i class="fa fa-key" aria-hidden="true"></i>
+						<span class="hidden-xs">Gerar</span>
+					</button>
+				</div>
+			</div>
         </div>
         <div clas="row">
         	<div class="col-xs-12">
@@ -85,4 +100,5 @@
 <script src="./app/shared/jquery-mask-plugin.js"></script>
 <script src="./app/shared/mascaras-padrao.js"></script>
 <script src="./app/professor/formulario.js"></script>
+<script src="./app/shared/gerador-senha.js"></script>
 {% endblock %}

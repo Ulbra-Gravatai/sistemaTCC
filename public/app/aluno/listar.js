@@ -18,7 +18,11 @@ $(function() {
         });
 
         request.fail(function(err) {
-            console.log(err);
+            var res = err.responseJSON;
+            showError(res.error);
+            if ('message' in res) {
+                console.log('DETALHES DO ERRO:', res.message);
+            }
             return false;
         });
     }
