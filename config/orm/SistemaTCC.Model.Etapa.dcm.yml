@@ -24,6 +24,9 @@ SistemaTCC\Model\Etapa:
             length: 25
             options:
                 fixed: false
+        descricao:
+            type: text
+            nullable: true
         dataInicio:
             type: datetime
             nullable: false
