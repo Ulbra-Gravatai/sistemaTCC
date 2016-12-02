@@ -10,13 +10,12 @@ $(function() {
     function verifyErrors(err) {
         const errors = err || {};
 
-        $.each(['titulo', 'aluno', 'semestre'], function(key, value) {
+        $.each(['titulo', 'aluno', 'semestre', 'disciplina'], function(key, value) {
             const message = errors[value] || false;
-            const element = $form.find('#' + value);
             if (message) {
-                element.parent().addClass('has-error').find('.help-block').html(message);
+                $('.group-' + value).addClass('has-error').find('.help-block').html(message);
             } else {
-                element.parent().removeClass('has-error').find('.help-block').html('');
+                $('.group-' + value).removeClass('has-error').find('.help-block').html('');
             }
         });
     }
@@ -28,6 +27,7 @@ $(function() {
             titulo: $form.find('#titulo').val(),
             aluno: $form.find('#aluno').val(),
             semestre: $form.find('#semestre').val(),
+			disciplina: $form.find('#disciplina').val(),
         };
         values.aluno = values.aluno.substring(0, values.aluno.toString().indexOf('-')).trim();
 

@@ -29,3 +29,6 @@
 .item-upload .progress, .item-upload .alert{
 	margin: 0px;
 }
+.modelo-item-upload{
+	display: none;
+}
