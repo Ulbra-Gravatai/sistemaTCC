@@ -7,6 +7,11 @@
   const $btnSalvarEtapa = $('#btn-salvar-etapa-js');
   const urlSemestre = './semestre/';
   const urlEtapa = './etapa-semestre/';
+  
+	$('.datepicker').datepicker({
+		format: 'dd/mm/yyyy',                
+		language: 'pt-BR'
+	});
 
   function init(){
     const id = $('#id-semestre').val();

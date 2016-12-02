@@ -1,63 +1,71 @@
 {% extends "layout.twig" %}
-
 {% block styles %}
+	<link rel="stylesheet" href="./app/enviaretapa/formulario.css">
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-	  <div class="col-sm-12 col-xs-12">
-		  <h3>{{ titulo }} <small>{{ subtitulo }}</small></h3>
-	  </div>
-  </div>
-  <form id="form-js" class="form-default" method="post" action="./enviaretapa/" enctype="multipart/form-data">
-	  {% if etapa is defined %}
-		<input type="hidden" name="etapa" value="{{ etapa }}" id="etapa-id" />
-	  {% endif %}
-	  <div class="row">
-		  <div class="col-xs-4 col-xs-offset-4">
-			  <table class="table table-bordered">
-				  <thead>
-					  <tr><th colspan="2" class="text-center">Datas para Envio</th></tr>
-				  </thead>
-				  <tbody>
-					  <tr>
-						  <th class="text-right">Inicio:</th>
-						  <td>{{ data_inicio }}</td>
-					  </tr>
-					  <tr>
-						  <th class="text-right">Fim:</th>
-						  <td>{{ data_fim }}</td>
-					  </tr>
-				  </tbody>
-			  </table>
-		  </div>
-	  </div>
-	  <div class="row">
-		  <div class="col-xs-12 col-sm-6">
-			  <div class="form-group">
-				  <label for="arquivo">Enviar Arquivo</label>
-				  <input type="file" name="arquivo" id="arquivo">
-				  <p class="help-block"></p>
-			  </div>
-		  </div>
-		  <div class="col-xs-12 col-sm-6">
-			  <div class="form-group">
-				  <label for="nome">Nome Arquivo</label>
-				  <input type="text" name="nome" id="nome" class="form-control">
-				  <p class="help-block"></p>
-			  </div>
-		  </div>
-	  </div>
-	  <div class="row">
-		  <div class="col-xs-12">
-			  <a href="./enviaretapa/listar/" class="btn btn-default"><i class="fa fa-angle-left" aria-hidden="true"></i> Voltar</a>
-			  <button type="submit" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i> Salvar</button>
-		  </div>
-	  </div>
-
-  </form>
-
+	{% set isEditable = etapa.getDataInicio() <= data_atual and etapa.getDataFim() >= data_atual %}
+	<div class="row">
+		<div class="col-sm-12 col-xs-12">
+			<h3>{{ titulo }} <small>{{ subtitulo }}</small></h3>
+		</div>
+	</div>
+	<form id="form-js" class="form-default" method="post" action="./enviaretapa/" enctype="multipart/form-data">
+		<input type="hidden" name="etapa" value="{{ etapa.id }}" id="etapa-id" />
+		<div class="row">
+			<div class="col-xs-12">
+				<h4 class="pull-left">Arquivos</h4>
+				{% if isEditable %}
+					<div id="upload" class="btn-upload pull-right">
+						<i class="fa fa-upload" aria-hidden="true"></i>
+						<span class="hidden-xs"> Enviar arquivo</span>
+						<input type="file" name="arquivo" id="arquivo">
+					</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<ul id="upload-list" class="list-group lista-arquivos-js">
+					{% if arquivos|length > 0 %}
+						{% for arquivo in arquivos %}
+							<li id="arquivo-{{ arquivo.getId() }}" class="list-group-item">
+								<a href="../{{ arquivo.caminho }}{{ arquivo.nome }}">{{ arquivo.nome }}</a>
+								{% if isEditable %}
+									<div class="pull-right">
+										<button type="button" class="btn btn-danger btn-xs excluir-arquivo-js" data-id="{{ arquivo.getId() }}">
+											<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+											<span class="hidden-xs">Excluir</span>
+										</button>
+									</div>
+								{% endif %}
+							</li>
+						{% endfor %}
+					{% else %}
+						<div class="alert alert-warning remove-on-upload-js" role="alert">Nenhum arquivo enviado.</div>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<a href="./enviaretapa/listar/" class="btn btn-default"><i class="fa fa-angle-left" aria-hidden="true"></i> Voltar</a>
+			</div>
+		</div>
+	</form>
+	<li class="list-group-item item-upload modelo-item-upload">
+		<a href=""></a>
+		{% if isEditable %}
+			<div class="pull-right">
+				<button type="button" class="btn btn-danger btn-xs excluir-arquivo-js" data-id="">
+					<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+					<span class="hidden-xs">Excluir</span>
+				</button>
+			</div>
+		{% endif %}
+	</li>
 {% endblock %}
 
 {% block scripts %}
+	<script src="./app/enviaretapa/formulario.js"></script>
 {% endblock %}

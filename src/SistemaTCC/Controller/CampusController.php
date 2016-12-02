@@ -37,9 +37,22 @@ class CampusController {
         return $retorno;
     }
 
+    private function nomeJaExiste($app, $nome, $id = false) {
+        $allCampus = $app['orm']->getRepository('\SistemaTCC\Model\Campus')->findAll();
+        if (count($allCampus)) {
+            foreach ($allCampus as $objCampus) {
+                if ($id && (int)$id === (int)$objCampus->getId()) {
+                    continue;
+                }
+                if ($nome === $objCampus->getNome()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public function add(Application $app, Request $request) {
-
         $dados = [
             'nome' => $request->get('nome'),
         ];
@@ -47,6 +60,11 @@ class CampusController {
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
+
+        if ($this->nomeJaExiste($app, $dados['nome'])) {
+            return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
+        }
+
         $campus = new \SistemaTCC\Model\Campus();
         $campus->setNome($dados['nome']);
         try {
@@ -70,6 +88,9 @@ class CampusController {
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
+        }
+        if ($this->nomeJaExiste($app, $dados['nome'], $id)) {
+            return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
         $campus->setNome($dados['nome']);
         try {
@@ -130,7 +151,7 @@ class CampusController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Campus');
         $campus = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Campus Listar',
+            'titulo' => 'Listar Campus',
             'campus' => $campus,
         ];
         return $app['twig']->render('campus/listar.twig', $dadosParaView);

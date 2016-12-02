@@ -14,8 +14,8 @@ class ProfessorController {
             'nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú]+?[a-zA-ZÀ-ú ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
+                    'pattern' => '/^[a-zA-ZÀ-ú]+ [a-zA-ZÀ-ú.]+?[a-zA-ZÀ-ú .]+$/i',
+                    'message' => 'Informe o Nome e Sobrenome'
                 ]),
                 new Assert\Length([
                     'min' => 3,
@@ -46,6 +46,18 @@ class ProfessorController {
             'sexo' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
             ],
+            'interesses' => [
+                new Assert\NotBlank(['message' => 'Informe as áreas de interesse']),
+                new Assert\Type([
+                    'type' => 'array',
+                ]),
+            ],
+			'senha' => [
+				new Assert\Length([
+					'min' => 6,
+					'minMessage' => 'A senha deve conter no minímo {{ limit }} digitos'
+				])
+			]
         ];
         $constraint = new Assert\Collection($asserts);
         $errors = $app['validator']->validate($dados, $constraint);
@@ -58,23 +70,50 @@ class ProfessorController {
         }
         return $retorno;
     }
+	
+	/*
+	 * Função que verifica se o email já foi cadastrado.
+	 */
+	private function emailJaExiste($app, $email, $id = false) {
+		$pessoa = $app['orm']->getRepository('\SistemaTCC\Model\Pessoa')->findOneByEmail($email);
+		if($pessoa && $id !== (int) $pessoa->getId()){
+			return true;
+		}
+		return false;
+	}
 
     public function add(Application $app, Request $request) {
 
         $dados = [
-            'nome'      => $request->get('nome'),
-            'email'     => $request->get('email'),
-            'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
-            'sexo'      => $request->get('sexo')
+            'nome'       => $request->get('nome'),
+            'email'      => $request->get('email'),
+            'telefone'   => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
+            'sexo'       => $request->get('sexo'),
+            'interesses' => $request->get('interesses'),
+			'senha' 	 => $request->get('senha')
         ];
 
         $errors = $this->validacao($app, $dados);
+		
+		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'])) {
+			$errors['email'] = 'Este email já existe, informe outro';
+		}
+		
+		if (!array_key_exists('senha',$errors) && $dados['senha'] == '') {
+			$errors['senha'] = 'Preencha esse campo';
+		}
+		
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
 
         $pessoa = new \SistemaTCC\Model\Pessoa();
         $professor = new \SistemaTCC\Model\Professor();
+		$usuario = new \SistemaTCC\Model\Usuario();
+
+        foreach ($dados['interesses'] as $idArea) {
+            $professor->addAreaDeInteresse($app['orm']->find('\SistemaTCC\Model\AreaDeInteresse', $idArea));
+        }
 
         $pessoa->setNome($request->get('nome'))
                ->setEmail($request->get('email'))
@@ -82,9 +121,14 @@ class ProfessorController {
                ->setSexo($request->get('sexo'));
 
         $professor->setPessoa($pessoa);
-
+		
+		$usuario->setPessoa($pessoa)
+				->setSenha($this->codificarSenha($app,$dados['senha']))
+				->setUsuarioAcesso($app['orm']->find('\SistemaTCC\Model\UsuarioAcesso',2));
+				
         try {
             $app['orm']->persist($professor);
+			$app['orm']->persist($usuario);
             $app['orm']->flush();
         }
         catch (\Exception $e) {
@@ -105,25 +149,53 @@ class ProfessorController {
 
         if (null === $professor = $app['orm']->find('\SistemaTCC\Model\Professor', (int) $id))
             return new Response('O professor não existe.', Response::HTTP_NOT_FOUND);
-
+		
+		$pessoa = $professor->getPessoa();
         $dados = [
-            'nome'      => $request->get('nome'),
-            'email'     => $request->get('email'),
-            'telefone'  => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
-            'sexo'      => $request->get('sexo')
+            'nome'       => $request->get('nome'),
+            'email'      => $request->get('email'),
+            'telefone'   => str_replace(array('(',')',' ','-'),'',$request->get('telefone')),
+            'sexo'       => $request->get('sexo'),
+            'interesses' => $request->get('interesses'),
+			'senha'		 => $request->get('senha')
         ];
         $errors = $this->validacao($app, $dados);
+		
+		if (!array_key_exists('email',$errors) && $this->emailJaExiste($app, $dados['email'],$pessoa->getId())) {
+			$errors['email'] = 'Este email já existe, informe outro';
+		}
+		
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
+        // Remove Areas de Interesse
+        $interesses = $professor->getAreasDeInteresse();
+        if (count($interesses)) {
+            foreach ($interesses as $interesse) {
+                $professor->removeAreaDeInteresse($interesse);
+            }
+        }
 
-        $pessoa = $professor->getPessoa();
+        // Adiciona Areas de Interesse
+        if (count($dados['interesses'])) {
+            foreach ($dados['interesses'] as $idArea) {
+                $areaDeInteresse = $app['orm']->find('\SistemaTCC\Model\AreaDeInteresse', (int) $idArea);
+                if ($areaDeInteresse) {
+                    $professor->addAreaDeInteresse($areaDeInteresse);
+                }
+            }
+        }
 
         $pessoa->setNome($request->get('nome', $pessoa->getNome()))
                ->setEmail($request->get('email', $pessoa->getEmail()))
                ->setTelefone(str_replace(array('(',')',' ','-'),'',$request->get('telefone', $pessoa->getTelefone())))
                ->setSexo($request->get('sexo', $pessoa->getSexo()));
-
+		
+		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($pessoa->getId());
+		if($dados['senha']!=''){
+			$usuario->setSenha($this->codificarSenha($app,$dados['senha']));
+		}
+		
         try {
             $app['orm']->flush();
         }
@@ -137,7 +209,10 @@ class ProfessorController {
 
         if (null === $professor = $app['orm']->find('\SistemaTCC\Model\Professor', (int) $id))
             return $app->json([ 'error' => 'O professor não existe.'], 400);
+		
+		$usuario = $app['orm']->getRepository('\SistemaTCC\Model\Usuario')->findOneByPessoa($professor->getPessoa()->getId());
         try {
+			$app['orm']->remove($usuario);
             $app['orm']->remove($professor);
             $app['orm']->flush();
         }
@@ -152,8 +227,12 @@ class ProfessorController {
     }
 
     public function cadastrarAction(Application $app, Request $request) {
+
+        $areas = $app['orm']->getRepository('\SistemaTCC\Model\AreaDeInteresse')->findAll();
+
         $dadosParaView = [
             'titulo' => 'Cadastrar Professor',
+            'areas' => $areas,
             'values' => [
                 'nome'      => '',
                 'email'     => '',
@@ -170,14 +249,17 @@ class ProfessorController {
         if (!$professor) {
             return $app->redirect('../professor/listar');
         }
+        $areas = $app['orm']->getRepository('\SistemaTCC\Model\AreaDeInteresse')->findAll();
         $dadosParaView = [
             'titulo' => 'Alterando Professor: ' . $professor->getPessoa()->getNome(),
             'id' => $id,
+            'areas' => $areas,
             'values' => [
-                'nome'      => $professor->getPessoa()->getNome(),
-                'email'     => $professor->getPessoa()->getEmail(),
-                'telefone'  => $professor->getPessoa()->getTelefone(),
-                'sexo'      => $professor->getPessoa()->getSexo(),
+                'nome'       => $professor->getPessoa()->getNome(),
+                'email'      => $professor->getPessoa()->getEmail(),
+                'telefone'   => $professor->getPessoa()->getTelefone(),
+                'sexo'       => $professor->getPessoa()->getSexo(),
+                'interesses' => $professor->getAreasDeInteresse(),
             ],
         ];
         return $app['twig']->render('professor/formulario.twig', $dadosParaView);
@@ -188,14 +270,21 @@ class ProfessorController {
     }
 
     public function listarAction(Application $app, Request $request) {
-        // return '1223';
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Professor');
         $professores = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Professor Listar',
+            'titulo' => 'Listar Professor',
             'professores' => $professores,
         ];
         return $app['twig']->render('professor/listar.twig', $dadosParaView);
     }
+	
+	private function codificarSenha(Application $app, $senha){
+		$token = $app['security.token_storage']->getToken();
 
+		if (null !== $token) {
+			return $app->encodePassword($token->getUser(), $senha);
+		}
+		return false;
+	}
 }

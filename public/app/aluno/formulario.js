@@ -6,11 +6,11 @@ $(function() {
     const itemID = $form.find('#id').val();
     const restURL = './aluno/';
     const listaURL = './aluno/';
-	
+
     function verifyErrors(err) {
         const errors = err || {};
 
-        $.each(['nome', 'email', 'telefone', 'cgu', 'matricula'], function(key, value) {
+        $.each(['nome', 'email', 'telefone', 'cgu', 'matricula','senha'], function(key, value) {
             const message = errors[value] || false;
             const element = $form.find('#' + value);
             if (message) {
@@ -31,6 +31,7 @@ $(function() {
             email: $form.find('#email').val(),
             sexo: $form.find('input[name=sexo]:checked').val(),
           	cgu:  $form.find('#cgu').val(),
+			senha: $form.find('#senha').val()
         };
 
 
@@ -48,16 +49,9 @@ $(function() {
         // Caiu aqui deu certo
         request.done(function(data) {
             verifyErrors();
-            swal({
-                title: "OK",
-                text: text,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Voltar para Lista",
-                closeOnConfirm: false },
-                function() {
-                    location.href = listaURL;
-                });
+            showSaved(text, function() {
+                location.href = listaURL;
+            });
         });
 
         // Caiu aqui, tem erro

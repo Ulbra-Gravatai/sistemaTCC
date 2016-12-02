@@ -34,30 +34,54 @@
                     <strong class="control-label">Sexo</strong>
                     <div class="checkbox">
                         <label for="">
-                            <input type="radio" name="sexo" value="1" id="sexom" {{ values.sexo == 1 ? 'checked' : '' }}> <strong>M</strong>
+                            <input type="radio" name="sexo" value="0" id="sexom" {{ values.sexo == 0 ? 'checked' : '' }}> <strong>M</strong>
                         </label>
                         <label>
-                            <input type="radio" name="sexo" value="0" id="sexof" {{ values.sexo == 0 ? 'checked' : '' }}> <strong>F</strong>
+                            <input type="radio" name="sexo" value="1" id="sexof" {{ values.sexo == 1 ? 'checked' : '' }}> <strong>F</strong>
                         </label>
                     </div>
                 </div>
             </div>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label class="control-label" for="senha">Senha</label>
+					<input type="text" class="form-control" name="senha" id="senha">
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="aling-btn-input">
+					<button type="button" class="btn btn-primary btn-block gerar-senha-js">
+						<i class="fa fa-key" aria-hidden="true"></i>
+						<span class="hidden-xs">Gerar</span>
+					</button>
+				</div>
+			</div>
         </div>
         <div clas="row">
         	<div class="col-xs-12">
-        		<h4>Áreas de interesse:</h4>
+                <div class="form-group">
+                    <h4 id="interesses">Áreas de interesse:</h4>
+                    <span class="help-block"></span>
+                </div>
         	</div>
         </div>
         <div class="row">
 			<div class="col-xs-4">
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="redesi" >Redes de Computadores I</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="redesii" >Redes de Computadores II</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Algoritmosi" >Algoritmos de programação I</label></div>
-			</div>
-			<div class="col-xs-4">
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Algoritmosii" >Algoritmos de programação II</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Algoritmosiii" >Algoritmos de programação III</label></div>
-				<div class="form-group"><label class="control-label"><input type="checkbox" name="interesse" value="Outros" >Outros</label></div>
+            {% for area in areas %}
+                {% set checked = ' ' %}
+                {% if id is defined %}
+                    {% for x in values.interesses %}
+                        {% if x.getId() == area.getId() %}
+                            {% set checked = 'checked' %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+				<div class="form-group">
+                    <label class="control-label">
+                    <input type="checkbox" value="{{ area.getId() }}" {{checked}}> {{ area.getTitulo() }}</label>
+                </div>
+            {% endfor %}
 			</div>
         </div>
         <hr>
@@ -76,4 +100,5 @@
 <script src="./app/shared/jquery-mask-plugin.js"></script>
 <script src="./app/shared/mascaras-padrao.js"></script>
 <script src="./app/professor/formulario.js"></script>
+<script src="./app/shared/gerador-senha.js"></script>
 {% endblock %}

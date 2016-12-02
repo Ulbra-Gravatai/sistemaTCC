@@ -12,13 +12,16 @@ $(function() {
             });
         // Caiu aqui deu certo
         request.done(function(data) {
-            location.href = urlListar;
+            showDone(function() {
+                location.href = urlListar;
+            });
             return;
         });
 
         // Caiu aqui, tem erro
         request.fail(function(err) {
-            console.log(err);
+            swal("OPS!","O Campus possui algum vínculo como por exemplo em SEMESTRE, portanto não pode ser removido!" , "error");
+            console.log(err.responseText);
             return false;
         });
     }
@@ -29,18 +32,9 @@ $(function() {
         if (!id) {
             return false;
         }
-        swal({
-            title: "Deseja mesmo excluir?",
-            text: "Você irá remover esse registro!",
-            type: "error",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Sim, excluir agora!",
-            closeOnConfirm: false },
-            function(){
-                swal("Ok!", "Registro excluido!", "success");
-                ajax(id);
-            });
+        showConfirmDelete(function() {
+            ajax(id);
+        });
     });
 
 });

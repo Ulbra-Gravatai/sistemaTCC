@@ -17,7 +17,7 @@ class EtapaSemestreController {
             'etapa-nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú ]+$/i',
+                    'pattern' => '/^[a-zA-ZÀ-ú0-9 ]+$/i',
                     'message' => 'Seu nome deve possuir apenas letras'
                 ]),
                 new Assert\Length([
@@ -31,21 +31,21 @@ class EtapaSemestreController {
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é um {{ type }} válido.',
+                        'message' => 'O valor {{ value }} não é numérico.',
                     ]),
             ],
 			'etapa-semestre' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é um {{ type }} válido.',
+                        'message' => 'O valor {{ value }} não é numérico.',
                     ]),
             ],
 			'etapa-peso' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é um {{ type }} válido.',
+                        'message' => 'O valor {{ value }} não é numérico.',
                     ]),
             ],
             'etapa-dataInicio' => [
@@ -60,14 +60,14 @@ class EtapaSemestreController {
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é um {{ type }} válido.',
+                        'message' => 'O valor {{ value }} não é numérico.',
                     ]),
             ],
 			'etapa-tcc' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é um {{ type }} válido.',
+                        'message' => 'O valor {{ value }} não é numérico.',
                     ]),
             ],
         ];
@@ -233,7 +233,7 @@ class EtapaSemestreController {
       $query = $app['orm']->createQuery($sql);
        $etapa = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Etapa Listar',
+            'titulo' => 'Listar Etapa',
             'etapas' => $etapa,
         ];
         return $app['twig']->render('etapa/listar.twig', $dadosParaView);

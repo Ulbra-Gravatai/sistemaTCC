@@ -16,12 +16,12 @@ class SemestreController {
         $asserts = [
             'nome' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
-                new Assert\Regex([
-                    'pattern' => '/^[a-zA-ZÀ-ú ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
-                ]),
+                // new Assert\Regex([
+                //     'pattern' => '/^[0-9]{4}\/[0-2]{2}+$/i',
+                //     'message' => 'Nome do semestre deve possuir esse formato Ex.: 2016/02'
+                // ]),
                 new Assert\Length([
-                    'min' => 3,
+                    'min' => 6,
                     'max' => 50,
                     'minMessage' => 'Seu nome precisa possuir pelo menos {{ limit }} caracteres',
                     'maxMessage' => 'Seu nome não deve possuir mais que {{ limit }} caracteres',
@@ -61,6 +61,22 @@ class SemestreController {
         }
         return $retorno;
     }
+
+    private function nomeJaExiste($app, $nome, $id = false) {
+        $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
+        if (count($semestres)) {
+            foreach ($semestres as $semestre) {
+                if ($id && (int)$id === (int)$semestre->getId()) {
+                    continue;
+                }
+                if ($nome === $semestre->getNome()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public function add(Application $app, Request $request) {
         $dados = [
             'nome'       => $request->get('nome'),
@@ -73,6 +89,24 @@ class SemestreController {
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
+        }
+        //verifica se a data inicial é maior que final.
+		if (strtotime($dados['dataInicio']) > strtotime($dados['dataFim'])){
+			return $app->json(['dataInicio' => 'Data inicial é maior que a Data Final'], 400);
+		}
+		//verifica se as datas escolhidas não ultrapassem 6 meses.
+		$dataInicio = strtotime($dados['dataInicio']);
+		$dataFim = strtotime($dados['dataFim']);
+		if(date('Y',$dataFim)==date('Y',$dataInicio)){
+			if (date('m',$dataFim)-date('m',$dataInicio)>6){
+				return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+			}
+		}else{
+			return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+		}
+
+        if ($this->nomeJaExiste($app, $dados['nome'])) {
+            return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
 
         $semestre = new Semestre();
@@ -120,10 +154,28 @@ class SemestreController {
             return $app->json($errors, 400);
         }
 
+        if ($this->nomeJaExiste($app, $dados['nome'], $id)) {
+            return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
+        }
+
         $campus = $app['orm']->find('\SistemaTCC\Model\Campus', $request->get('campus'));
         if (!$campus) {
             return $app->json(['campus' => 'Não existe campus cadastrado'], 400);
         }
+        //verifica se a data inicial é maior que final.
+		if (strtotime($dados['dataInicio']) > strtotime($dados['dataFim'])){
+			return $app->json(['dataInicio' => 'Data inicial é maior que a Data Final'], 400);
+		}
+		//verifica se as datas escolhidas não ultrapassem 6 meses.
+		$dataInicio = strtotime($dados['dataInicio']);
+		$dataFim = strtotime($dados['dataFim']);
+		if(date('Y',$dataFim)==date('Y',$dataInicio)){
+			if (date('m',$dataFim)-date('m',$dataInicio)>6){
+				return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+			}
+		}else{
+			return $app->json(['dataInicio' => 'Semestre deve ter no máximo 6 meses'], 400);
+		}
 
         $semestre->setNome($request->get('nome'));
         $semestre->setDataInicio(new DateTime($request->get('dataInicio')));
@@ -236,13 +288,14 @@ class SemestreController {
     }
 
     public function listarAction(Application $app) {
-     $db = $app['orm']->getRepository('\SistemaTCC\Model\Semestre');
-      $query = $app['orm']->createQuery($sql);
-       $semestres = $db->findAll();
+
+        $semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
+
         $dadosParaView = [
-            'titulo' => 'Semestre Listar',
-            'semestres' => $semestres,
+            'titulo' => 'Listar Semestre',
+            'semestres' => $semestres
         ];
+
         return $app['twig']->render('semestre/listar.twig', $dadosParaView);
     }
 

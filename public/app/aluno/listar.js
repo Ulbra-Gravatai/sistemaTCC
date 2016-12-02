@@ -1,39 +1,41 @@
-var swalExcluir = {
-  title: "Você tem certeza?",
-  text: "Após a exclusão não será possível recupera os dados.",
-  type: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#DD6B55",
-  confirmButtonText: "Deletar!",
-  cancelButtonText: "Cancelar!",
-  closeOnConfirm: false,
-  closeOnCancel: false
-};
-var $lista = $('.lista-aluno-js');
-$lista.on('click', '.excluir-aluno-js', function (e) {
-  e.preventDefault();
+$(function() {
 
-  var alunoId = $(this).data('id');
+    const $lista = $('#lista-js');
+    const url = './aluno/';
+    const urlListar = './aluno/listar';
 
-  if (!alunoId)
-    return false;
+    function ajax(id) {
+        const request = $.ajax({
+                url: url + id + '/',
+                type: 'delete',
+                dataType: 'json',
+            });
+        request.done(function(data) {
+            showDone(function() {
+                location.href = urlListar;
+            });
+            return;
+        });
 
-  swal(swalExcluir, function (isConfirm) {
-    if (isConfirm) {
-      var request = $.ajax({
-        url: 'aluno/' + alunoId + '/',
-        type: 'DELETE',
-        dataType: 'json'
-      });
-      request.done(function (data) {
-        swal("Deletado!", "O Aluno foi deletado com sucesso!", "success");
-        $('#aluno-' + alunoId).remove();
-      });
-      request.fail(function (data) {
-        swal("Erro!", "Erro ao deletar o aluno, tente novamente", "error");
-      });
-    } else {
-      swal("Cancelado!", "O Aluno não foi deletado!", "error");
+        request.fail(function(err) {
+            var res = err.responseJSON;
+            showError(res.error);
+            if ('message' in res) {
+                console.log('DETALHES DO ERRO:', res.message);
+            }
+            return false;
+        });
     }
-  });
+
+    $lista.on('click', '.excluir', function(event) {
+        event.preventDefault();
+        const id = $(this).data('id');
+        if (!id) {
+            return false;
+        }
+        showConfirmDelete(function() {
+            ajax(id);
+        });
+    });
+
 });
