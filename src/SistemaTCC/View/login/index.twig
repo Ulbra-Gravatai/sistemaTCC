@@ -10,8 +10,14 @@
 		{% endif %}
         <div class="account-wall">
             <form action="./login/" method="post" class="form-signin">
-            <input type="text" name="_username" class="form-control" placeholder="Email" required autofocus>
-            <input type="password" name="_password" class="form-control" placeholder="Senha" required>
+            <div class="form-group">
+              <label for="_username">e-mail</label>
+              <input type="text" name="_username" class="form-control" required autofocus>
+            </div>
+            <div class="form-group">
+              <label for="_password">Senha</label>
+              <input type="password" name="_password" class="form-control" required>
+            </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">
                 Login</button>
             </form>
