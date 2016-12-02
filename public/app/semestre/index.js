@@ -7,9 +7,9 @@
   const $btnSalvarEtapa = $('#btn-salvar-etapa-js');
   const urlSemestre = './semestre/';
   const urlEtapa = './etapa-semestre/';
-  
+
 	$('.datepicker').datepicker({
-		format: 'dd/mm/yyyy',                
+		format: 'dd/mm/yyyy',
 		language: 'pt-BR'
 	});
 
@@ -110,7 +110,8 @@
     });
 
     request.done(function(data){
-      if(data.id) {
+
+      if(data.semestre) {
           swal({
            title: "Cadastrado!",
            text: "Continuar cadastrando o semestre!",
@@ -119,7 +120,7 @@
           },
           function(isConfirm){
            if (isConfirm) {
-             location.href = urlSemestre + 'editar/' + data.id;
+             location.href = urlSemestre;
            }
           });
       }
