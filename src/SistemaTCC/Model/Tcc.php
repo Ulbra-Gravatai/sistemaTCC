@@ -27,7 +27,12 @@ class Tcc
      */
     private $semestre;
 
-
+	/**
+     * @var integer
+     */
+    private $disciplina;
+	
+	
     /**
      * Get id
      *
@@ -108,6 +113,30 @@ class Tcc
     public function getSemestre()
     {
         return $this->semestre;
+    }
+	
+	/**
+     * Set disciplina
+     *
+     * @param integer $disciplina
+     *
+     * @return Tcc
+     */
+    public function setDisciplina($disciplina = null)
+    {
+        $this->disciplina = $disciplina;
+
+        return $this;
+    }
+	
+	/**
+     * Get disciplina
+     *
+     * @return integer
+     */
+    public function getDisciplina()
+    {
+        return $this->disciplina;
     }
 }
 

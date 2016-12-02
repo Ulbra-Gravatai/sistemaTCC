@@ -38,6 +38,13 @@ class tccController {
                     'maxMessage' => 'O titulo não deve possuir mais que {{ limit }} caracteres',
                 ])
             ],
+			'disciplina' => [
+				new Assert\NotBlank(['message' => 'Preencha esse campo']),
+				new Assert\Type([
+                    'type' => 'numeric',
+                    'message' => 'A disciplina selecionada não é válida'
+                ]),
+			]
         ];
         $constraint = new Assert\Collection($asserts);
         $errors = $app['validator']->validate($dados, $constraint);
@@ -57,26 +64,31 @@ class tccController {
         $dados = [
 			'titulo'   => $request->get('titulo'),
 			'aluno'    => $request->get('aluno'),
-			'semestre' => $request->get('semestre')
+			'semestre' => $request->get('semestre'),
+			'disciplina' => $request->get('disciplina')
         ];
 
         $errors = $this->validacao($app, $dados);
+		
+		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
+        if (!array_key_exists('aluno',$errors) && !$aluno) {
+            $errors['aluno'] = 'aluno não existe';
+        }
+        $semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
+        if (!array_key_exists('semestre',$errors) && !$semestre) {
+            $errors['semestre'] = 'O semestre não existe';
+        }
+		
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
-        $aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
-        if (!$aluno) {
-            return $app->json(['aluno' => 'aluno não existe'], 400);
-        }
-        $semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
-        if (!$semestre) {
-            return $app->json(['semestre' => 'O semestre não existe'], 400);
-        }
+        
         $tcc = new \SistemaTCC\Model\Tcc();
 
         $tcc->setTitulo($request->get('titulo'))
 			->setAluno($aluno)
-			->setSemestre($semestre);
+			->setSemestre($semestre)
+			->setDisciplina($request->get('disciplina'));
 
         try {
             $app['orm']->persist($tcc);
@@ -104,26 +116,29 @@ class tccController {
         $dados = [
             'titulo'     => $request->get('titulo'),
             'aluno'    	 => $request->get('aluno'),
-            'semestre'   => $request->get('semestre')
+            'semestre'   => $request->get('semestre'),
+			'disciplina' => $request->get('disciplina')
         ];
         $errors = $this->validacao($app, $dados);
-        if (count($errors) > 0) {
-            return $app->json($errors, 400);
-        }
-
-        $aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
-        if (!$aluno) {
-            return $app->json(['aluno' => 'aluno não existe'], 400);
+		
+		$aluno = $app['orm']->find('\SistemaTCC\Model\Aluno', (int) $dados['aluno']);
+        if (!array_key_exists('aluno',$errors) && !$aluno) {
+            $errors['aluno'] = 'aluno não existe';
         }
 
 		$semestre = $app['orm']->find('\SistemaTCC\Model\Semestre', (int) $dados['semestre']);
-        if (!$semestre) {
-            return $app->json(['semestre' => 'O semestre não existe'], 400);
+        if (!array_key_exists('semestre',$errors) && !$semestre) {
+            $errors['semestre'] = 'O semestre não existe';
+        }
+		
+        if (count($errors) > 0) {
+            return $app->json($errors, 400);
         }
 		
         $tcc->setTitulo($request->get('titulo', $tcc->getTitulo()))
                ->setAluno($aluno)
-               ->setSemestre($semestre);
+               ->setSemestre($semestre)
+			   ->setDisciplina($request->get('disciplina'));
 
         try {
             $app['orm']->flush();
@@ -167,9 +182,10 @@ class tccController {
             'listaAlunos' => json_encode($alunos),
 			'listarSemestres' => $semestres,
             'values' => [
-              'titulo'    => '',
-              'aluno'     => '',
-              'semestre'  => '',              
+				'titulo'	 => '',
+				'aluno'		 => '',
+				'semestre'	 => '',
+				'disciplina' => ''
             ],
         ];
 
@@ -198,6 +214,7 @@ class tccController {
                 'titulo'      => $tcc->getTitulo(),
                 'aluno'     => $tcc->getAluno()->getId() . ' - ' . $tcc->getAluno()->getPessoa()->getNome(),
                 'semestre'  => $tcc->getSemestre()->getId(),
+				'disciplina' => $tcc->getDisciplina()
             ],
         ];
         return $app['twig']->render('tcc/formulario.twig', $dadosParaView);
