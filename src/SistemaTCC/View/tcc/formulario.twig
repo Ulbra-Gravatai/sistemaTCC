@@ -2,6 +2,7 @@
 {% block content %}
     <h3>{{ titulo }}</h3>
     <form id="form-js">
+        <input type="hidden" name="alunoSelecionado" value="" id="alunoSelecionado" />
         {% if id is defined %}
         <input type="hidden" name="id" value="{{ id }}" id="id" />
         {% endif %}
@@ -17,35 +18,36 @@
                 <div class="form-group group-aluno">
                     <label class="control-label" for="aluno">Aluno</label>
                     <input type="text" class="form-control typeahead pessoas-js" name="aluno" id="aluno" placeholder="Digite o nome..." size="100%" value="{{ values.aluno }}">
-					<span class="help-block"></span>
+                    <span class="help-block"></span>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-4">
                 <div class="form-group group-semestre">
-					<label class="control-label" for="semestre">Semestre</label>
+                    <label class="control-label" for="semestre">Semestre</label>
                     <select class="form-control" id="semestre">
-						<option value="">Selecione um semestre...</option>
-						{% for semestre in listarSemestres %}
-							<option value="{{ semestre.getId() }}" {{ values.semestre == semestre.getId() ? 'selected' : '' }}>{{ semestre.getNome() }}</option>
-						{% endfor %}
+                        <option value="">Selecione um semestre...</option>
+                        {% for semestre in listarSemestres %}
+                            <option value="{{ semestre.getId() }}" {{ values.semestre == semestre.getId() ? 'selected' : '' }}>{{ semestre.getNome() }}</option>
+                        {% endfor %}
                     </select>
-					<span class="help-block"></span>
+                    <span class="help-block"></span>
                 </div>
             </div>
-			<div class="col-xs-4">
-				<div class="form-group group-disciplina">
-					<label class="control-label" for="disciplina">Disciplina</label>
-					<select class="form-control" id="disciplina">
-						<option value="">Selecione uma disciplina...</option>
-						<option value="1" {{ values.disciplina == 1 ? 'selected' : '' }}>TCC 1</option>
-						<option value="2" {{ values.disciplina == 2 ? 'selected' : '' }}>TCC 2</option>
-					</select>
-					<span class="help-block"></span>
-				</div>
-			</div>
+            <div class="col-xs-4">
+                <div class="form-group group-disciplina">
+                    <label class="control-label" for="disciplina">Disciplina</label>
+                    <select class="form-control" id="disciplina">
+                        <option value="">Selecione uma disciplina...</option>
+                        <option value="1" {{ values.disciplina == 1 ? 'selected' : '' }}>TCC 1</option>
+                        <option value="2" {{ values.disciplina == 2 ? 'selected' : '' }}>TCC 2</option>
+                    </select>
+                    <span class="help-block"></span>
+                </div>
+            </div>
         </div>
+<<<<<<< HEAD
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="form-group group-banca">
@@ -93,9 +95,16 @@
 				<button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
 			</div>
 			<div class="col-xs-2">
+=======
+        <div class="row">
+            <div class="col-xs-3">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
+            </div>
+            <div class="col-xs-2">
+>>>>>>> refs/remotes/origin/master
                 <a href="./tcc/" class="btn btn-default btn-lg btn-block">Cancelar</a>
             </div>
-		</div>
+        </div>
     </form>
 
 {% endblock %}

@@ -25,11 +25,13 @@ $(function() {
 
         const values = {
             titulo: $form.find('#titulo').val(),
-            aluno: $form.find('#aluno').val(),
+            aluno: $form.find('#alunoSelecionado').val(),
             semestre: $form.find('#semestre').val(),
-			disciplina: $form.find('#disciplina').val(),
+            disciplina: $form.find('#disciplina').val(),
         };
-        values.aluno = values.aluno.substring(0, values.aluno.toString().indexOf('-')).trim();
+        console.log('selecionado e: ', values);
+
+        //values.aluno = values.aluno.substring(0, values.aluno.toString().indexOf('-')).trim();
 
         const url = restURL + (itemID ? itemID + '/' : '' );
         const method = itemID ? 'put' : 'post';
@@ -73,24 +75,27 @@ $(function() {
     {
       name: 'alunos',
       source: substringMatcher(alunos)
+    }).bind('typeahead:selected', function(a, b){
+        var x = alunos.filter( function(arg) {
+            return arg.nome == b;
+        });
+        $('#alunoSelecionado').val(x[0].id);
     });
 
 });
 
-var substringMatcher = function(strs) {
+var substringMatcher = function(alunos) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
 
     matches = [];
-
     substrRegex = new RegExp(q, 'i');
 
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
+    $.each(alunos, function(i, aluno) {
+      if (substrRegex.test(aluno.nome)) {
+        matches.push(aluno.nome);
       }
     });
-
     cb(matches);
   };
 };

@@ -8,3 +8,12 @@ doc/analysis/Modelagem/Diagrama.mwb.bak
 /nbproject/
 /config/db.yml
 /files/
+
+
+/flyway/*.txt
+/flyway/drivers
+/flyway/flyway*
+/flyway/jars
+/flyway/jre
+/flyway/lib
+/flyway/sql/*.txt
