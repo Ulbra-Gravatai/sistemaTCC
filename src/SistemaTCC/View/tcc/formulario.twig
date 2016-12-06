@@ -51,12 +51,41 @@
 				<div class="form-group group-banca">
 					<label for="basic-url">Banca</label>
 					<div class="input-group">
-					  <input type="text" class="form-control" placeholder="Procurar por...">
+					  <select class="form-control" id="semestre">
+						<option value="">Selecione o professor e clique em adicionar</option>
+						{% for professor in listaProfessores %}
+							<option value="{{ professor.getId() }}" >{{ professor.getPessoa().getNome() }}</option>
+						{% endfor %}
+                    </select>
+						<select class="form-control" id="semestre">
+							<option value="">Selecione um Tipo</option>
+							<option value="1">Banca</option>
+							<option value="2">Orientador</option>
+						</select>
 					  <span class="input-group-btn">
-						<button class="btn btn-primary" type="button"><i class="fa fa-plus"></i><span class="hidden-xs"> Adicionar Professor</span></button>
+						<button class="btn btn-success" type="button"><i class="fa fa-plus"></i><span class="hidden-xs"> Adicionar Professor</span></button>
 					  </span>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<ul class="group-list">
+					{% if banca|length > 0 %}
+						{% for banca in professor %}
+							<li id="professor-{{ professor.getId() }}" class="list-group-item">
+								{{ professor.getPessoa().getNome() }}
+								<div class="pull-right">
+									<button type="button" class="btn btn-danger btn-xs excluir-professor-js" data-id="{{ professor.getId() }}">
+										<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+										<span class="hidden-xs">Excluir</span>
+									</button>
+								</div>
+							</li>
+						{% endfor %}
+					{% endif %}
+				</ul>
 			</div>
 		</div>
 		<div class="row">

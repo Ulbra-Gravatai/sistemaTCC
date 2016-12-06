@@ -175,12 +175,15 @@ class tccController {
 		foreach ($aluno as $a => $al) {
 		  array_push($alunos, $al->getId().' - '.$al->getPessoa()->getNome());
 		}
+		$professores = $app['orm']->getRepository('\SistemaTCC\Model\Professor')->findAll();
 
 		$semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
         $dadosParaView = [
             'titulo' => 'Cadastrar tcc',
             'listaAlunos' => json_encode($alunos),
+			'listaProfessores' => $professores,
 			'listarSemestres' => $semestres,
+			'banca' => '',
             'values' => [
 				'titulo'	 => '',
 				'aluno'		 => '',
@@ -204,12 +207,16 @@ class tccController {
 		foreach ($aluno as $a => $al) {
 		  array_push($alunos, $al->getId().' - '.$al->getPessoa()->getNome());
 		}
+		$professores = $app['orm']->getRepository('\SistemaTCC\Model\Professor')->findAll();
 		$semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
+		$banca = $app['orm']->getRepository('\SistemaTCC\Model\TccProfessor')->findBy(['tipo' => \SistemaTCC\Model\TccProfessor::BANCA, 'tcc' => $tcc]);
         $dadosParaView = [
             'titulo' => 'Alterando tcc: ' . $tcc->getTitulo(),
             'id' => $id,
 			'listaAlunos' => json_encode($alunos),
+			'listaProfessores' => $professores,
 			'listarSemestres' => $semestres,
+			'banca' => $banca,
             'values' => [
                 'titulo'      => $tcc->getTitulo(),
                 'aluno'     => $tcc->getAluno()->getId() . ' - ' . $tcc->getAluno()->getPessoa()->getNome(),
