@@ -7,6 +7,8 @@ namespace SistemaTCC\Model;
  */
 class TccProfessor
 {
+	const BANCA = 1;
+	const ORIENTADOR = 2;
     /**
      * @var integer
      */
