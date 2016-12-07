@@ -10,6 +10,8 @@ use SistemaTCC\Model\AreaDeInteresse;
  */
 class Professor
 {
+	use Serializer\ObjectToJson;
+	
     /**
      * @var integer
      */

@@ -7,6 +7,8 @@ namespace SistemaTCC\Model;
  */
 class TccProfessor
 {
+	use Serializer\ObjectToJson;
+	
 	const BANCA = 1;
 	const ORIENTADOR = 2;
     /**
