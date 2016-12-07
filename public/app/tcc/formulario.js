@@ -51,7 +51,8 @@ $(function() {
                 title: "OK",
                 text: text,
                 type: "success",
-                showCancelButton: false,
+                showCancelButton: true,
+				cancelButtonText: 'Inserir Banca',
                 confirmButtonText: "Voltar para Lista",
                 closeOnConfirm: false },
                 function() {
@@ -66,6 +67,42 @@ $(function() {
         });
 
     });
+	
+	$('.btn-add-banca').on('click', function(event){
+		event.preventDefault();
+		if(!itemID){
+			swal({
+                title: "Erro",
+                text: 'Você precisa salvar o TCC para criar a banca.',
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                closeOnConfirm: false });
+			return false;
+		}
+		const tccPID = '';
+		const url = './tccprofessor/' + (tccPID ? tccPID + '/' : '' );
+		const method = tccPID ? 'put' : 'post';
+		var values = {
+			tipo: $(this).data('tipo'),
+			tcc: itemID,
+			professor: $('#professor').val()
+		};
+		values.professor = values.professor.substring(0, values.professor.toString().indexOf('-')).trim()
+		const request = $.ajax({
+                url: url,
+                type: method,
+                dataType: 'json',
+                data: values
+            });
+		request.done(function(data) {
+			var item = $('.modelo-item-banca').clone().removeClass('modelo-item-banca');
+			item.attr('id','tccprofessor-' + data.banca.id);
+			item.prepend(data.professor.pessoa.nome);
+			item.find('.excluir-professor-js').attr('data-id',data.banca.id);
+			$('#banca-list').append(item);
+		});
+	});
 
     $('.typeahead.pessoas-js').typeahead({
       hint: true,
@@ -82,6 +119,20 @@ $(function() {
         $('#alunoSelecionado').val(x[0].id);
     });
 
+	$('.typeahead.professor-js').typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      name: 'professores',
+      source: substringMatcher(professores)
+    }).bind('typeahead:selected', function(a, b){
+        var x = professores.filter( function(arg) {
+            return arg.nome == b;
+        });
+        $('#professor').val(x[0].id);
+    });
 });
 
 var substringMatcher = function(alunos) {
@@ -92,8 +143,8 @@ var substringMatcher = function(alunos) {
     substrRegex = new RegExp(q, 'i');
 
     $.each(alunos, function(i, aluno) {
-      if (substrRegex.test(aluno.nome)) {
-        matches.push(aluno.nome);
+      if (substrRegex.test(aluno)) {
+        matches.push(aluno);
       }
     });
     cb(matches);

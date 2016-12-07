@@ -175,12 +175,16 @@ class tccController {
 		  array_push($alunos, $al->getId().' - '.$al->getPessoa()->getNome());
 		}
 		$professores = $app['orm']->getRepository('\SistemaTCC\Model\Professor')->findAll();
+		$listaProfessores = [];
+		foreach ($professores as $p => $pf) {
+		  array_push($listaProfessores, $pf->getId().' - '.$pf->getPessoa()->getNome());
+		}
 
 		$semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
         $dadosParaView = [
             'titulo' => 'Cadastrar tcc',
             'listaAlunos' => json_encode($alunos),
-			'listaProfessores' => $professores,
+			'listaProfessores' => json_encode($listaProfessores),
 			'listarSemestres' => $semestres,
 			'banca' => '',
             'values' => [
@@ -189,6 +193,10 @@ class tccController {
 				'semestre'	 => '',
 				'disciplina' => ''
             ],
+			'tipo' => [
+				'banca' => \SistemaTCC\Model\TccProfessor::BANCA,
+				'orientador' => \SistemaTCC\Model\TccProfessor::ORIENTADOR
+			]
         ];
 
         return $app['twig']->render('tcc/formulario.twig', $dadosParaView);
@@ -207,13 +215,17 @@ class tccController {
 		  array_push($alunos, $al->getId().' - '.$al->getPessoa()->getNome());
 		}
 		$professores = $app['orm']->getRepository('\SistemaTCC\Model\Professor')->findAll();
+		$listaProfessores = [];
+		foreach ($professores as $p => $pf) {
+		  array_push($listaProfessores, $pf->getId().' - '.$pf->getPessoa()->getNome());
+		}
 		$semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
-		$banca = $app['orm']->getRepository('\SistemaTCC\Model\TccProfessor')->findBy(['tipo' => \SistemaTCC\Model\TccProfessor::BANCA, 'tcc' => $tcc]);
+		$banca = $app['orm']->getRepository('\SistemaTCC\Model\TccProfessor')->findByTcc($tcc);
         $dadosParaView = [
             'titulo' => 'Alterando tcc: ' . $tcc->getTitulo(),
             'id' => $id,
 			'listaAlunos' => json_encode($alunos),
-			'listaProfessores' => $professores,
+			'listaProfessores' => json_encode($listaProfessores),
 			'listarSemestres' => $semestres,
 			'banca' => $banca,
             'values' => [
@@ -222,6 +234,10 @@ class tccController {
                 'semestre'  => $tcc->getSemestre()->getId(),
 				'disciplina' => $tcc->getDisciplina()
             ],
+			'tipo' => [
+				'banca' => \SistemaTCC\Model\TccProfessor::BANCA,
+				'orientador' => \SistemaTCC\Model\TccProfessor::ORIENTADOR
+			]
         ];
         return $app['twig']->render('tcc/formulario.twig', $dadosParaView);
     }
