@@ -12,7 +12,13 @@ trait ObjectToJson
 		$data = [];
 
 		foreach ($reflect->getProperties() as $var) {
-			$data[$var->name] = $this->{$var->name};
+			if(isset($this->{$var->name})){
+				if(is_object($this->{$var->name}) && method_exists($this->{$var->name},'toJson')){
+					$data[$var->name] = $this->{$var->name}->toJson();
+				}else{
+					$data[$var->name] = $this->{$var->name};
+				}
+			}
 		}
 
 		return $data;
