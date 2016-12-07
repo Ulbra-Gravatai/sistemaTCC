@@ -24,7 +24,7 @@ SistemaTCC\Model\TccProfessor:
     manyToOne:
         professor:
             targetEntity: SistemaTCC\Model\Professor
-            cascade: {  }
+            cascade: ["ALL"]
             fetch: LAZY
             mappedBy: null
             inversedBy: null
@@ -34,7 +34,7 @@ SistemaTCC\Model\TccProfessor:
             orphanRemoval: false
         tcc:
             targetEntity: SistemaTCC\Model\Tcc
-            cascade: {  }
+            cascade: ["ALL"]
             fetch: LAZY
             mappedBy: null
             inversedBy: null
