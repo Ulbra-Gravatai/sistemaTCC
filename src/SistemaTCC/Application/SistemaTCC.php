@@ -141,6 +141,11 @@ class SistemaTCC extends Application {
 		$app->post('/tcc/', "\\SistemaTCC\\Controller\\TccController::add");
 		$app->put('/tcc/{id}/', "\\SistemaTCC\\Controller\\TccController::edit");
 		$app->delete('/tcc/{id}/', "\\SistemaTCC\\Controller\\TccController::del");
+		
+		// REST  TccProfessor
+		$app->post('/tccprofessor/', "\\SistemaTCC\\Controller\\TccProfessorController::add");
+		$app->put('/tccprofessor/{id}/', "\\SistemaTCC\\Controller\\TccProfessorController::edit");
+		$app->delete('/tccprofessor/{id}/', "\\SistemaTCC\\Controller\\TccProfessorController::del");
 
 		// REST Campus
 		$app->post('/campus/', "\\SistemaTCC\\Controller\\CampusController::add");

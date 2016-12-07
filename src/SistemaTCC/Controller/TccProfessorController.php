@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class tccController {
+class tccProfessorController {
 
     private function validacao($app, $dados) {
         $asserts = [
@@ -76,13 +76,13 @@ class tccController {
 			->setTipo($request->get('tipo'));
 
         try {
-            $app['orm']->persist($tcc);
+            $app['orm']->persist($tccProfessor);
             $app['orm']->flush();
         }
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'Professor banca cadastrado com sucesso.'], 201);
+        return $app->json(['success' => 'Professor banca cadastrado com sucesso.','banca' => $tccProfessor->toJson(),'professor' => ['pessoa'=>['nome' => $professor->getPessoa()->getNome()]]], 201);
     }
 
     public function edit(Application $app, Request $request, $id) {
@@ -91,28 +91,15 @@ class tccController {
             return new Response('O Professor banca não existe.', Response::HTTP_NOT_FOUND);
 
         $dados = [
-			'professor'   => $request->get('professor'),
-			'tcc' => $request->get('tcc'),
 			'tipo' => $request->get('tipo')
         ];
         $errors = $this->validacao($app, $dados);
-
-		$professor = $app['orm']->find('\SistemaTCC\Model\Professor', (int) $dados['professor']);
-        if (!array_key_exists('professor',$errors) && !$professor) {
-            $errors['professor'] = 'Professor não existe';
-        }
-		$tcc = $app['orm']->find('\SistemaTCC\Model\Tcc', (int) $dados['tcc']);
-        if (!array_key_exists('tcc',$errors) && !$tcc) {
-            $errors['tcc'] = 'O TCC não existe';
-        }
 
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
 
-        $tccProfessor->setTcc($tcc)
-			->setProfessor($professor)
-			->setTipo($request->get('tipo'));
+        $tccProfessor->setTipo($request->get('tipo'));
 
         try {
             $app['orm']->flush();
