@@ -182,7 +182,7 @@ class tccController {
 
 		$semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
         $dadosParaView = [
-            'titulo' => 'Cadastrar tcc',
+            'titulo' => 'Cadastrar TCC',
             'listaAlunos' => json_encode($alunos),
 			'listaProfessores' => json_encode($listaProfessores),
 			'listarSemestres' => $semestres,
@@ -222,7 +222,7 @@ class tccController {
 		$semestres = $app['orm']->getRepository('\SistemaTCC\Model\Semestre')->findAll();
 		$banca = $app['orm']->getRepository('\SistemaTCC\Model\TccProfessor')->findByTcc($tcc);
         $dadosParaView = [
-            'titulo' => 'Alterando tcc: ' . $tcc->getTitulo(),
+            'titulo' => 'Alterando TCC: ' . $tcc->getTitulo(),
             'id' => $id,
 			'listaAlunos' => json_encode($alunos),
 			'listaProfessores' => json_encode($listaProfessores),
@@ -243,7 +243,7 @@ class tccController {
     }
 
     public function excluirAction() {
-        return 'Excluir tcc';
+        return 'Excluir TCC';
     }
 
     public function listarAction(Application $app, Request $request) {
@@ -251,7 +251,7 @@ class tccController {
         $db = $app['orm']->getRepository('\SistemaTCC\Model\Tcc');
         $tccs = $db->findAll();
         $dadosParaView = [
-            'titulo' => 'Listar Tcc',
+            'titulo' => 'Listar TCC',
             'tccs' => $tccs,
         ];
         return $app['twig']->render('tcc/listar.twig', $dadosParaView);

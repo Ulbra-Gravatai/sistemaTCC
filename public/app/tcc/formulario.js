@@ -112,9 +112,11 @@ $(function() {
 			if(data.banca.tipo == data.tipo.orientador){
 				item.find('.label').addClass('label-warning').text('Orientador');
 			}else{
-				item.find('.label').addClass('label-info').text('banca');
+				item.find('.label').addClass('label-info').text('Banca');
 			}
+			$('.remove-on-add-banca-js').remove();
 			$('#banca-list').append(item);
+			$('#professor').val('');
 		});
 		request.fail(function(err) {
             const errors = err.responseJSON;
