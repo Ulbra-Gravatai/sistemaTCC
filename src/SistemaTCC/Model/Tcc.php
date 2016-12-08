@@ -7,6 +7,8 @@ namespace SistemaTCC\Model;
  */
 class Tcc
 {
+	use Serializer\ObjectToJson;
+	
     /**
      * @var integer
      */

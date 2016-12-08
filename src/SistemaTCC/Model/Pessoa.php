@@ -7,6 +7,8 @@ namespace SistemaTCC\Model;
  */
 class Pessoa
 {
+	use Serializer\ObjectToJson;
+	
     /**
      * @var integer
      */
