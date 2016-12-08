@@ -13,6 +13,10 @@ class IndexController {
 		]);
     }
 
+	public function homeAction(Application $app){
+		return $app['twig']->render('index/index.twig');
+	}
+	
     public function creditosAction(Application $app) {
 		return $app['twig']->render('index/creditos.twig');
     }
