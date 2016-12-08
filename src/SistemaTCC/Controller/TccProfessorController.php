@@ -65,6 +65,14 @@ class tccProfessorController {
             $errors['tcc'] = 'O TCC não existe';
         }
 
+		if (!array_key_exists('professor',$errors) && $this->jaContemProfessor($app,$professor,$tcc)) {
+            $errors['professor'] = 'Este professor já foi adicionado a banca.';
+        }
+		
+		if (!array_key_exists('professor',$errors) && $this->contemOrientador($app,$tcc, (int) $dados['tipo'])) {
+            $errors['professor'] = 'Já existe um Orientador cadastrado.';
+        }
+		
         if (count($errors) > 0) {
             return $app->json($errors, 400);
         }
@@ -82,7 +90,12 @@ class tccProfessorController {
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'Professor banca cadastrado com sucesso.','banca' => $tccProfessor->toJson(),'professor' => ['pessoa'=>['nome' => $professor->getPessoa()->getNome()]]], 201);
+        return $app->json([
+			'success' => 'Professor banca cadastrado com sucesso.',
+			'banca' => $tccProfessor->toJson(),
+			'professor' => ['pessoa'=>['nome' => $professor->getPessoa()->getNome()]],
+			'tipo' => ['orientador' => \SistemaTCC\Model\TccProfessor::ORIENTADOR,'banca' => \SistemaTCC\Model\TccProfessor::BANCA]
+		], 201);
     }
 
     public function edit(Application $app, Request $request, $id) {
@@ -107,7 +120,7 @@ class tccProfessorController {
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'Professor banca editado com sucesso.']);
+	return $app->json(['success' => 'Professor banca editado com sucesso.','tipo' => ['orientador' => \SistemaTCC\Model\TccProfessor::ORIENTADOR,'banca' => \SistemaTCC\Model\TccProfessor::BANCA]]);
     }
 
     public function del(Application $app, Request $request, $id) {
@@ -123,6 +136,21 @@ class tccProfessorController {
         }
         return $app->json(['success' => 'Professor banca excluído com sucesso.']);
     }
-
+	
+	private function jaContemProfessor(Application $app, $professor, $tcc){
+		if(!$tcc || !$professor){
+			return false;
+		}
+		$tccProfessor = $app['orm']->getRepository('\SistemaTCC\Model\TccProfessor')->findBy(['tcc' => $tcc,'professor' => $professor]);
+		return count($tccProfessor) > 0;
+	}
+	
+	private function contemOrientador(Application $app, $tcc, $tipo){
+		if(!$tcc || $tipo != \SistemaTCC\Model\TccProfessor::ORIENTADOR){
+			return false;
+		}
+		$tccProfessor = $app['orm']->getRepository('\SistemaTCC\Model\TccProfessor')->findBy(['tcc' => $tcc,'tipo' => \SistemaTCC\Model\TccProfessor::ORIENTADOR]);
+		return count($tccProfessor) > 0;
+	}
 }
 

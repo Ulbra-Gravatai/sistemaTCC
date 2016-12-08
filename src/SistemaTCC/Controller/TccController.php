@@ -96,13 +96,13 @@ class tccController {
         catch (\Exception $e) {
             return $app->json([$e->getMessage()], 400);
         }
-        return $app->json(['success' => 'tcc cadastrado com sucesso.'], 201);
+        return $app->json(['success' => 'TCC cadastrado com sucesso.','tcc' => $tcc->toJson() ], 201);
     }
 
     public function find(Application $app, Request $request, $id) {
         $tcc = $app['orm']->find('\SistemaTCC\Model\Tcc', (int) $id);
         if (null === $tcc) {
-            return new Response('O tcc não existe.', Response::HTTP_NOT_FOUND);
+            return new Response('O TCC não existe.', Response::HTTP_NOT_FOUND);
         }
         return new Response($tcc->tcc()->getTitulo());
     }

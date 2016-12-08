@@ -50,19 +50,21 @@
                 </div>
             </div>
         </div>
+		{% if id is defined %}
 		<div class="row">
 			<div class="col-xs-12">
-				<div class="form-group group-banca">
+				<div class="form-group group-professor">
 					<label for="basic-url">Banca</label>
 					<div class="input-group">
 						<div class="input-container form-control">
 							<input type="text" class="form-control typeahead professor-js" name="professor" id="professor" placeholder="Digite o nome..." size="100%">
 						</div>
 						<div class="input-group-btn">
-							<button class="btn btn-success btn-add-banca" type="button" data-tipo="{{ tipo.orientador }}"><i class="fa fa-plus"></i><span class="hidden-xs"> Adicionar Orientador</span></button>
-							<button class="btn btn-success btn-add-banca" type="button" data-tipo="{{ tipo.banca }}"><i class="fa fa-plus"></i><span class="hidden-xs"> Adicionar Banca</span></button>
+							<button class="btn btn-success add-banca-js" type="button" data-tipo="{{ tipo.orientador }}"><i class="fa fa-plus"></i><span class="hidden-xs"> Adicionar Orientador</span></button>
+							<button class="btn btn-success add-banca-js" type="button" data-tipo="{{ tipo.banca }}"><i class="fa fa-plus"></i><span class="hidden-xs"> Adicionar Banca</span></button>
 						</div>
 					</div>
+					<span class="help-block"></span>
 				</div>
 			</div>
 		</div>
@@ -73,8 +75,13 @@
 						{% for tccProfessor in banca %}
 							<li id="tccprofessor-{{ tccProfessor.getId() }}" class="list-group-item">
 								{{ tccProfessor.getProfessor().getPessoa().getNome() }}
+								{% if tccProfessor.getTipo() == tipo.orientador %}
+									<span class="label label-warning">Orientador</span>
+								{% else %}
+									<span class="label label-info">Banca</span>
+								{% endif %}
 								<div class="pull-right">
-									<button type="button" class="btn btn-danger btn-xs excluir-professor-js" data-id="{{ tccProfessor.getId() }}">
+									<button type="button" class="btn btn-danger btn-xs excluir-banca-js" data-id="{{ tccProfessor.getId() }}">
 										<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
 										<span class="hidden-xs">Excluir</span>
 									</button>
@@ -85,6 +92,16 @@
 				</ul>
 			</div>
 		</div>
+		<li class="list-group-item modelo-item-banca">
+			<span class="label"></span>
+			<div class="pull-right">
+				<button type="button" class="btn btn-danger btn-xs excluir-banca-js">
+					<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+					<span class="hidden-xs">Excluir</span>
+				</button>
+			</div>
+		</li>
+		{% endif %}
         <div class="row">
             <div class="col-xs-3">
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
@@ -94,14 +111,6 @@
             </div>
         </div>
     </form>
-	<li class="list-group-item modelo-item-banca">
-		<div class="pull-right">
-			<button type="button" class="btn btn-danger btn-xs excluir-professor-js">
-				<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
-				<span class="hidden-xs">Excluir</span>
-			</button>
-		</div>
-	</li>
 
 {% endblock %}
 {% block scripts %}
