@@ -37,7 +37,7 @@ SistemaTCC\Model\Aluno:
     manyToOne:
         pessoa:
             targetEntity: SistemaTCC\Model\Pessoa
-            cascade: ["all"]
+            cascade: [ "persist" ]
             fetch: LAZY
             mappedBy: null
             inversedBy: null
