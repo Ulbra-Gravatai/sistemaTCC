@@ -12,25 +12,25 @@ class tccProfessorController {
     private function validacao($app, $dados) {
         $asserts = [
             'professor' => [
-                new Assert\NotBlank(['message' => 'Selecione um professor']),
                 new Assert\Type([
                     'type' => 'numeric',
                     'message' => 'O Professor selecionado não é válido'
                 ]),
+				new Assert\NotBlank(['message' => 'Selecione um professor'])
             ],
 			'tcc' => [
-                new Assert\NotBlank(['message' => 'Selecione um TCC']),
                 new Assert\Type([
                     'type' => 'numeric',
                     'message' => 'O TCC selecionado não é válido'
                 ]),
+				new Assert\NotBlank(['message' => 'Selecione um TCC']),
             ],
 			'tipo' => [
-                new Assert\NotBlank(['message' => 'Selecione um Tipo']),
                 new Assert\Type([
                     'type' => 'numeric',
                     'message' => 'O tipo selecionado não é válido'
                 ]),
+				new Assert\NotBlank(['message' => 'Selecione um Tipo']),
             ],
         ];
         $constraint = new Assert\Collection($asserts);
