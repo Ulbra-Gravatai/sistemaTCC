@@ -88,6 +88,8 @@
 								</div>
 							</li>
 						{% endfor %}
+					{% else %}
+						<div class="alert alert-warning remove-on-add-banca-js" role="alert"><i class="fa fa-warning"></i> Nenhum Professor adicionado à Banca.</div>
 					{% endif %}
 				</ul>
 			</div>
@@ -101,6 +103,12 @@
 				</button>
 			</div>
 		</li>
+		{% else %}
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> Salve o TCC para inserir a Banca.</div>
+				</div>
+			</div>
 		{% endif %}
         <div class="row">
             <div class="col-xs-3">
