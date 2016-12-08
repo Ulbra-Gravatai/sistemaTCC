@@ -9,8 +9,8 @@ class TccProfessor
 {
 	use Serializer\ObjectToJson;
 	
-	const BANCA = 1;
-	const ORIENTADOR = 2;
+	const BANCA = 0;
+	const ORIENTADOR = 1;
     /**
      * @var integer
      */
