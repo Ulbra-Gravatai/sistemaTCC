@@ -1,0 +1,38 @@
+SistemaTCC\Model\Atestado:
+    type: entity
+    table: atestado
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        data:
+            type: date
+            nullable: false
+    manyToOne:
+        tcc:
+            targetEntity: SistemaTCC\Model\Tcc
+            cascade: [ "persist" ]
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tcc_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        professor:
+            targetEntity: SistemaTCC\Model\Professor
+            cascade: [ "persist" ]
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                professor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
