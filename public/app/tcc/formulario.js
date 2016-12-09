@@ -6,7 +6,7 @@ $(function() {
     const itemID = $form.find('#id').val();
     const restURL = './tcc/';
     const listaURL = './tcc/';
-    
+
     function verifyErrors(err) {
         const errors = err || {};
 
@@ -29,7 +29,6 @@ $(function() {
             semestre: $form.find('#semestre').val(),
             disciplina: $form.find('#disciplina').val(),
         };
-        console.log('selecionado e: ', values);
 
         values.aluno = values.aluno.substring(0, values.aluno.toString().indexOf('-')).trim();
 
@@ -72,7 +71,7 @@ $(function() {
         });
 
     });
-	
+
 	/************************************************
 	 * Ação para botão adicionar Banca ou Orientador
 	 ************************************************/
@@ -123,7 +122,7 @@ $(function() {
             verifyErrors(errors);
         });
 	});
-	
+
 	/**********************************************
 	 * Ação para botão excluir Banca ou Orientador
 	 **********************************************/
@@ -142,11 +141,11 @@ $(function() {
 	$lista.on('click', '.excluir-banca-js', function (e) {
 		e.preventDefault();
 		var tccPID = $(this).data('id');
-		
+
 		if (!tccPID){
 			return false;
 		}
-		
+
 		swal(swalExcluir, function (isConfirm) {
 			if (isConfirm) {
 				var request = $.ajax({
@@ -166,7 +165,7 @@ $(function() {
 			}
 		});
 	});
-	
+
     $('.typeahead.pessoas-js').typeahead({
       hint: true,
       highlight: true,
@@ -190,11 +189,6 @@ $(function() {
     {
       name: 'professores',
       source: substringMatcher(professores)
-    }).bind('typeahead:selected', function(a, b){
-        var x = professores.filter( function(arg) {
-            return arg.nome == b;
-        });
-        $('#professor').val(x[0].id);
     });
 });
 

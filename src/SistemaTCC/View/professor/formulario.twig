@@ -67,8 +67,8 @@
         	</div>
         </div>
         <div class="row">
-			<div class="col-xs-4">
             {% for area in areas %}
+            <div class="col-md-3">
                 {% set checked = ' ' %}
                 {% if id is defined %}
                     {% for x in values.interesses %}
@@ -77,12 +77,12 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-				<div class="form-group">
+                <div class="form-group">
                     <label class="control-label">
                     <input type="checkbox" value="{{ area.getId() }}" {{checked}}> {{ area.getTitulo() }}</label>
                 </div>
+            </div>
             {% endfor %}
-			</div>
         </div>
         <hr>
         <div class="row">
