@@ -73,10 +73,12 @@ class EnviarEtapaController {
 		}
 		
 		$caminho = 'files/alunos/' . $etapa->getSemestre()->getId() . '/' . $tcc->getId() . '/' . $request->get('etapa') . '/';
+		$nome = $file->getClientOriginalName();
 		$num = 1;
-		do{
-			$nome = $file->getClientOriginalName();
-		}while(file_exists(__DIR__ . '/../../../' . $caminho . '/' . $nome));
+		while(file_exists(__DIR__ . '/../../../' . $caminho . '/' . $nome)){
+			$nome = str_ireplace('.' . $tipo,'',$file->getClientOriginalName()) . $num . '.' . $tipo;
+			$num++;
+		}
 		
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
 		
