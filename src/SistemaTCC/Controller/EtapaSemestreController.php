@@ -18,34 +18,34 @@ class EtapaSemestreController {
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Regex([
                     'pattern' => '/^[a-zA-ZÀ-ú0-9 ]+$/i',
-                    'message' => 'Seu nome deve possuir apenas letras'
+                    'message' => 'Informe o nome da etapa'
                 ]),
                 new Assert\Length([
                     'min' => 3,
                     'max' => 50,
-                    'minMessage' => 'Seu nome precisa possuir pelo menos {{ limit }} caracteres',
-                    'maxMessage' => 'Seu nome não deve possuir mais que {{ limit }} caracteres',
+                    'minMessage' => 'A etapa precisa possuir pelo menos {{ limit }} caracteres',
+                    'maxMessage' => 'A etapa não deve possuir mais que {{ limit }} caracteres',
                 ])
             ],
 			'etapa-tipo' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é numérico.',
+                        'message' => 'Informe um valor numérico',
                     ]),
             ],
 			'etapa-semestre' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é numérico.',
+                        'message' => 'Informe um valor numérico',
                     ]),
             ],
 			'etapa-peso' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é numérico.',
+                        'message' => 'Informe um valor numérico',
                     ]),
             ],
             'etapa-dataInicio' => [
@@ -60,14 +60,14 @@ class EtapaSemestreController {
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é numérico.',
+                        'message' => 'Informe um valor numérico',
                     ]),
             ],
 			'etapa-tcc' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
                 new Assert\Type([
                         'type'    => 'numeric',
-                        'message' => 'O valor {{ value }} não é numérico.',
+                        'message' => 'Informe um valor numérico',
                     ]),
             ],
         ];
