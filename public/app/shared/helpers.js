@@ -46,4 +46,16 @@
             closeOnConfirm: true });
     };
 
+    context['horaMask'] = function horaMask(v) {
+        var a = v.replace(/\D/g,"").slice(0,6);
+        var l = a.length;
+        if (l <= 4) {
+            return a.replace(/^(\d{2})(\d{1,2})$/, "$1:$2");
+        }
+        if (l <= 6) {
+            return a.replace(/^(\d{2})(\d{2})(\d{1,2})$/, "$1:$2:$3");
+        }
+        return a;
+    }
+
 })(this);

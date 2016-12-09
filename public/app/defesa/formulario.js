@@ -12,6 +12,10 @@ $(function() {
       orientation: 'bottom'
     });
 
+    $('#hora').on('keyup', function(e) {
+        e.target.value = horaMask(e.target.value);
+    });
+
     function verifyErrors(err) {
         const errors = err || {};
         $.each(['tcc_id', 'data', 'hora', 'local'], function(key, value) {

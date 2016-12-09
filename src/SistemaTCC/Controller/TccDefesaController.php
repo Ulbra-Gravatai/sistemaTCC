@@ -24,7 +24,7 @@ class TccDefesaController {
             ],
             'hora' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
-				new Assert\Time(['message' => 'Preencha a data']),
+				new Assert\Time(['message' => 'Hora inválida']),
             ],
             'local' => [
                 new Assert\NotBlank(['message' => 'Preencha esse campo']),
