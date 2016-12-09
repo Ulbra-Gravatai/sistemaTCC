@@ -7,7 +7,7 @@ ADD COLUMN `avaliado_banca` TINYINT(1) NOT NULL AFTER `nome`,
 ADD COLUMN `avaliado_coordenador` TINYINT(1) NOT NULL AFTER `avaliado_banca`,
 ADD COLUMN `avaliado_orientador` TINYINT(1) NOT NULL AFTER `avaliado_coordenador`,
 ADD COLUMN `entrega_arquivo` TINYINT(1) NOT NULL AFTER `avaliado_orientador`,
-COMMENT = 'Tipos de etapas.'
+COMMENT = 'Tipos de etapas.';
 
 INSERT INTO `etapa_tipo` (`id`,`nome`,`avaliado_banca`,`avaliado_coordenador`,`avaliado_orientador`,`entrega_arquivo`) VALUES (NULL,'Proposta',1,0,0,1);
 INSERT INTO `etapa_tipo` (`id`,`nome`,`avaliado_banca`,`avaliado_coordenador`,`avaliado_orientador`,`entrega_arquivo`) VALUES (NULL,'Seminário de Andamento',0,1,0,0);

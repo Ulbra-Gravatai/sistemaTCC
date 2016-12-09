@@ -1,0 +1,29 @@
+.input-container{
+	border: none;
+	padding: 0px;
+}
+.input-container .form-control{
+	border-radius: 4px !important;
+}
+.tt-menu{
+	font-size: 12px;
+	color: black;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #000;
+	width: 100%;
+}
+.tt-selectable{
+	padding: 3px 6px;
+}
+.tt-selectable:hover{
+	background-color: rgb(0, 120, 215);
+	color: white;
+}
+.input-group .input-container:first-child .form-control{
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.modelo-item-banca{
+	display: none;
+}

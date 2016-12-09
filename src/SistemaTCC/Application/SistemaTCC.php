@@ -19,10 +19,10 @@ class SistemaTCC extends Application {
 	public function __construct() {
 
 		parent::__construct();
-		
+
 		//Seta o timezone padrão para corrigir o erro da Issue #183
 		date_default_timezone_set('America/Sao_Paulo');
-		
+
 		$app = $this;
 
 		Request::enableHttpMethodParameterOverride();
@@ -35,7 +35,7 @@ class SistemaTCC extends Application {
 		$this->register(new SecurityServiceProvider(), ['security.firewalls' => [
 			'admin' => [
 				'pattern' => '^/.+',
-				'form' => ['login_path' => '/', 'check_path' => '/login/', 'default_target_path' => '/semestre/'],
+				'form' => ['login_path' => '/', 'check_path' => '/login/', 'default_target_path' => '/home/'],
 				'logout' => ['logout_path' => '/logout/', 'invalidate_session' => true],
 				'users' => function () use ($app) {
 					return new UserProvider($app['orm']->getConnection());
@@ -49,6 +49,7 @@ class SistemaTCC extends Application {
 
 		// Controller
 		$app->get('/', "\\SistemaTCC\\Controller\\IndexController::indexAction")->bind('/');
+		$app->get('/home/', "\\SistemaTCC\\Controller\\IndexController::homeAction");
 		$app->get('/creditos/', "\\SistemaTCC\\Controller\\IndexController::creditosAction");
 
 		$app->get('/aluno/', "\\SistemaTCC\\Controller\\AlunoController::indexAction");
@@ -141,6 +142,11 @@ class SistemaTCC extends Application {
 		$app->post('/tcc/', "\\SistemaTCC\\Controller\\TccController::add");
 		$app->put('/tcc/{id}/', "\\SistemaTCC\\Controller\\TccController::edit");
 		$app->delete('/tcc/{id}/', "\\SistemaTCC\\Controller\\TccController::del");
+		
+		// REST  TccProfessor
+		$app->post('/tccprofessor/', "\\SistemaTCC\\Controller\\TccProfessorController::add");
+		$app->put('/tccprofessor/{id}/', "\\SistemaTCC\\Controller\\TccProfessorController::edit");
+		$app->delete('/tccprofessor/{id}/', "\\SistemaTCC\\Controller\\TccProfessorController::del");
 
 		// REST Campus
 		$app->post('/campus/', "\\SistemaTCC\\Controller\\CampusController::add");
@@ -173,6 +179,12 @@ class SistemaTCC extends Application {
 			$twig->addFilter($fone_format);
 			return $twig;
 		});
+
+		$isGranted = new \Twig_SimpleFunction('is_granted', function($role) use ($app) {
+		    return $app['security.authorization_checker']->isGranted($role);
+		});
+
+		$app['twig']->addFunction($isGranted);
 	}
 
 }

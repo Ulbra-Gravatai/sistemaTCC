@@ -29,7 +29,7 @@
 
   $form.find('#arquivo').on('change', function (event) {
     event.preventDefault();
-	var item = $('<li class="list-group-item item-upload"></li>').html(
+	var item = $('.modelo-item-upload').clone().removeClass('modelo-item-upload').html(
 	'<div class="progress">'
 		+ '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
 			+ 'Enviando Arquivo...'
@@ -48,6 +48,7 @@
 		processData:false,
 		beforeSend: function() {
 			$('#upload-list').append(item);
+			$('.remove-on-upload-js').remove();
 		}
     });
     // Caiu aqui deu certo
@@ -55,7 +56,7 @@
       verifyErrors();
 	  
 	  item.attr('id','arquivo-' + data.arquivo.id);
-	  item.html(item.prev().html());
+	  item.html($('.modelo-item-upload').html());
 	  item.find('a').attr('href','../' + data.arquivo.caminho + data.arquivo.nome).text(data.arquivo.nome);
 	  item.find('.excluir-arquivo-js').attr('data-id',data.arquivo.id);
       swal({

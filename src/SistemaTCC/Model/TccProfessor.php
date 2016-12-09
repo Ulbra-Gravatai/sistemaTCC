@@ -7,6 +7,10 @@ namespace SistemaTCC\Model;
  */
 class TccProfessor
 {
+	use Serializer\ObjectToJson;
+	
+	const BANCA = 0;
+	const ORIENTADOR = 1;
     /**
      * @var integer
      */

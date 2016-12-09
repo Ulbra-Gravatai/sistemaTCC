@@ -2,9 +2,6 @@ SistemaTCC\Model\Usuario:
     type: entity
     table: usuario
     indexes:
-        fk_usuario_usuario_acesso_idx:
-            columns:
-                - usuario_acesso_id
         fk_usuario_pessoa1_idx:
             columns:
                 - pessoa_id
@@ -24,25 +21,21 @@ SistemaTCC\Model\Usuario:
             length: 255
             options:
                 fixed: false
+        nivel:
+            type: string
+            nullable: false
+            length: 255
+            options:
+                fixed: false
     manyToOne:
         pessoa:
             targetEntity: SistemaTCC\Model\Pessoa
-            cascade: {  }
+            cascade: [ "persist" ]
             fetch: LAZY
             mappedBy: null
             inversedBy: null
             joinColumns:
                 pessoa_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        usuarioAcesso:
-            targetEntity: SistemaTCC\Model\UsuarioAcesso
-            cascade: {  }
-            fetch: LAZY
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                usuario_acesso_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

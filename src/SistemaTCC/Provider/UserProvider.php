@@ -21,7 +21,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
 		$sql = '
-			SELECT p.email, u.senha
+			SELECT p.email, u.senha, u.nivel
 			FROM usuario u
 			INNER JOIN pessoa p
 			ON p.id = u.pessoa_id
@@ -34,7 +34,7 @@ class UserProvider implements UserProviderInterface
             throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
         }
 
-        return new User($user['email'], $user['senha'], explode(',', 'ROLE_ADMIN'), true, true, true, true);
+        return new User($user['email'], $user['senha'], explode(',', $user['nivel']), true, true, true, true);
     }
 
     public function refreshUser(UserInterface $user)

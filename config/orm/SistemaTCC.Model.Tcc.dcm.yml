@@ -24,10 +24,14 @@ SistemaTCC\Model\Tcc:
             length: 255
             options:
                 fixed: false
+        disciplina:
+            type: integer
+            nullable: false
+            column: disciplina
     manyToOne:
         aluno:
             targetEntity: SistemaTCC\Model\Aluno
-            cascade: {  }
+            cascade: [ "persist" ]
             fetch: LAZY
             mappedBy: null
             inversedBy: null
@@ -37,7 +41,7 @@ SistemaTCC\Model\Tcc:
             orphanRemoval: false
         semestre:
             targetEntity: SistemaTCC\Model\Semestre
-            cascade: {  }
+            cascade: [ "persist" ]
             fetch: LAZY
             mappedBy: null
             inversedBy: null

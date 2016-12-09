@@ -6,17 +6,16 @@ $(function() {
     const itemID = $form.find('#id').val();
     const restURL = './tcc/';
     const listaURL = './tcc/';
-    
+
     function verifyErrors(err) {
         const errors = err || {};
 
-        $.each(['titulo', 'aluno', 'semestre'], function(key, value) {
+        $.each(['titulo', 'aluno', 'semestre', 'disciplina', 'professor'], function(key, value) {
             const message = errors[value] || false;
-            const element = $form.find('#' + value);
             if (message) {
-                element.parent().addClass('has-error').find('.help-block').html(message);
+                $('.group-' + value).addClass('has-error').find('.help-block').html(message);
             } else {
-                element.parent().removeClass('has-error').find('.help-block').html('');
+                $('.group-' + value).removeClass('has-error').find('.help-block').html('');
             }
         });
     }
@@ -28,7 +27,9 @@ $(function() {
             titulo: $form.find('#titulo').val(),
             aluno: $form.find('#aluno').val(),
             semestre: $form.find('#semestre').val(),
+            disciplina: $form.find('#disciplina').val(),
         };
+
         values.aluno = values.aluno.substring(0, values.aluno.toString().indexOf('-')).trim();
 
         const url = restURL + (itemID ? itemID + '/' : '' );
@@ -49,11 +50,17 @@ $(function() {
                 title: "OK",
                 text: text,
                 type: "success",
-                showCancelButton: false,
+                showCancelButton: true,
+				cancelButtonText: 'Inserir Banca',
                 confirmButtonText: "Voltar para Lista",
-                closeOnConfirm: false },
-                function() {
-                    location.href = listaURL;
+                closeOnConfirm: false,
+				closeOnCancel: false},
+                function(isConfirm) {
+                    if(isConfirm){
+						location.href = listaURL;
+					}else{
+						location.href = restURL + 'editar/' + data.tcc.id + '/';
+					}
                 });
         });
 
@@ -65,6 +72,100 @@ $(function() {
 
     });
 
+	/************************************************
+	 * Ação para botão adicionar Banca ou Orientador
+	 ************************************************/
+	$('.add-banca-js').on('click', function(event){
+		event.preventDefault();
+		if(!itemID){
+			swal({
+                title: "Erro",
+                text: 'Você precisa salvar o TCC para criar a banca.',
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+                closeOnConfirm: false });
+			return false;
+		}
+		const tccPID = '';
+		const url = './tccprofessor/' + (tccPID ? tccPID + '/' : '' );
+		const method = tccPID ? 'put' : 'post';
+		var values = {
+			tipo: $(this).data('tipo'),
+			tcc: itemID,
+			professor: $('#professor').val()
+		};
+		values.professor = values.professor.substring(0, values.professor.toString().indexOf('-')).trim()
+		const request = $.ajax({
+                url: url,
+                type: method,
+                dataType: 'json',
+                data: values
+            });
+		request.done(function(data) {
+			verifyErrors();
+			var item = $('.modelo-item-banca').clone().removeClass('modelo-item-banca');
+			item.attr('id','tccprofessor-' + data.banca.id);
+			item.prepend(data.professor.pessoa.nome);
+			item.find('.excluir-professor-js').attr('data-id',data.banca.id);
+			if(data.banca.tipo == data.tipo.orientador){
+				item.find('.label').addClass('label-warning').text('Orientador');
+			}else{
+				item.find('.label').addClass('label-info').text('Banca');
+			}
+			$('.remove-on-add-banca-js').remove();
+			$('#banca-list').append(item);
+			$('#professor').val('');
+		});
+		request.fail(function(err) {
+            const errors = err.responseJSON;
+            verifyErrors(errors);
+        });
+	});
+
+	/**********************************************
+	 * Ação para botão excluir Banca ou Orientador
+	 **********************************************/
+	var swalExcluir = {
+		title: "Você tem certeza?",
+		text: "Após a exclusão não será possível recupera os dados.",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Deletar!",
+		cancelButtonText: "Cancelar!",
+		closeOnConfirm: false,
+		closeOnCancel: false
+	};
+	var $lista = $('#banca-list');
+	$lista.on('click', '.excluir-banca-js', function (e) {
+		e.preventDefault();
+		var tccPID = $(this).data('id');
+
+		if (!tccPID){
+			return false;
+		}
+
+		swal(swalExcluir, function (isConfirm) {
+			if (isConfirm) {
+				var request = $.ajax({
+					url: './tccprofessor/' + tccPID + '/',
+					type: 'DELETE',
+					dataType: 'json'
+				});
+				request.done(function (data) {
+					swal("Deletado!", "O Professor foi excluído da banca com sucesso!", "success");
+					$('#tccprofessor-' + tccPID).remove();
+				});
+				request.fail(function (data) {
+				swal("Erro!", "Erro ao excluir professor da banca, tente novamente", "error");
+				});
+			} else {
+			swal("Cancelado!", "O Professor não foi excluído da banca!", "error");
+			}
+		});
+	});
+
     $('.typeahead.pessoas-js').typeahead({
       hint: true,
       highlight: true,
@@ -73,24 +174,36 @@ $(function() {
     {
       name: 'alunos',
       source: substringMatcher(alunos)
+    }).bind('typeahead:selected', function(a, b){
+        var x = alunos.filter( function(arg) {
+            return arg.nome == b;
+        });
+        $('#alunoSelecionado').val(x[0].id);
     });
 
+	$('.typeahead.professor-js').typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    },
+    {
+      name: 'professores',
+      source: substringMatcher(professores)
+    });
 });
 
-var substringMatcher = function(strs) {
+var substringMatcher = function(alunos) {
   return function findMatches(q, cb) {
     var matches, substringRegex;
 
     matches = [];
-
     substrRegex = new RegExp(q, 'i');
 
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
+    $.each(alunos, function(i, aluno) {
+      if (substrRegex.test(aluno)) {
+        matches.push(aluno);
       }
     });
-
     cb(matches);
   };
 };
