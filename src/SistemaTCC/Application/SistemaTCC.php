@@ -107,6 +107,11 @@ class SistemaTCC extends Application {
 		$app->get('/defesa/editar/{id}/', "\\SistemaTCC\\Controller\\TccDefesaController::editarAction");
 		$app->get('/defesa/listar/', "\\SistemaTCC\\Controller\\TccDefesaController::listarAction");
 
+		$app->get('/atestado/', "\\SistemaTCC\\Controller\\AtestadoController::indexAction");
+		$app->get('/atestado/cadastrar/', "\\SistemaTCC\\Controller\\AtestadoController::cadastrarAction");
+		$app->get('/atestado/editar/{id}/', "\\SistemaTCC\\Controller\\AtestadoController::editarAction");
+		$app->get('/atestado/listar/', "\\SistemaTCC\\Controller\\AtestadoController::listarAction");
+
 		// REST Aluno
 		$app->post('/aluno/', "\\SistemaTCC\\Controller\\AlunoController::add");
 		$app->get('/aluno/{id}/', "\\SistemaTCC\\Controller\\AlunoController::find");
@@ -172,6 +177,11 @@ class SistemaTCC extends Application {
 	  $app->post('/defesa/', "\\SistemaTCC\\Controller\\TccDefesaController::add");
 	  $app->put('/defesa/{id}/', "\\SistemaTCC\\Controller\\TccDefesaController::edit");
 	  $app->delete('/defesa/{id}/', "\\SistemaTCC\\Controller\\TccDefesaController::del");
+
+	  // REST Atestado
+	  $app->post('/atestado/', "\\SistemaTCC\\Controller\\AtestadoController::add");
+	  $app->put('/atestado/{id}/', "\\SistemaTCC\\Controller\\AtestadoController::edit");
+	  $app->delete('/atestado/{id}/', "\\SistemaTCC\\Controller\\AtestadoController::del");
 
 		// Twig Extensions
     $app['twig'] = $app->extend('twig', function ($twig, $app) {

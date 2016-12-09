@@ -1,0 +1,49 @@
+{% extends 'layout.twig' %}
+{% block content %}
+	<div class="row">
+    <div class="col-sm-6 col-xs-12">
+      <h3>{{ titulo }}</h3>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+			<a href="./atestado/cadastrar" class="btn btn-success btn-cadastrar"><span class="glyphicon glyphicon-plus"></span> Cadastrar Atestado</a>
+    </div>
+	</div>
+	<div class="row">
+    <div class="col-xs-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th width="170px">TCC</th>
+            <th>Professor</th>
+            <th>Data:</th>
+            <th></th>
+          </tr>
+          <tbody id="lista-js">
+            {% for atestado in atestados %}
+            <tr>
+              <td>{{ atestado.getTcc().getTitulo() }}</td>
+              <td>{{ atestado.getProfessor().getPessoa().getNome() }}</td>
+              <td>{{ atestado.getData()|date('d/m/Y') }}</td>
+              <td>
+                <div class="pull-right">
+                  <a href="./atestado/editar/{{ atestado.getId() }}" class="btn btn-primary btn-xs">
+                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                    <span class="hidden-xs">Editar</span>
+                  </a>
+                  <button data-id="{{ atestado.getId() }}" class="excluir btn btn-danger btn-xs" data-id="{{ atestado.getId() }}">
+                    <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                    <span class="hidden-xs">Excluir</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </thead>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+<script src="./app/atestado/listar.js"></script>
+{% endblock %}
