@@ -82,6 +82,13 @@ class EtapaSemestreController {
         }
         return $retorno;
     }
+
+    private function dataInicialEhMaiorQueFinal($ini, $fim) {
+        $ini = new DateTime($ini);
+        $fim = new DateTime($fim);
+        return $ini > $fim;
+    }
+
     public function add(Application $app, Request $request) {
 	    $dados = [
             'etapa-nome'		=> $request->get('nome'),
@@ -97,6 +104,10 @@ class EtapaSemestreController {
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
+        }
+
+        if ($this->dataInicialEhMaiorQueFinal($dados['etapa-dataInicio'], $dados['etapa-dataFim'])) {
+            return $app->json(['etapa-dataInicio' => 'Data inicial maior que a final'], 400);
         }
 
         $etapa = new Etapa();
@@ -155,6 +166,10 @@ class EtapaSemestreController {
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
             return $app->json($errors, 400);
+        }
+
+        if ($this->dataInicialEhMaiorQueFinal($dados['etapa-dataInicio'], $dados['etapa-dataFim'])) {
+            return $app->json(['etapa-dataInicio' => 'Data inicial maior que a final'], 400);
         }
 
         $tipo = $app['orm']->find('\\SistemaTCC\\Model\\EtapaTipo', $request->get('tipo'));
