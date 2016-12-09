@@ -61,12 +61,23 @@ class EnviarEtapaController {
 			return $app->json($errors, 400);
 		}
 		
-		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
-		$nome = md5(uniqid()) . '.' . $tipo;
+		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $request->get('etapa'));
+		$tcc = $app['orm']->getRepository('\SistemaTCC\Model\Tcc')->findOneBy(['aluno' => $aluno, 'semestre' => $etapa->getSemestre()]);
+		if(!$tcc){
+			return $app->json(['arquivo'=>'Você não tem um TCC cadastrado no semestre atual.'], 400);
+		}
+		
+		$caminho = 'files/alunos/' . $etapa->getSemestre()->getId() . '/' . $tcc->getId() . '/' . $request->get('etapa') . '/';
+		$nome = $file->getClientOriginalName();
+		$num = 1;
+		while(file_exists(__DIR__ . '/../../../' . $caminho . '/' . $nome)){
+			$nome = str_ireplace('.' . $tipo,'',$file->getClientOriginalName()) . $num . '.' . $tipo;
+			$num++;
+		}
+		
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
 		
 		$etapaEntregaArquivo = new \SistemaTCC\Model\EtapaEntregaArquivo();
-		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $request->get('etapa'));
 		
 		$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneBy(['etapa'=>$etapa,'aluno'=>$aluno]);
 		if(!$etapaEntrega){
