@@ -24,6 +24,30 @@ class EtapaTipoController {
                     'maxMessage' => 'O nome não deve possuir mais que {{ limit }} caracteres',
                 ])
             ],
+			'banca' =>[
+				new Assert\Type([
+                  'type' => 'numeric',
+                  'message' => 'Informe um valor númerico'
+                ]),
+			],
+			'orientador' => [
+				new Assert\Type([
+                  'type' => 'numeric',
+                  'message' => 'Informe um valor númerico'
+                ]),
+			],
+			'coordenador' => [
+				new Assert\Type([
+                  'type' => 'numeric',
+                  'message' => 'Informe um valor númerico'
+                ]),
+			],
+			'entrega_arquivo' => [
+				new Assert\Type([
+                  'type' => 'numeric',
+                  'message' => 'Informe um valor númerico'
+                ]),
+			]
         ];
         $constraint = new Assert\Collection($asserts);
         $errors = $app['validator']->validate($dados, $constraint);
@@ -54,7 +78,11 @@ class EtapaTipoController {
 
     public function add(Application $app, Request $request) {
         $dados = [
-            'nome' => $request->get('nome'),
+            'nome' 			=> $request->get('nome'),
+			'banca'			=> $request->get('banca'),
+			'orientador'	=> $request->get('orientador'),
+			'coordenador' 	=> $request->get('coordenador'),
+			'entrega_arquivo' => $request->get('entrega_arquivo')
         ];
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
@@ -66,7 +94,11 @@ class EtapaTipoController {
         }
 
         $etapatipo = new \SistemaTCC\Model\EtapaTipo();
-        $etapatipo->setNome($dados['nome']);
+        $etapatipo->setNome($dados['nome'])
+				->setAvaliadoBanca($dados['banca'])
+				->setAvaliadoOrientador($dados['orientador'])
+				->setAvaliadoCoordenador($dados['coordenador'])
+				->setEntregaArquivo($dados['entrega_arquivo']);
         try {
             $app['orm']->persist($etapatipo);
             $app['orm']->flush();
@@ -83,7 +115,11 @@ class EtapaTipoController {
             return $app->json([ 'error' => 'A etapa não existe.'], 400);
         }
         $dados = [
-            'nome' => $request->get('nome')
+            'nome' => $request->get('nome'),
+			'banca'			=> $request->get('banca'),
+			'orientador'	=> $request->get('orientador'),
+			'coordenador' 	=> $request->get('coordenador'),
+			'entrega_arquivo' => $request->get('entrega_arquivo')
         ];
         $errors = $this->validacao($app, $dados);
         if (count($errors) > 0) {
@@ -92,7 +128,11 @@ class EtapaTipoController {
         if ($this->nomeJaExiste($app, $dados['nome'], $id)) {
             return $app->json(['nome' => 'Nome já existe, informe outro'], 400);
         }
-        $etapatipo->setNome($dados['nome']);
+        $etapatipo->setNome($dados['nome'])
+				->setAvaliadoBanca($dados['banca'])
+				->setAvaliadoOrientador($dados['orientador'])
+				->setAvaliadoCoordenador($dados['coordenador'])
+				->setEntregaArquivo($dados['entrega_arquivo']);
         try {
             $app['orm']->flush();
         }
@@ -125,7 +165,11 @@ class EtapaTipoController {
         $dadosParaView = [
             'titulo' => 'Cadastrar Tipo de Etapa',
             'values' => [
-            'nome' => '',
+				'nome' => '',
+				'banca'			=> '',
+				'orientador'	=> '',
+				'coordenador' 	=> '',
+				'entrega_arquivo' => ''
             ],
         ];
         return $app['twig']->render('etapatipo/formulario.twig', $dadosParaView);
@@ -141,7 +185,11 @@ class EtapaTipoController {
             'titulo' => 'Alterando Tipo de Etapa: ' . $id,
             'id' => $id,
             'values' => [
-                'nome'      => $etapatipo->getNome(),
+                'nome'      	=> $etapatipo->getNome(),
+				'banca'			=> $etapatipo->getAvaliadoBanca(),
+				'orientador'	=> $etapatipo->getAvaliadoOrientador(),
+				'coordenador' 	=> $etapatipo->getAvaliadoCoordenador(),
+				'entrega_arquivo' => $etapatipo->getEntregaArquivo()
             ],
         ];
         return $app['twig']->render('etapatipo/formulario.twig', $dadosParaView);

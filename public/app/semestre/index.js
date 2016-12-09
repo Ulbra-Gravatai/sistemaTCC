@@ -50,17 +50,6 @@
     closeOnCancel: false
   };
 
-  const swalSalvar = {
-    title: "Cadastrar essa etapa?",
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#8CD4F5",
-    confirmButtonText: "Cadastrar!",
-    cancelButtonText: "Cancelar!",
-    closeOnConfirm: false,
-    closeOnCancel: false
-  };
-
   function verifyErrors(elem, arr, err) {
       const errors = err || {};
       $.each(arr, function(key, value) {
@@ -101,6 +90,7 @@
 
     const url = urlSemestre + (id ? id + '/' : '');
     const method = id ? 'PUT' : 'POST';
+	const text = id ? 'Alterado': 'Incluído';
     const request = $.ajax({
         url: url,
         type: method,
@@ -114,14 +104,21 @@
       if(data.semestre) {
           swal({
            title: "Cadastrado!",
-           text: "Continuar cadastrando o semestre!",
+           text: text,
            type: "success",
-           confirmButtonText: "OK"
+		   showCancelButton: true,
+           confirmButtonText: "Voltar para Lista",
+		   cancelButtonText: "Inserir Etapas",
+		   closeOnConfirm: false,
+		   closeOnCancel: false
           },
           function(isConfirm){
-           if (isConfirm) {
-             location.href = urlSemestre;
-           }
+			if(isConfirm){
+				location.href = urlSemestre;
+			}else{
+				var id_semestre = data.id ? data.id : id;
+				location.href = urlSemestre + 'editar/' + id_semestre + '/';
+			}
           });
       }
     });
@@ -238,39 +235,33 @@
       body.id = etapaId;
     }
 
-    swal(swalSalvar,
-    function(isConfirm){
-      if (isConfirm) {
-        var request = $.ajax({
-              url: url,
-              type: method,
-              dataType: 'json',
-              data: body
-        });
-
-        request.done(function(data){
-          swal({
-           title: "Cadastrada!",
-           text: "A etapa foi cadastrada com sucesso!",
-           type: "success",
-           confirmButtonText: "OK"
-          },
-          function(isConfirm){
-           if (isConfirm) {
-             location.reload();
-           }
-          });
-        });
-
-        request.fail(function(err){
-          const errors = err.responseJSON;
-          const verify = ['etapa-nome','etapa-tipo','etapa-peso', 'etapa-dataInicio', 'etapa-dataFim'];
-          verifyErrors($formEtapa, verify, errors);
-          swal("Erro!", "Erro ao alterar a etapa, tente novamente", "error");
-        });
-      } else {
-        swal("Cancelado", "A etapa não foi alterada!", "error");
-      }
+    var request = $.ajax({
+      url: url,
+      type: method,
+      dataType: 'json',
+      data: body
     });
+
+    request.done(function(data){
+      swal({
+       title: "Cadastrada!",
+       text: "A etapa foi cadastrada com sucesso!",
+       type: "success",
+       confirmButtonText: "OK"
+      },
+      function(isConfirm){
+       if (isConfirm) {
+         location.reload();
+       }
+      });
+    });
+
+    request.fail(function(err){
+      const errors = err.responseJSON;
+      const verify = ['etapa-nome','etapa-tipo','etapa-peso', 'etapa-dataInicio', 'etapa-dataFim'];
+      verifyErrors($formEtapa, verify, errors);
+      swal("Erro!", "Erro ao alterar a etapa, tente novamente", "error");
+    });
+
   });
 })();

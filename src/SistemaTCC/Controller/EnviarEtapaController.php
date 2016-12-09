@@ -61,12 +61,26 @@ class EnviarEtapaController {
 			return $app->json($errors, 400);
 		}
 		
-		$caminho = 'files/idsemestre/idtcc/' . $request->get('etapa') . '/';
-		$nome = md5(uniqid()) . '.' . $tipo;
+		$semestre  = $app['orm']->createQuery('SELECT s FROM SistemaTCC\Model\Semestre s WHERE CURRENT_DATE() BETWEEN s.dataInicio AND s.dataFim')->getOneOrNullResult();
+		if(!$semestre){
+			return $app->json(['arquivo'=>'O semestre atual não foi cadastrado, contacte o administrado.'], 400);
+		}
+		
+		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $request->get('etapa'));
+		$tcc = $app['orm']->getRepository('\SistemaTCC\Model\Tcc')->findOneBy(['aluno' => $aluno, 'semestre' => $semestre]);
+		if(!$tcc){
+			return $app->json(['arquivo'=>'Você não tem um TCC cadastrado no semestre atual.'], 400);
+		}
+		
+		$caminho = 'files/alunos/' . $etapa->getSemestre()->getId() . '/' . $tcc->getId() . '/' . $request->get('etapa') . '/';
+		$num = 1;
+		do{
+			$nome = $file->getClientOriginalName();
+		}while(file_exists(__DIR__ . '/../../../' . $caminho . '/' . $nome));
+		
 		$file->move(__DIR__ . '/../../../' . $caminho, $nome);
 		
 		$etapaEntregaArquivo = new \SistemaTCC\Model\EtapaEntregaArquivo();
-		$etapa = $app['orm']->find('\SistemaTCC\Model\Etapa', $request->get('etapa'));
 		
 		$etapaEntrega = $app['orm']->getRepository('\SistemaTCC\Model\EtapaEntrega')->findOneBy(['etapa'=>$etapa,'aluno'=>$aluno]);
 		if(!$etapaEntrega){
@@ -150,7 +164,7 @@ class EnviarEtapaController {
 			'etapas' => $etapas,
 			'etapas_status' => $etapas_status,
 			'etapas_nota' => $etapas_nota,
-			'data_atual' => (new DateTime())
+			'data_atual' => (new DateTime())->setTime(0,0)
 		];
 		return $app['twig']->render('enviaretapa/listar.twig', $dadosParaView);
 	}
@@ -178,7 +192,7 @@ class EnviarEtapaController {
 			'titulo' => 'Enviar Etapa:',
 			'subtitulo' => $etapa->getNome(),
 			'etapa' => $etapa,
-			'data_atual' => new DateTime(),
+			'data_atual' => (new DateTime())->setTime(0,0),
 			'arquivos' => $arquivos
 		];
 		return $app['twig']->render('enviaretapa/formulario.twig', $dadosParaView);

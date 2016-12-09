@@ -1,82 +1,82 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <base href="{{ app.url('/') }}">
-    <title>SistemaTCC</title>
-    <link rel="stylesheet" href="./lib/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./app/index/main.css">
-    <link rel="stylesheet" href="./app/shared/nav-side.css">
-    <link rel="stylesheet" href="./app/shared/sweetalert.css">
-    <!-- styles -->
-	  {% block styles %}
-	  {% endblock %}
-    <!-- /styles -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-  </head>
-  <body>
-    <div class="main">
-        <nav class="navbar navbar-system navbar-fixed-top">
-            <div class="">
-                <a href="#" class="btn-hamburguer menu-show pull-left"><span></span></a>
-            </div>
-            <div class="navbar-header">
-                <a href="./home/" class="navbar-brand">SistemaTCC</a>
-            </div>
-            <div class="pull-right menu-header">
-                <ul class="nav navbar-top-links navbar-right">
-                    <li><span class="username-js">{{ app.orm.getRepository('\\SistemaTCC\\Model\\Pessoa').findOneByEmail(app.user.username).getNome() }}</span></li>
-                    <li><a href="#" ><i class="fa fa-cog fa-lg" aria-hidden="true"></i></a></li>
-                    <li><a href="./logout/" class="btn-logout-js"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a></li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-    <!--
-    ### USE APENAS O PONTO ANTES DO LINK:
-    ### CERTO: ./meu-link/
-    ### ERRADO: ../public/meu-link/
-    -->
-    <aside class="navbar-toggle-js">
-        <nav class="navbar-container">
-            <ul class="navbar-content">
-				{% if is_granted('ROLE_ADMIN') %}
-					<li><a href="./areadeinteresse/">Area de Interesse</a></li>
-					<li><a href="./campus/">Campus</a></li>
-					<li><a href="./semestre/">Semestre</a></li>
-					<li><a href="./etapatipo/">Tipo de Etapa</a></li>
-					<li><a href="./tcc/">Cadastro de TCC</a></li>
-					<li><a href="./aluno/">Aluno</a></li>
-					<li><a href="./professor/">Professor</a></li>
-					<li><a href="./avaliacao/">Consultar avaliação</a></li>
-					<li><a href="./atestado/">Gerar atestado</a></li>
-					<li><a href="./agenda/">Agendar defesa</a></li>
-				{% elseif is_granted('ROLE_PROFESSOR') %}
-					
-				{% elseif is_granted('ROLE_ALUNO') %}
-					<li><a href="./enviaretapa/">Etapas</a></li>
-				{% endif %}
-            </ul>
-        </nav>
-    </aside>
-    <div class="container">
-        <div class="content content-move-js">
-        <!-- conteudo -->
-        {% block content %}
-        {% endblock %}
-        <!-- /conteudo -->
+    <head>
+        <meta charset="utf-8">
+        <base href="{{ app.url('/') }}">
+        <title>SistemaTCC</title>
+        <link rel="stylesheet" href="./lib/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./app/index/main.css">
+        <link rel="stylesheet" href="./app/shared/nav-side.css">
+        <link rel="stylesheet" href="./app/shared/sweetalert.css">
+        <!-- styles -->
+          {% block styles %}
+          {% endblock %}
+        <!-- /styles -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+    </head>
+    <body>
+        <div class="main">
+            <nav class="navbar navbar-system navbar-fixed-top">
+                <div class="">
+                    <a href="#" class="btn-hamburguer menu-show pull-left"><span></span></a>
+                </div>
+                <div class="navbar-header">
+                    <a href="./home/" class="navbar-brand">SistemaTCC</a>
+                </div>
+                <div class="pull-right menu-header">
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li><span class="username-js">{{ app.orm.getRepository('\\SistemaTCC\\Model\\Pessoa').findOneByEmail(app.user.username).getNome() }}</span></li>
+                        <li><a href="#" ><i class="fa fa-cog fa-lg" aria-hidden="true"></i></a></li>
+                        <li><a href="./logout/" class="btn-logout-js"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i></a></li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-    </div>
-    <script src="./lib/jquery/dist/jquery.min.js"></script>
-    <script src="./lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="./lib/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="./app/shared/nav-side.js"></script>
-    <script src="./app/shared/sweetalert.min.js"></script>
-    <script src="./app/shared/helpers.js"></script>
-    <!-- scripts -->
-	{% block scripts %}{% endblock %}
-    <!-- /scripts -->
-  </body>
+        <!--
+        ### USE APENAS O PONTO ANTES DO LINK:
+        ### CERTO: ./meu-link/
+        ### ERRADO: ../public/meu-link/
+        -->
+        <aside class="navbar-toggle-js">
+            <nav class="navbar-container">
+                <ul class="navbar-content">
+    				{% if is_granted('ROLE_ADMIN') %}
+    					<li><a href="./areadeinteresse/">Area de Interesse</a></li>
+    					<li><a href="./campus/">Campus</a></li>
+    					<li><a href="./semestre/">Semestre</a></li>
+    					<li><a href="./etapatipo/">Tipo de Etapa</a></li>
+    					<li><a href="./tcc/">Cadastro de TCC</a></li>
+    					<li><a href="./aluno/">Aluno</a></li>
+    					<li><a href="./professor/">Professor</a></li>
+    					<li><a href="./avaliacao/">Consultar avaliação</a></li>
+    					<li><a href="./atestado/">Gerar atestado</a></li>
+    					<li><a href="./defesa/">Agendar defesa</a></li>
+    				{% elseif is_granted('ROLE_PROFESSOR') %}
+
+    				{% elseif is_granted('ROLE_ALUNO') %}
+    					<li><a href="./enviaretapa/">Etapas</a></li>
+    				{% endif %}
+                </ul>
+            </nav>
+        </aside>
+        <div class="container">
+            <div class="content content-move-js">
+            <!-- conteudo -->
+            {% block content %}
+            {% endblock %}
+            <!-- /conteudo -->
+            </div>
+        </div>
+        <script src="./lib/jquery/dist/jquery.min.js"></script>
+        <script src="./lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="./lib/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="./app/shared/nav-side.js"></script>
+        <script src="./app/shared/sweetalert.min.js"></script>
+        <script src="./app/shared/helpers.js"></script>
+        <!-- scripts -->
+    	{% block scripts %}{% endblock %}
+        <!-- /scripts -->
+    </body>
 </html>

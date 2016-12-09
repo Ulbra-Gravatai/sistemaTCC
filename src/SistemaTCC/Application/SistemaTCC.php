@@ -102,6 +102,11 @@ class SistemaTCC extends Application {
 		$app->get('/areadeinteresse/editar/{id}/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::editarAction");
 		$app->get('/areadeinteresse/listar/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::listarAction");
 
+		$app->get('/defesa/', "\\SistemaTCC\\Controller\\TccDefesaController::indexAction");
+		$app->get('/defesa/cadastrar/', "\\SistemaTCC\\Controller\\TccDefesaController::cadastrarAction");
+		$app->get('/defesa/editar/{id}/', "\\SistemaTCC\\Controller\\TccDefesaController::editarAction");
+		$app->get('/defesa/listar/', "\\SistemaTCC\\Controller\\TccDefesaController::listarAction");
+
 		// REST Aluno
 		$app->post('/aluno/', "\\SistemaTCC\\Controller\\AlunoController::add");
 		$app->get('/aluno/{id}/', "\\SistemaTCC\\Controller\\AlunoController::find");
@@ -142,7 +147,7 @@ class SistemaTCC extends Application {
 		$app->post('/tcc/', "\\SistemaTCC\\Controller\\TccController::add");
 		$app->put('/tcc/{id}/', "\\SistemaTCC\\Controller\\TccController::edit");
 		$app->delete('/tcc/{id}/', "\\SistemaTCC\\Controller\\TccController::del");
-		
+
 		// REST  TccProfessor
 		$app->post('/tccprofessor/', "\\SistemaTCC\\Controller\\TccProfessorController::add");
 		$app->put('/tccprofessor/{id}/', "\\SistemaTCC\\Controller\\TccProfessorController::edit");
@@ -162,6 +167,11 @@ class SistemaTCC extends Application {
 	  $app->post('/areadeinteresse/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::add");
 	  $app->put('/areadeinteresse/{id}/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::edit");
 	  $app->delete('/areadeinteresse/{id}/', "\\SistemaTCC\\Controller\\AreaDeInteresseController::del");
+
+	  // REST Defesa
+	  $app->post('/defesa/', "\\SistemaTCC\\Controller\\TccDefesaController::add");
+	  $app->put('/defesa/{id}/', "\\SistemaTCC\\Controller\\TccDefesaController::edit");
+	  $app->delete('/defesa/{id}/', "\\SistemaTCC\\Controller\\TccDefesaController::del");
 
 		// Twig Extensions
     $app['twig'] = $app->extend('twig', function ($twig, $app) {

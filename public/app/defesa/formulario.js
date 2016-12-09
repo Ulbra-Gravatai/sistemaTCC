@@ -2,14 +2,23 @@ $(function() {
 
     const $form = $('#form-js');
     const itemID = $form.find('#id').val();
-    const restURL = './etapatipo/';
-    const listaURL = './etapatipo/';
-    const fields = ['nome','banca','orientador','coordenador','entrega_arquivo'];
-    let isDone = false;
+    const restURL = './defesa/';
+    const listaURL = './defesa/';
+
+    $('.datepicker').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+      language: 'pt-BR',
+      orientation: 'bottom'
+    });
+
+    $('#hora').on('keyup', function(e) {
+        e.target.value = horaMask(e.target.value);
+    });
 
     function verifyErrors(err) {
         const errors = err || {};
-        $.each(fields, function(key, value) {
+        $.each(['tcc_id', 'data', 'hora', 'local'], function(key, value) {
             const message = errors[value] || false;
             const element = $form.find('#' + value);
             if (message) {
@@ -20,19 +29,21 @@ $(function() {
         });
     }
 
+    function formatDate(d) {
+        if (!d) {
+            return '';
+        }
+        return d.split('/').reverse().join('-');
+    }
+
     $form.on('submit', function(event) {
         event.preventDefault();
 
-        if (isDone) {
-            return false;
-        }
-
         const values = {
-            nome: $form.find('#nome').val(),
-			banca: Number($form.find('#banca').is(':checked')),
-			orientador: Number($form.find('#orientador').is(':checked')),
-			coordenador: Number($form.find('#coordenador').is(':checked')),
-			entrega_arquivo: Number($form.find('#entrega_arquivo').is(':checked')),
+            tcc_id: $form.find('#tcc_id option:selected').val(),
+            data: formatDate($form.find('#data').val()),
+            hora: formatDate($form.find('#hora').val()),
+            local: $form.find('#local').val(),
         };
 
         const url = restURL + (itemID ? itemID + '/' : '' );
@@ -45,15 +56,12 @@ $(function() {
                 dataType: 'json',
                 data: values
             });
-
         request.done(function(data) {
-            isDone = true;
             verifyErrors();
             showSaved(text, function() {
                 location.href = listaURL;
             });
         });
-
         request.fail(function(err) {
             const errors = err.responseJSON;
             verifyErrors(errors);

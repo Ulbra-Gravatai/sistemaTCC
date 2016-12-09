@@ -16,6 +16,7 @@
               <th>Título</th>
               <th>Aluno</th>
               <th>Semestre</th>
+			  <th>Disciplina</th>
             </tr>
         </thead>
         <tbody id="lista-js">
@@ -23,15 +24,16 @@
             <tr>
                 <td>{{ tcc.getTitulo() }}</td>
                 <td>{{ tcc.getAluno().getPessoa().getNome()}}</td>
-                <td>{{ tcc.getSemestre().getNome()}}</td>
+                <td>{{ tcc.getSemestre().getNome() }}</td>
+				<td>{{ tcc.getDisciplina() == 1? 'TCC1':'TCC2' }}</td>
                 <td>
 					<div class="pull-right">
-						<a href="./tcc/editar/{{ tcc.getId() }}" class="btn btn-primary">
+						<a href="./tcc/editar/{{ tcc.getId() }}" class="btn btn-primary btn-xs">
 							<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
 							<span class="hidden-xs">Editar</span>
 						</a>
 
-						<button data-id="{{ tcc.getId() }}" class="excluir btn btn-danger">
+						<button data-id="{{ tcc.getId() }}" class="excluir btn btn-danger btn-xs">
 							<i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
 							<span class="hidden-xs">Excluir</span>
 						</button>
