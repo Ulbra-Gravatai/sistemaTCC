@@ -1,0 +1,75 @@
+{% extends 'layout.twig' %}
+{% block styles %}
+    <link rel="stylesheet" href="./lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+{% endblock %}
+{% block content %}
+    <h3>{{ titulo }}</h3>
+    <form id="form-js">
+        {% if id is defined %}
+        <input type="hidden" name="id" value="{{ id }}" id="id" />
+        {% endif %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label" for="tcc_id">Tcc</label>
+                    <select class="form-control" name="tcc_id" id="tcc_id">
+                        <option value="">-</option>
+                    {% for tcc in tccs %}
+                        {% set selected = '' %}
+                        {% if tcc.getId() == values.tcc_id %}
+                            {% set selected = "selected" %}
+                        {% endif %}
+                        <option value="{{ tcc.getId() }}" {{ selected }}>{{ tcc.getTitulo() }}</option>
+                    {% endfor %}
+                    </select>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label" for="professor_id">Professor</label>
+                    <select class="form-control" name="professor_id" id="professor_id">
+                        <option value="">-</option>
+                    {% for professor in professores %}
+                        {% set selected = '' %}
+                        {% if professor.getId() == values.professor_id %}
+                            {% set selected = "selected" %}
+                        {% endif %}
+                        <option value="{{ professor.getId() }}" {{ selected }}>{{ professor.getPessoa().getNome() }}</option>
+                    {% endfor %}
+                    </select>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label" for="data">Data</label>
+                    <input type="data" class="form-control datepicker" name="data" id="data" value="{{ values.data }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div clas="row">
+
+        </div>
+        <hr>
+        <div class="row">
+        	<div class="col-xs-3">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
+        	</div>
+            <div class="col-xs-2">
+                <a href="./defesa/" class="btn btn-default btn-lg btn-block">Cancelar</a>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}
+{% block scripts %}
+<script src="./lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="./lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="./app/atestado/formulario.js"></script>
+{% endblock %}
