@@ -6,14 +6,44 @@
         <input type="hidden" name="id" value="{{ id }}" id="id" />
         {% endif %}
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-12 col-md-8">
                 <div class="form-group">
                     <label class="control-label" for="nome">Nome</label>
                     <input type="text" class="form-control" name="nome" id="nome" value="{{ values.nome }}">
                     <span class="help-block"></span>
                 </div>
             </div>
+			<div class="col-xs-12 col-md-4">
+				<label>Necessário:</label>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" value="1" name="entrega_arquivo" id="entrega_arquivo" {{ values.entrega_arquivo ? 'checked' : '' }}>
+						Entrega de Arquivo
+					</label>
+				</div>
+			</div>
         </div>
+		<div class="row">
+            <div class="col-xs-12">
+				<label>Avaliadores:</label>
+			</div>
+		</div>
+		<div class="row">
+            <div class="col-xs-12">
+				<label class="checkbox-inline">
+					<input type="checkbox" value="1" name="banca" id="banca" {{ values.banca ? 'checked' : '' }}>
+					Banca
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" value="1" name="orientador" id="orientador" {{ values.orientador ? 'checked' : '' }}>
+					Orientador
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" value="1" name="coordenador" id="coordenador" {{ values.coordenador ? 'checked' : '' }}>
+					Coordenador
+				</label>
+			</div>
+		</div>
         <hr>
         <div class="row">
         	<div class="col-xs-3">

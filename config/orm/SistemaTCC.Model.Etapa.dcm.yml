@@ -28,11 +28,11 @@ SistemaTCC\Model\Etapa:
             type: text
             nullable: true
         dataInicio:
-            type: datetime
+            type: date
             nullable: false
             column: data_inicio
         dataFim:
-            type: datetime
+            type: date
             nullable: false
             column: data_fim
         peso:

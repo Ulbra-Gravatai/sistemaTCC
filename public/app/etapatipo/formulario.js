@@ -4,7 +4,7 @@ $(function() {
     const itemID = $form.find('#id').val();
     const restURL = './etapatipo/';
     const listaURL = './etapatipo/';
-    const fields = ['nome'];
+    const fields = ['nome','banca','orientador','coordenador','entrega_arquivo'];
     let isDone = false;
 
     function verifyErrors(err) {
@@ -28,7 +28,11 @@ $(function() {
         }
 
         const values = {
-            nome: $form.find('#nome').val()
+            nome: $form.find('#nome').val(),
+			banca: Number($form.find('#banca').is(':checked')),
+			orientador: Number($form.find('#orientador').is(':checked')),
+			coordenador: Number($form.find('#coordenador').is(':checked')),
+			entrega_arquivo: Number($form.find('#entrega_arquivo').is(':checked')),
         };
 
         const url = restURL + (itemID ? itemID + '/' : '' );

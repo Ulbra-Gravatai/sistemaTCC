@@ -21,7 +21,7 @@ class SistemaTCC extends Application {
 		parent::__construct();
 
 		//Seta o timezone padrão para corrigir o erro da Issue #183
-		date_default_timezone_set('America/Sao_Paulo');
+		date_default_timezone_set('UTC');
 
 		$app = $this;
 

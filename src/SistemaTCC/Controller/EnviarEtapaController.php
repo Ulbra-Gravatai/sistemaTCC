@@ -150,7 +150,7 @@ class EnviarEtapaController {
 			'etapas' => $etapas,
 			'etapas_status' => $etapas_status,
 			'etapas_nota' => $etapas_nota,
-			'data_atual' => (new DateTime())
+			'data_atual' => (new DateTime())->setTime(0,0)
 		];
 		return $app['twig']->render('enviaretapa/listar.twig', $dadosParaView);
 	}
@@ -178,7 +178,7 @@ class EnviarEtapaController {
 			'titulo' => 'Enviar Etapa:',
 			'subtitulo' => $etapa->getNome(),
 			'etapa' => $etapa,
-			'data_atual' => new DateTime(),
+			'data_atual' => (new DateTime())->setTime(0,0),
 			'arquivos' => $arquivos
 		];
 		return $app['twig']->render('enviaretapa/formulario.twig', $dadosParaView);

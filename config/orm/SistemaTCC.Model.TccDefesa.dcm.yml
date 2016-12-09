@@ -1,0 +1,34 @@
+SistemaTCC\Model\TccDefesa:
+    type: entity
+    table: tcc_defesa
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        data_hora:
+            type: datetime
+            nullable: false
+        local:
+            type: string
+            nullable: false
+            length: 50
+            options:
+                fixed: false
+    manyToOne:
+        tcc:
+            targetEntity: SistemaTCC\Model\Tcc
+            cascade: [ "persist" ]
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tcc_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

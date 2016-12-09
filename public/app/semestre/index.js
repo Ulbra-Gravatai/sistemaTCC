@@ -90,6 +90,7 @@
 
     const url = urlSemestre + (id ? id + '/' : '');
     const method = id ? 'PUT' : 'POST';
+	const text = id ? 'Alterado': 'Incluído';
     const request = $.ajax({
         url: url,
         type: method,
@@ -103,14 +104,21 @@
       if(data.semestre) {
           swal({
            title: "Cadastrado!",
-           text: "Continuar cadastrando o semestre!",
+           text: text,
            type: "success",
-           confirmButtonText: "OK"
+		   showCancelButton: true,
+           confirmButtonText: "Voltar para Lista",
+		   cancelButtonText: "Inserir Etapas",
+		   closeOnConfirm: false,
+		   closeOnCancel: false
           },
           function(isConfirm){
-           if (isConfirm) {
-             location.href = urlSemestre;
-           }
+			if(isConfirm){
+				location.href = urlSemestre;
+			}else{
+				var id_semestre = data.id ? data.id : id;
+				location.href = urlSemestre + 'editar/' + id_semestre + '/';
+			}
           });
       }
     });
