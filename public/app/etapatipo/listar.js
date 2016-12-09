@@ -21,7 +21,6 @@ $(function() {
         // Caiu aqui, tem erro
         request.fail(function(err) {
             swal("OPS!","A etapa possui algum vínculo e portanto não pode ser removido!" , "error");
-            console.log(err.responseText);
             return false;
         });
     }
