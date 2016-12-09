@@ -1,0 +1,71 @@
+{% extends 'layout.twig' %}
+{% block styles %}
+    <link rel="stylesheet" href="./lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+{% endblock %}
+{% block content %}
+    <h3>{{ titulo }}</h3>
+    <form id="form-js">
+        {% if id is defined %}
+        <input type="hidden" name="id" value="{{ id }}" id="id" />
+        {% endif %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label" for="tcc_id">Tcc</label>
+                    <select class="form-control" name="tcc_id" id="tcc_id">
+                        <option value="">-</option>
+                    {% for tcc in tccs %}
+                        {% set selected = '' %}
+                        {% if tcc.getId() == values.tcc_id %}
+                            {% set selected = "selected" %}
+                        {% endif %}
+                        <option value="{{ tcc.getId() }}" {{ selected }}>{{ tcc.getTitulo() }}</option>
+                    {% endfor %}
+                    </select>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label" for="data">Data</label>
+                    <input type="data" class="form-control datepicker" name="data" id="data" value="{{ values.data }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label" for="hora">Hora</label>
+                    <input type="hora" class="form-control" name="hora" id="hora" value="{{ values.hora }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label" for="local">Local</label>
+                    <input type="local" class="form-control" name="local" id="local" value="{{ values.local }}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+        <div clas="row">
+
+        </div>
+        <hr>
+        <div class="row">
+        	<div class="col-xs-3">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Salvar</button>
+        	</div>
+            <div class="col-xs-2">
+                <a href="./defesa/" class="btn btn-default btn-lg btn-block">Cancelar</a>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}
+{% block scripts %}
+<script src="./lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="./lib/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="./app/defesa/formulario.js"></script>
+{% endblock %}
