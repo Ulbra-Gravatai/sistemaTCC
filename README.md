@@ -115,11 +115,12 @@ git checkout -b <seu_nome>
 ## Banco de dados
 Para a base de dados está sendo utilizado o flyway.
 Você deve: 
-# Baixar o flyway correspondente a sua plataforma do site
-# Descompactar o flyway em uma pasta no seu computador
-# Colocar tudo o que estiver dentro da pasta flyway-4.X.X para dentro da pasta flyway do projeto
-# Executar flyway migrate 
-# Sempre que alguém criar uma nova migration na pasta sql, basta executar flyway migrate para o seu banco ficar atualizado.
+
+  1. Baixar o flyway correspondente a sua plataforma do site
+  2. Descompactar o flyway em uma pasta no seu computador
+  3. Colocar tudo o que estiver dentro da pasta flyway-4.X.X para dentro da pasta flyway do projeto
+  4. Executar flyway migrate 
+  5. Sempre que alguém criar uma nova migration na pasta sql, basta executar flyway migrate para o seu banco ficar atualizado.
 
 ## Brincadeira!
 Agora sim, a brincadeira pode começar!
